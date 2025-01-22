@@ -7,9 +7,16 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "server": "node server/index.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.9.16",
+    "nodemon": "^3.1.9",
     "nuxt": "^3.15.2",
     "vue": "latest",
     "vue-router": "latest"
