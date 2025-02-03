@@ -1,4 +1,5 @@
-import mysql from 'mysql';
+// import mysql from 'mysql';
+import mysql from 'mysql2/promise';
 
 // export default defineNitroPlugin(() => {
 //   const conn = mysql.createPool({
@@ -16,19 +17,19 @@ import mysql from 'mysql';
 //   };
 // });
 
-const conn = mysql.createConnection({
+const conn = mysql.createPool({
     user: "root",
     password: '',
     host: 'localhost',
     port: 3306,
     database: 'mfeeDB'
 })
-conn.connect(function (err) {
-    if (!err) {
-        console.log('共用sql連線成功');
-    } else {
-        console.log(err);
-    }
-})
+// conn.connect(function (err) {
+//     if (!err) {
+//         console.log('共用sql連線成功');
+//     } else {
+//         console.log(err);
+//     }
+// })
 
 export default conn
