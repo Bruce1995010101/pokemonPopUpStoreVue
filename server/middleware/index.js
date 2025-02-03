@@ -1,18 +1,19 @@
 import express from "express"
+import { fromNodeMiddleware } from "h3"
+import bp from "body-parser"
+import session from "express-session"
+import conn from "../sql.js"
+import nodemailer from "nodemailer"
+import bcrypt from "bcryptjs"
+
 const app = express();
 
-import { fromNodeMiddleware } from "h3"
-
-
 //導入body-parser 以處理post
-// const bp = require('body-parser');
-import bp from "body-parser"
 app.use(bp.urlencoded({ extended: true }));
 app.use(bp.json());
 
+
 //導入express-session 以儲存各網頁互傳時的資料
-// const session = require('express-session');
-import session from "express-session"
 app.use(session({
     secret: "password",
     resave: false,
@@ -20,26 +21,23 @@ app.use(session({
 }))
 
 //sql
-// const myspl = require('mysql');
-import myspl from "mysql"
-const conn = myspl.createConnection({
-    user: "root",
-    password: '',
-    host: 'localhost',
-    port: 3306,
-    database: 'mfeeDB'
-})
-conn.connect(function (err) {
-    if (!err) {
-        console.log('連線成功');
-    } else {
-        console.log(err);
-    }
-})
+// const conn = myspl.createConnection({
+//     user: "root",
+//     password: '',
+//     host: 'localhost',
+//     port: 3306,
+//     database: 'mfeeDB'
+// })
+// conn.connect(function (err) {
+//     if (!err) {
+//         console.log('連線成功');
+//     } else {
+//         console.log(err);
+//     }
+// })
+
 
 //nodemailer
-// const nodemailer = require('nodemailer')
-import nodemailer from "nodemailer"
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -76,8 +74,7 @@ function mailSomeone(mailAddress, mailSubject, mailText) {
 
 
 
-// const bcrypt = require('bcryptjs');
-import bcrypt from "bcryptjs"
+// bcrypt
 async function verifyPassword(plainTextPassword, hashedPassword) {
     try {
         const match = await bcrypt.compare(plainTextPassword, hashedPassword);
@@ -140,7 +137,7 @@ app.get('/getITAccount',function(req, res){
     conn.query(`select * from userInfo where userTitle = 'IT'`,
         [],
         function (err, result) {
-            // console.log(result);
+            console.log(result);
             
             if (result[0] !== undefined) {
                 let data = [{
@@ -253,6 +250,8 @@ app.get('/logout', function (req, res) {
     delete req.session.account;
     res.send('out')
 })
-
+app.get('/hi', (req, res) => {
+  res.json({ message: 'Hello, world!' });
+});
 
 export default fromNodeMiddleware(app);
