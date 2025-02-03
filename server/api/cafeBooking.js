@@ -1,11 +1,12 @@
 import conn from "../sql.js"
 
-let data = null
+
 
 
 
 export default defineEventHandler(async (event) => {
   if (event.node.req) {
+    let data = null
     const method = event.node.req.method
     switch (method) {
       case 'GET':
