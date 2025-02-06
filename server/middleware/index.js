@@ -100,56 +100,45 @@ function hashPasswordSync(password) {
 
 
 
-app.post('/loginApi', function (req, res) {
+app.post('/loginApi', async function (req, res) {
     let account = req.body.account
     let password = req.body.password
 
-    conn.query(`select * from userInfo where userExist = 1 AND userAccount = '${account}'`,
-        [],
-        function (err, result) {
-            // console.log(result);
-            // console.log(password);
-            // console.log(result[0].userPassword);
-            if(!err){
-                // console.log('good');
-                if(result[0]!==undefined){
-                    verifyPassword(password, result[0].userPassword)
-                        .then(function (check) {
-                            if (check) {
-                                //存入session
-                                req.session.account = req.body.account;
-                                res.send(true);
-        
-                            } else {
-                                res.send(false);
-                            }
-                        })
-                }else{
+    const [result] = await conn.query(`select * from userInfo where userExist = 1 AND userAccount = ?`, [account])
+
+    if (result[0] !== undefined) {
+        console.log("有人登入");
+        await verifyPassword(password, result[0].userPassword)
+            .then(function (check) {
+                if (check) {
+                    //存入session
+                    req.session.account = req.body.account;
+                    res.send(true);
+                    // console.log("登入成功");
+                } else {
                     res.send(false);
+                    // console.log("登入失敗");
                 }
-            }else{
-                console.log(err);
-                // res.send(err)
-            }
-        })
+            })
+    } else {
+        res.send(false);
+        console.log("err");
+    }
 })
-app.get('/getITAccount',function(req, res){
-    conn.query(`select * from userInfo where userTitle = 'IT'`,
-        [],
-        function (err, result) {
-            console.log(result);
-            
-            if (result[0] !== undefined) {
-                let data = [{
-                    userAccount : result[0].userAccount,
-                    userName : result[0].userName,
-                    userEmail : result[0].userEmail,
-                }]
-                res.send(JSON.stringify(data));
-            } else {
-                res.send(false);
-            }
-        })
+app.get('/getITAccount', async function (req, res) {
+    const [result] = await conn.query(`select * from userInfo where userTitle = 'IT'`)
+    console.log(result);
+
+    if (result[0] !== undefined) {
+        let data = [{
+            userAccount: result[0].userAccount,
+            userName: result[0].userName,
+            userEmail: result[0].userEmail,
+        }]
+        res.send(JSON.stringify(data));
+    } else {
+        res.send(false);
+    }
 })
 
 app.post('/loginForgetApi', function (req, res) {
@@ -169,7 +158,7 @@ app.post('/loginForgetApi', function (req, res) {
             // console.log(result[0].userPassword);
             if (result[0] !== undefined) {
                 let data = [{
-                    userAccount : result[0].userAccount,
+                    userAccount: result[0].userAccount,
                     userEmail: result[0].userEmail,
                     code: code
                 }]
@@ -211,10 +200,10 @@ app.post('/updatePWApi', function (req, res) {
                 res.send(true)
                 console.log(result);
             }
-    })
+        })
 })
 
-app.get('/checkUserAuthority', function(req, res){
+app.get('/checkUserAuthority', function (req, res) {
     let account = req.session.account
 
     conn.query(`SELECT * FROM userInfo INNER JOIN userAuthority INNER JOIN page on userInfo.userID = userAuthority.authorityUserID AND userAuthority.authorityPageID = page.pageID WHERE userAccount = '${account}'`,
@@ -226,7 +215,7 @@ app.get('/checkUserAuthority', function(req, res){
             } else {
                 res.send(result)
             }
-    })
+        })
 })
 
 
@@ -250,8 +239,6 @@ app.get('/logout', function (req, res) {
     delete req.session.account;
     res.send('out')
 })
-app.get('/hi', (req, res) => {
-  res.json({ message: 'Hello, world!' });
-});
+
 
 export default fromNodeMiddleware(app);
