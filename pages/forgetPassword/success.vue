@@ -1,22 +1,17 @@
 <template>
     <div id="container">
-        <div class="bc_yellow" id="backStageContent">
+        <div class="bc_yellow" id="backStageContentForget">
             <img id="loginLogo" src="~/assets/logo.png" alt="">
-            <div class="f_h6 fredoka_b" id="loginText">LOGIN</div>
+            <img id="checkIcon" src="~/assets/check3.gif" alt="">
+
+            <div class="f_h6 noto-sans-tc_r" id="loginForgetText">已寄出密碼重設申請至IT人員</div>
+            
             <div id="inputContent">
-                <div  id="loginWrongDiv">
-                    <div v-if="wrongLoginSignCom.value" id="loginWrong">帳號或密碼錯誤</div>
-                </div>
-                <!-- <div id="loginWrong">帳號或密碼錯誤</div> -->
-                <input class="input" type="text" name="" id="account" placeholder="帳號" v-model="account">
-                <br>
-                <input class="input" type="password" name="" id="password" placeholder="密碼" v-model="password">
-                
                 <div id="buttonDiv">
-                    <button class="button bc_black c_white" id="forgetBN" @click="turnToForgetPassword">忘記密碼</button>
-                    <button class="button bc_red c_white" id="loginBN" @click="login">登入</button>
+                    <button class="button bc_black c_white" id="backBNForget">回登入頁面</button>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -25,46 +20,11 @@
 definePageMeta({
   layout: 'loginLayout'
 })
-
-
-
-const account = ref('')
-const password = ref('')
-let wrongLoginSign = ref(false)
-
-async function login(){
-    console.log("Account:", account.value, "Password:", password.value);
-    const payload = {"account": account.value, "password": password.value}
-    const { data, error } = await useAsyncData("userLogin",()=>
-        $fetch("http://localhost:3000/loginApi",{
-            method: "POST",
-            body: payload
-        })
-    )
-    console.log('Result:', data.value)
-    console.log('err:', error.value)
-    if(data.value?? false){
-        window.location.href = 'http://localhost:3000/overAll'
-    }else{
-        wrongLoginSign.value = true
-        console.log(wrongLoginSign);
-        console.log('登入失敗');
-    }
-}
-
-function turnToForgetPassword(){
-    window.location.href = 'http://localhost:3000/forgetPassword'
-}
-
-const wrongLoginSignCom = computed(()=>wrongLoginSign)
-
-
-
 </script>
 
-
 <style scoped>
-    
+
+
 
 
 #container{
@@ -78,11 +38,10 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
 
 #backStageContent{
     width: 400px;
-    height: 390px;
+    height: 400px;
     margin: auto;
     border-radius: 20px;
 }
-
 
 #loginLogo{
 
@@ -98,19 +57,13 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
     letter-spacing: 2px;
     /* border: 3px solid black; */
 }
-#inputContent {
-    padding: 0 60px;
-
-}
-
 .input{
-    width: 100%;
+    width: 280px;
     height: 40px;
     border-radius: 20px;
     border: 0cap;
-    margin: 16px 0;
+    margin: 16px 60px;
     padding-left: 20px;
-    box-sizing: border-box
 }
 .input::placeholder{
     color: var(--black);
@@ -129,7 +82,7 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
 }
 #buttonDiv{
     /* border: 1px black solid; */
-    margin: 16px 0;
+    margin: 16px 60px;
 }
 .button{
     width: 130px;
@@ -183,5 +136,16 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
     height: 400px;
     margin: auto;
     border-radius: 20px;
+}
+
+
+#checkIcon{
+    width: 100px;
+    margin-left: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#backBNForget{
+    width: 100%;
 }
 </style>

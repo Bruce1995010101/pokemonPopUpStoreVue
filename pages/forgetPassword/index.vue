@@ -1,22 +1,17 @@
 <template>
     <div id="container">
-        <div class="bc_yellow" id="backStageContent">
+        <div class="bc_yellow" id="backStageContentForget">
             <img id="loginLogo" src="~/assets/logo.png" alt="">
-            <div class="f_h6 fredoka_b" id="loginText">LOGIN</div>
+            <div class="f_h6 noto-sans-tc_r" id="loginForgetText">忘記密碼</div>
+            <div id="loginWrongDiv"></div>
             <div id="inputContent">
-                <div  id="loginWrongDiv">
-                    <div v-if="wrongLoginSignCom.value" id="loginWrong">帳號或密碼錯誤</div>
-                </div>
-                <!-- <div id="loginWrong">帳號或密碼錯誤</div> -->
-                <input class="input" type="text" name="" id="account" placeholder="帳號" v-model="account">
-                <br>
-                <input class="input" type="password" name="" id="password" placeholder="密碼" v-model="password">
-                
+                <input class="input" type="text" name="" id="account" placeholder="請填入帳號"><br>
                 <div id="buttonDiv">
-                    <button class="button bc_black c_white" id="forgetBN" @click="turnToForgetPassword">忘記密碼</button>
-                    <button class="button bc_red c_white" id="loginBN" @click="login">登入</button>
+                    <button class="button bc_black c_white" id="backBN" @click="turnToLogin">回上一頁</button>
+                    <button class="button bc_red c_white" id="sendBN">重設申請</button>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -26,45 +21,13 @@ definePageMeta({
   layout: 'loginLayout'
 })
 
-
-
-const account = ref('')
-const password = ref('')
-let wrongLoginSign = ref(false)
-
-async function login(){
-    console.log("Account:", account.value, "Password:", password.value);
-    const payload = {"account": account.value, "password": password.value}
-    const { data, error } = await useAsyncData("userLogin",()=>
-        $fetch("http://localhost:3000/loginApi",{
-            method: "POST",
-            body: payload
-        })
-    )
-    console.log('Result:', data.value)
-    console.log('err:', error.value)
-    if(data.value?? false){
-        window.location.href = 'http://localhost:3000/overAll'
-    }else{
-        wrongLoginSign.value = true
-        console.log(wrongLoginSign);
-        console.log('登入失敗');
-    }
+function  turnToLogin(){
+    window.location.href = "http://localhost:3000"
 }
-
-function turnToForgetPassword(){
-    window.location.href = 'http://localhost:3000/forgetPassword'
-}
-
-const wrongLoginSignCom = computed(()=>wrongLoginSign)
-
-
-
 </script>
 
-
 <style scoped>
-    
+
 
 
 #container{
@@ -83,7 +46,6 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
     border-radius: 20px;
 }
 
-
 #loginLogo{
 
     width: 250px;
@@ -98,17 +60,16 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
     letter-spacing: 2px;
     /* border: 3px solid black; */
 }
+
 #inputContent {
     padding: 0 60px;
-
 }
-
 .input{
     width: 100%;
     height: 40px;
     border-radius: 20px;
     border: 0cap;
-    margin: 16px 0;
+    margin: 16px 0px;
     padding-left: 20px;
     box-sizing: border-box
 }
@@ -129,7 +90,7 @@ const wrongLoginSignCom = computed(()=>wrongLoginSign)
 }
 #buttonDiv{
     /* border: 1px black solid; */
-    margin: 16px 0;
+    margin: 16px 0px;
 }
 .button{
     width: 130px;
