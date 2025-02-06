@@ -1,17 +1,32 @@
 <template>
   <div>
     <div class="f_h6 noto-sans-tc_r" id="loginForgetText">忘記密碼</div>
-    <div id="loginWrongDiv"></div>
+    <div>
+      <div v-if="wrongLoginSignCom.value" id="loginWrong">查無此帳號</div>
+    </div>
     <div id="inputContent">
       <input
         class="input"
         type="text"
         name=""
         placeholder="請填入帳號"
+        v-model="account"
       /><br />
       <div id="buttonDiv">
-        <button class="button bc_black c_white" id="backBN" @click="turnToLogin">回上一頁</button>
-        <button class="button bc_red c_white" id="sendBN">重設申請</button>
+        <button
+          class="button bc_black c_white"
+          id="backBN"
+          @click="turnToLogin"
+        >
+          回上一頁
+        </button>
+        <button
+          class="button bc_red c_white"
+          id="sendBN"
+          @click="verifyAccountAndSentEmail"
+        >
+          重設申請
+        </button>
       </div>
     </div>
   </div>
@@ -22,10 +37,72 @@ definePageMeta({
   layout: "login-layout",
 });
 
+const account = ref("");
+let wrongLoginSign = ref(false);
+const wrongLoginSignCom = computed(() => wrongLoginSign);
+
+async function verifyAccountAndSentEmail() {
+//   console.log(account.value);
+//   console.log(typeof account.value);
+
+  if (account.value === "") {
+    wrongLoginSign.value = true;
+    return;
+  }
+
+  //撈使用者的資料
+  const payload = { account: account.value };
+  const result = await useAsyncData("loginForgetSearchUserData", () =>
+    $fetch("http://localhost:3000/loginForgetApi", {
+      method: "POST",
+      body: payload,
+    })
+  );
+//   console.log(result);
+  const userData = JSON.parse(result.data.value)[0];
+//   console.log(userData);
+  if (userData === undefined) {
+    wrongLoginSign.value = true;
+    return;
+  }
+
+  // 撈IT帳號
+  const { data, ITReqError } = await useAsyncData(
+    "loginForgetGetITAccount",
+    () => $fetch("http://localhost:3000/getITAccount")
+  );
+  const [ITData] = JSON.parse(data.value);
+//   console.log(ITData);
+
+  //寄信給IT
+  const mailPayload = {
+    mail: ITData.userEmail,
+    subject: "職員申請修改密碼",
+    text: `申請人帳號：${userData.userAccount}`,
+  };
+  if (userData !== null) {
+    console.log("寄信");
+    const mailResult = await useAsyncData("loginForgetMailITApi", () =>
+      $fetch("http://localhost:3000/mailSomeone", {
+        method: "POST",
+        body: mailPayload,
+      })
+    );
+    window.location.href = "http://localhost:3000/forgetPassword/success"
+    console.log(mailResult);
+  } else {
+    console.log("無資料");
+    wrongLoginSign.value = true;
+  }
+}
+
 function turnToLogin() {
   window.location.href = "http://localhost:3000";
 }
 </script>
+
+
+
 
 <style scoped>
 #loginForgetText {

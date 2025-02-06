@@ -7,7 +7,7 @@
 
     <div id="inputContent">
       <div id="buttonDiv">
-        <button class="button bc_black c_white" id="backBNForget">
+        <button class="button bc_black c_white" id="backBNForget" @click="turnToLogin">
           回登入頁面
         </button>
       </div>
@@ -19,6 +19,10 @@
 definePageMeta({
   layout: "login-layout",
 });
+
+function turnToLogin() {
+  window.location.href = "http://localhost:3000";
+}
 </script>
 
 <style scoped>

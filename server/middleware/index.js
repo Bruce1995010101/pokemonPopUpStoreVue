@@ -64,7 +64,8 @@ function mailSomeone(mailAddress, mailSubject, mailText) {
         })
     })
         .then(info => {
-            res.send(mailAddress)
+            // res.send(mailAddress)
+            return info
 
         })
         .catch((err) => console.log(err))
@@ -127,7 +128,7 @@ app.post('/loginApi', async function (req, res) {
 })
 app.get('/getITAccount', async function (req, res) {
     const [result] = await conn.query(`select * from userInfo where userTitle = 'IT'`)
-    console.log(result);
+    // console.log(result);
 
     if (result[0] !== undefined) {
         let data = [{
@@ -141,32 +142,29 @@ app.get('/getITAccount', async function (req, res) {
     }
 })
 
-app.post('/loginForgetApi', function (req, res) {
+app.post('/loginForgetApi', async function (req, res) {
     let account = req.body.account
     req.session.accountForget = account
 
-    conn.query(`select * from userInfo where userAccount = '${account}'`,
-        [],
-        function (err, result) {
-            // console.log(result);
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += Math.floor(Math.random() * 10)
-            }
-            req.session.code = code;
-            // console.log(password);
-            // console.log(result[0].userPassword);
-            if (result[0] !== undefined) {
-                let data = [{
-                    userAccount: result[0].userAccount,
-                    userEmail: result[0].userEmail,
-                    code: code
-                }]
-                res.send(JSON.stringify(data));
-            } else {
-                res.send(false);
-            }
-        })
+    let [result] = await conn.query(`select * from userInfo where userExist = 1 AND userAccount = ?`, [account])
+    // console.log(result);
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+        code += Math.floor(Math.random() * 10)
+    }
+    req.session.code = code;
+    // console.log(password);
+    // console.log(result[0].userPassword);
+    if (result[0] !== undefined) {
+        let data = [{
+            userAccount: result[0].userAccount,
+            userEmail: result[0].userEmail,
+            code: code
+        }]
+        res.send(JSON.stringify(data));
+    } else {
+        res.send(false);
+    }
 })
 app.post('/loginForgetCheckApi', function (req, res) {
     let code = req.body.code
@@ -219,11 +217,12 @@ app.get('/checkUserAuthority', function (req, res) {
 })
 
 
-app.post('/mailSomeone', function (req, res) {
-    let mail = req.body.mail
-    let subject = req.body.subject
-    let text = req.body.text
-    mailSomeone(mail, subject, text)
+app.post('/mailSomeone', async function (req, res) {
+    const mail = req.body.mail
+    const subject = req.body.subject
+    const text = req.body.text
+    const result = await mailSomeone(mail, subject, text)
+    res.send(result)
 
 })
 app.get('/check', function (req, res) {
