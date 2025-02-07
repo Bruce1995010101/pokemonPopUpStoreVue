@@ -2,7 +2,7 @@
   <div>
     <div class="f_h6 noto-sans-tc_r" id="loginForgetText">忘記密碼</div>
     <div>
-      <div v-if="wrongLoginSignCom.value" id="loginWrong">查無此帳號</div>
+      <div v-if="wrongLoginSignCom" id="loginWrong">查無此帳號</div>
     </div>
     <div id="inputContent">
       <input
@@ -39,7 +39,7 @@ definePageMeta({
 
 const account = ref("");
 let wrongLoginSign = ref(false);
-const wrongLoginSignCom = computed(() => wrongLoginSign);
+const wrongLoginSignCom = computed(() => wrongLoginSign.value);
 
 async function verifyAccountAndSentEmail() {
 //   console.log(account.value);

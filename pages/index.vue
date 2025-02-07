@@ -3,7 +3,7 @@
     <div class="f_h6 fredoka_b" id="loginText">LOGIN</div>
     <div id="inputContent">
       <div>
-        <div v-if="wrongLoginSignCom.value" id="loginWrong">帳號或密碼錯誤</div>
+        <div v-if="wrongLoginSignCom" id="loginWrong">帳號或密碼錯誤</div>
       </div>
       <input
         class="input"
@@ -60,7 +60,7 @@ function turnToForgetPassword() {
   window.location.href = "http://localhost:3000/forgetPassword";
 }
 
-const wrongLoginSignCom = computed(() => wrongLoginSign);
+const wrongLoginSignCom = computed(() => wrongLoginSign.value);
 </script>
 
 
