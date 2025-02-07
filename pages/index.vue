@@ -106,6 +106,7 @@ const wrongLoginSignCom = computed(() => wrongLoginSign.value);
   border-radius: 20px;
   border: 0cap;
   font-size: var(--p);
+  cursor: pointer;
 }
 #forgetBN {
   float: left;

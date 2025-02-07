@@ -50,6 +50,7 @@ function turnToLogin() {
   border-radius: 20px;
   border: 0cap;
   font-size: var(--p);
+  cursor: pointer;
 }
 #backBNForget {
   width: 100%;
