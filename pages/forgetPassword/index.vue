@@ -21,11 +21,20 @@
           回上一頁
         </button>
         <button
+          v-if="!pendingSignCom"
           class="button bc_red c_white"
           id="sendBN"
           @click="verifyAccountAndSentEmail"
         >
           重設申請
+        </button>
+        <button
+          v-else
+          class="button bc_red c_white"
+          id="sendBN"
+          @click="verifyAccountAndSentEmail"
+        >
+          <img class="loadingIcon" src="~/assets/loading.png" alt="" />
         </button>
       </div>
     </div>
@@ -40,13 +49,17 @@ definePageMeta({
 const account = ref("");
 let wrongLoginSign = ref(false);
 const wrongLoginSignCom = computed(() => wrongLoginSign.value);
+let pendingSign = ref(false);
+const pendingSignCom = computed(() => pendingSign.value);
 
 async function verifyAccountAndSentEmail() {
-//   console.log(account.value);
-//   console.log(typeof account.value);
+  //   console.log(account.value);
+  //   console.log(typeof account.value);
+  pendingSign.value = true;
 
   if (account.value === "") {
     wrongLoginSign.value = true;
+    pendingSign.value = false;
     return;
   }
 
@@ -58,11 +71,12 @@ async function verifyAccountAndSentEmail() {
       body: payload,
     })
   );
-//   console.log(result);
+  //   console.log(result);
   const userData = JSON.parse(result.data.value)[0];
-//   console.log(userData);
+  //   console.log(userData);
   if (userData === undefined) {
     wrongLoginSign.value = true;
+    pendingSign.value = false;
     return;
   }
 
@@ -72,7 +86,7 @@ async function verifyAccountAndSentEmail() {
     () => $fetch("http://localhost:3000/getITAccount")
   );
   const [ITData] = JSON.parse(data.value);
-//   console.log(ITData);
+  //   console.log(ITData);
 
   //寄信給IT
   const mailPayload = {
@@ -88,11 +102,13 @@ async function verifyAccountAndSentEmail() {
         body: mailPayload,
       })
     );
-    window.location.href = "http://localhost:3000/forgetPassword/success"
+    pendingSign.value = false;
+    window.location.href = "http://localhost:3000/forgetPassword/success";
     console.log(mailResult);
   } else {
     console.log("無資料");
     wrongLoginSign.value = true;
+    pendingSign.value = false;
   }
 }
 
@@ -152,5 +168,21 @@ function turnToLogin() {
 }
 #sendBN {
   float: right;
+  
+}
+.loadingIcon {
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite; /* 1秒旋轉一次，線性動畫，無限循環 */
+  margin-top: 3px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
