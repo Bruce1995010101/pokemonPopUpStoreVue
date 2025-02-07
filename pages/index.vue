@@ -1,36 +1,41 @@
 <template>
-  <div>
-    <div class="f_h6 fredoka_b" id="loginText">LOGIN</div>
-    <div id="inputContent">
-      <div>
-        <div v-if="wrongLoginSignCom" id="loginWrong">帳號或密碼錯誤</div>
-      </div>
-      <input
-        class="input"
-        type="text"
-        placeholder="帳號"
-        v-model="account"
-      />
-      <br />
-      <input
-        class="input"
-        type="password"
-        placeholder="密碼"
-        v-model="password"
-      />
+  <NuxtLayout name="login-layout">
+    <div>
+      <div class="f_h6 fredoka_b" id="loginText">LOGIN</div>
+      <div id="inputContent">
+        <div>
+          <div v-if="wrongLoginSignCom" id="loginWrong">帳號或密碼錯誤</div>
+        </div>
+        <input class="input" type="text" placeholder="帳號" v-model="account" />
+        <br />
+        <input
+          class="input"
+          type="password"
+          placeholder="密碼"
+          v-model="password"
+        />
 
-      <div id="buttonDiv">
-        <button class="button bc_black c_white" id="forgetBN" @click="turnToForgetPassword">忘記密碼</button>
-        <button class="button bc_red c_white" id="loginBN" @click="login">登入</button>
+        <div id="buttonDiv">
+          <button
+            class="button bc_black c_white"
+            id="forgetBN"
+            @click="turnToForgetPassword"
+          >
+            忘記密碼
+          </button>
+          <button class="button bc_red c_white" id="loginBN" @click="login">
+            登入
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "login-layout",
-});
+// definePageMeta({
+//   layout: "login-layout",
+// });
 
 const account = ref("");
 const password = ref("");

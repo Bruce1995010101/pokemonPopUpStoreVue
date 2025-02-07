@@ -1,4 +1,5 @@
 <template>
+  <NuxtLayout name="default">
   <div>
     <div class="f_h4 c_white" id="title">總覽</div>
     <div id="tableDiv">
@@ -23,6 +24,7 @@
       </div>
     </div>
   </div>
+  </NuxtLayout>
 </template>
 
 <style scoped>

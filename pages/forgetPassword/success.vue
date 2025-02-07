@@ -1,24 +1,30 @@
 <template>
-  <div>
-    <img id="checkIcon" src="~/assets/check3.gif" alt="" />
-    <div class="f_h6 noto-sans-tc_r" id="loginForgetText">
-      已寄出密碼重設申請至IT人員
-    </div>
+  <NuxtLayout name="login-layout">
+    <div>
+      <img id="checkIcon" src="~/assets/check3.gif" alt="" />
+      <div class="f_h6 noto-sans-tc_r" id="loginForgetText">
+        已寄出密碼重設申請至IT人員
+      </div>
 
-    <div id="inputContent">
-      <div id="buttonDiv">
-        <button class="button bc_black c_white" id="backBNForget" @click="turnToLogin">
-          回登入頁面
-        </button>
+      <div id="inputContent">
+        <div id="buttonDiv">
+          <button
+            class="button bc_black c_white"
+            id="backBNForget"
+            @click="turnToLogin"
+          >
+            回登入頁面
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "login-layout",
-});
+// definePageMeta({
+//   layout: "login-layout",
+// });
 
 function turnToLogin() {
   window.location.href = "http://localhost:3000";

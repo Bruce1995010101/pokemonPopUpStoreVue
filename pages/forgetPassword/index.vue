@@ -1,50 +1,52 @@
 <template>
-  <div>
-    <div class="f_h6 noto-sans-tc_r" id="loginForgetText">忘記密碼</div>
+  <NuxtLayout name="login-layout">
     <div>
-      <div v-if="wrongLoginSignCom" id="loginWrong">查無此帳號</div>
-    </div>
-    <div id="inputContent">
-      <input
-        class="input"
-        type="text"
-        name=""
-        placeholder="請填入帳號"
-        v-model="account"
-      /><br />
-      <div id="buttonDiv">
-        <button
-          class="button bc_black c_white"
-          id="backBN"
-          @click="turnToLogin"
-        >
-          回上一頁
-        </button>
-        <button
-          v-if="!pendingSignCom"
-          class="button bc_red c_white"
-          id="sendBN"
-          @click="verifyAccountAndSentEmail"
-        >
-          重設申請
-        </button>
-        <button
-          v-else
-          class="button bc_red c_white"
-          id="sendBN"
-          @click="verifyAccountAndSentEmail"
-        >
-          <img class="loadingIcon" src="~/assets/loading.png" alt="" />
-        </button>
+      <div class="f_h6 noto-sans-tc_r" id="loginForgetText">忘記密碼</div>
+      <div>
+        <div v-if="wrongLoginSignCom" id="loginWrong">查無此帳號</div>
+      </div>
+      <div id="inputContent">
+        <input
+          class="input"
+          type="text"
+          name=""
+          placeholder="請填入帳號"
+          v-model="account"
+        /><br />
+        <div id="buttonDiv">
+          <button
+            class="button bc_black c_white"
+            id="backBN"
+            @click="turnToLogin"
+          >
+            回上一頁
+          </button>
+          <button
+            v-if="!pendingSignCom"
+            class="button bc_red c_white"
+            id="sendBN"
+            @click="verifyAccountAndSentEmail"
+          >
+            重設申請
+          </button>
+          <button
+            v-else
+            class="button bc_red c_white"
+            id="sendBN"
+            @click="verifyAccountAndSentEmail"
+          >
+            <img class="loadingIcon" src="~/assets/loading.png" alt="" />
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "login-layout",
-});
+// definePageMeta({
+//   layout: "login-layout",
+// });
 
 const account = ref("");
 let wrongLoginSign = ref(false);
@@ -168,7 +170,6 @@ function turnToLogin() {
 }
 #sendBN {
   float: right;
-  
 }
 .loadingIcon {
   width: 20px;

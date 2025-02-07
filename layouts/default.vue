@@ -14,10 +14,6 @@
             <div class="navTextDiv noto-sans-tc_r" id="navOrder">
               交易紀錄管理
             </div>
-            
-            <div class="navTextDiv noto-sans-tc_r" id="navOrder">
-              交易紀錄管理
-            </div>
             <div class="navTextDiv noto-sans-tc_r" id="navMenu">
               咖啡廳品項管理
             </div>
@@ -34,12 +30,37 @@
           </div>
         </div>
       </div>
+
       <div class="col-10">
-        <slot />
+        <slot ></slot>
+      </div>
+
+      <div v-if="tempShow.value" id="editContainer">
+        <div id="editBlack"></div>
+        <div id="createUI">
+          <slot name="create"></slot>
+        </div>
+        <div id="editUI">
+          <slot name="edit"></slot>
+        </div>
+        <div id="deleteUI">
+          <slot name="delete" ></slot>
+        </div>
+        <div id="removeUI">
+          <slot name="remove"></slot>
+        </div>
+        <div id="onUI">
+          <slot name="on"></slot>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+  let tempShow = ref(false)
+
+</script>
 
 <style scoped>
 .container{
