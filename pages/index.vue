@@ -66,6 +66,12 @@ function turnToForgetPassword() {
 }
 
 const wrongLoginSignCom = computed(() => wrongLoginSign.value);
+
+import { useCounterStore } from '~/stores/counter'
+
+const counterStore = useCounterStore()
+// console.log(counterStore.count);
+
 </script>
 
 
