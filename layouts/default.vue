@@ -1,77 +1,73 @@
 <template>
-  <div class="container">
-    <div class="bc_yellow_l2 row">
-      <div class="col-2" id="overAllContainer">
-        <div class="bc_yellow" id="nav">
-          <div id="logoDiv">
-            <img id="logo" src="/assets/logo.png" alt="" />
+  <div class="bc_yellow_l2 row">
+    <div class="col-2" id="overAllContainer">
+      <div class="bc_yellow" id="nav">
+        <div id="logoDiv">
+          <img id="logo" src="/assets/logo.png" alt="" />
+        </div>
+        <div class="navList">
+          <div class="navTextDiv noto-sans-tc_r" id="navOverAll">總覽</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navProduct">商品管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navOrder">
+            交易紀錄管理
           </div>
-          <div class="navList">
-            <div class="navTextDiv noto-sans-tc_r" id="navOverAll">總覽</div>
-            <div class="navTextDiv noto-sans-tc_r" id="navProduct">
-              商品管理
-            </div>
-            <div class="navTextDiv noto-sans-tc_r" id="navOrder">
-              交易紀錄管理
-            </div>
-            <div class="navTextDiv noto-sans-tc_r" id="navMenu">
-              咖啡廳品項管理
-            </div>
-            <div class="navTextDiv noto-sans-tc_r" id="navCafeBooking">
-              咖啡廳預定管理
-            </div>
-            <div class="navTextDiv noto-sans-tc_r" id="navStoreBooking">
-              快閃店預定管理
-            </div>
-            <div class="navTextDiv noto-sans-tc_r" id="navAccount">
-              帳號管理
-            </div>
-            <button id="logout">LOGOUT</button>
+          <div class="navTextDiv noto-sans-tc_r" id="navMenu">
+            咖啡廳品項管理
           </div>
+          <div class="navTextDiv noto-sans-tc_r" id="navCafeBooking">
+            咖啡廳預定管理
+          </div>
+          <div class="navTextDiv noto-sans-tc_r" id="navStoreBooking">
+            快閃店預定管理
+          </div>
+          <div class="navTextDiv noto-sans-tc_r" id="navAccount">帳號管理</div>
+          <button id="logout">LOGOUT</button>
         </div>
       </div>
+    </div>
 
-      <div class="col-10">
-        <slot ></slot>
+    <div class="col-10">
+      <slot></slot>
+    </div>
+
+    <div v-if="tempShow.value" id="editContainer">
+      <div id="editBlack"></div>
+      <div id="createUI">
+        <slot name="create"></slot>
       </div>
-
-      <div v-if="tempShow.value" id="editContainer">
-        <div id="editBlack"></div>
-        <div id="createUI">
-          <slot name="create"></slot>
-        </div>
-        <div id="editUI">
-          <slot name="edit"></slot>
-        </div>
-        <div id="deleteUI">
-          <slot name="delete" ></slot>
-        </div>
-        <div id="removeUI">
-          <slot name="remove"></slot>
-        </div>
-        <div id="onUI">
-          <slot name="on"></slot>
-        </div>
+      <div id="editUI">
+        <slot name="edit"></slot>
+      </div>
+      <div id="deleteUI">
+        <slot name="delete"></slot>
+      </div>
+      <div id="removeUI">
+        <slot name="remove"></slot>
+      </div>
+      <div id="onUI">
+        <slot name="on"></slot>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  let tempShow = ref(false)
-
+let tempShow = ref(false);
 </script>
 
 <style scoped>
-.container{
-    height: 100vh;
-
-}
 .row {
   display: grid;
   grid-template-columns: 16% 84%;
   height: 100%;
-      margin: 0%;
+  margin: 0%;
+}
+
+.col-2 {
+  height: 100vh;
+}
+.col-10 {
+  height: 100vh;
 }
 
 /* nav--------------------- */

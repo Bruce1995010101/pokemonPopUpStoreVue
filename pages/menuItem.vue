@@ -36,7 +36,10 @@
             <table-head :menuDataTitleList="menuDataTitleListTW"></table-head>
           </template>
           <template #tableBody>
-            <table-body :data="data"></table-body>
+            <table-body-menu
+              :panelActive="panelActiveValueCom"
+              :data="data"
+            ></table-body-menu>
           </template>
         </table-slot>
         <div class="addDiv">
@@ -87,20 +90,25 @@ const menuDataTitleListTW = [
 ];
 
 let panelActiveValue = ref("exist");
-function changePanal(panalName) {
+async function changePanal(panalName) {
   panelActiveValue.value = panalName;
+  refresh()
 }
 const panelActiveValueCom = computed(() => panelActiveValue.value);
 
 
-const result = await useAsyncData("menuItemData", () =>
-  $fetch("http://localhost:3000/api/menuItem")
-);
-console.log(result.data.value);
-const data = result.data.value
+const { data, pending, error, refresh } = useAsyncData("menuItemData", async () => {
+  let url = "http://localhost:3000/api/menuItem?";
+  url += panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
+  return await $fetch(url);
+});
 
 onMounted(async () => {
   if (process.client) {
+    //  console.log(resultR.value.data.value);
+    // console.log(data);
+    // console.log(panelActiveValueCom.value);
+    // console.log(url);
   }
 });
 </script>
@@ -119,7 +127,7 @@ onMounted(async () => {
 .tabs {
   margin: 30px;
   position: relative;
-  height: 80%;
+  height: 85%;
 }
 /* 有無資料標籤 */
 .bookmark {
@@ -143,41 +151,6 @@ onMounted(async () => {
 input:checked + .bookMarkLabel {
   background: var(--yellow);
   color: var(--black);
-}
-
-/* button------------------------------- */
-.remove {
-  background-image: url("../image/remove.png");
-  /* width: 70; */
-  background-position: center;
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-color: var(--red);
-}
-.on {
-  background-image: url("../image/upwhite.png");
-  /* width: 70; */
-  background-position: center;
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-color: var(--black-l1);
-}
-
-.edit {
-  background-image: url("../image/pencil-fillwhite.png");
-  background-position: center;
-  background-size: 70%;
-  background-repeat: no-repeat;
-  background-color: var(--yellow);
-}
-
-.delete {
-  background-image: url("../image/trash3-fillwhite.png");
-  /* width: 70; */
-  background-position: center;
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-color: var(--red);
 }
 
 /* 加號--------------------- */

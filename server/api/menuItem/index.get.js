@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
             // 執行查詢
             [data] = await conn.query(query, params);
-            console.log(data);
+            // console.log(data);
 
         } catch (err) {
             console.error("Error:", err);
