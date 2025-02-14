@@ -6,8 +6,8 @@
       <article class="tabs">
         <data-filter
           :currentPage="page"
-          :pageDataList="menuDataTitleList"
-          :pageDataListTW="menuDataTitleListTW"
+          :pageDataList="filterDataTitle"
+          @updateData="handleUpdateData"
         ></data-filter>
 
         <input
@@ -33,7 +33,7 @@
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
-            <table-head :menuDataTitleList="menuDataTitleListTW"></table-head>
+            <table-head :menuDataTitleList="menuDataTitle"></table-head>
           </template>
           <template #tableBody>
             <table-body-menu
@@ -61,7 +61,6 @@
 // const pagesData = usePagesData()
 // pagesData.changePage('menuItem')
 // console.log(pagesData.currentPage);
-import { useRoute } from "vue-router";
 
 const route = useRoute();
 // 取得最後一段路由
@@ -70,45 +69,53 @@ const page = computed(() => {
   return segments[segments.length - 1] || "";
 });
 
-const menuDataTitleList = [
-  "itemID",
-  "itemImg",
-  "itemName",
-  "itemType",
-  "itemMain",
-  "itemPrice",
-  "itemDescribe",
-];
-const menuDataTitleListTW = [
-  "餐點編號",
-  "餐點圖片",
-  "餐點名稱",
-  "餐點類型",
-  "首頁呈現品項",
-  "餐點價格",
-  "餐點描述",
-];
+const menuDataTitle = [
+  {eng : "itemID",cht : "餐點編號"},
+  {eng : "itemImg",cht : "餐點圖片"},
+  {eng : "itemName",cht : "餐點名稱"},
+  {eng : "itemType",cht : "餐點類型"},
+  {eng : "itemMain",cht : "首頁呈現品項"},
+  {eng : "itemPrice",cht : "餐點價格"},
+  {eng : "itemDescribe",cht : "餐點描述"},
+]
+const filterDataTitle = computed(() => menuDataTitle.filter((title) => title.cht !== '餐點圖片'))
 
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
   panelActiveValue.value = panalName;
-  refresh()
+  refresh();
 }
 const panelActiveValueCom = computed(() => panelActiveValue.value);
 
+let condition = ref({ condition: "", value: "" });
+function handleUpdateData(data) {
+  // console.log(data);
+  condition.value = data
+  refresh();
+}
 
-const { data, pending, error, refresh } = useAsyncData("menuItemData", async () => {
-  let url = "http://localhost:3000/api/menuItem?";
-  url += panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
-  return await $fetch(url);
-});
+const { data, pending, error, refresh } = useAsyncData(
+  "menuItemData",
+  async () => {
+    let url = "http://localhost:3000/api/menuItem?";
+    url += panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
+    if (condition.value.value !== "") {
+      url += "&";
+      url += condition.value.condition;
+      url += "=";
+      url += condition.value.value;
+    }
+    return await $fetch(url);
+  }
+);
+
 
 onMounted(async () => {
   if (process.client) {
     //  console.log(resultR.value.data.value);
     // console.log(data);
     // console.log(panelActiveValueCom.value);
-    // console.log(url);
+    // console.log(condition.value);
   }
 });
 </script>

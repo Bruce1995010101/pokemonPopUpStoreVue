@@ -2,7 +2,7 @@
   <thead>
     <tr class="bc_yellow">
       <th v-for="menuDataTitle in menuDataTitleList" :key="menuDataTitle">
-        <span>{{ menuDataTitle }}</span>
+        <span>{{ menuDataTitle.cht }}</span>
       </th>
       <th>
         <span>編輯</span>

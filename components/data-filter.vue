@@ -1,23 +1,28 @@
 <template>
   <div class="selectDiv">
-    <div v-if="currentPage === 'menuItem'" @change="change">
-      <select class="selectSomething" id="condition">
+    <div v-if="currentPage === 'menuItem'">
+      <select
+        class="selectSomething"
+        id="condition"
+        v-model="filterCondition"
+        @change="changeCondition(true)"
+      >
         <option
-          v-for="dataCol in pageDataListTW"
+          v-for="dataCol in pageDataList"
           :key="dataCol"
-          :value="dataCol"
+          :value="dataCol.eng"
           class="selectOption"
-          id="menuItemCol"
         >
-          {{ dataCol }}
+          {{ dataCol.cht }}
         </option>
       </select>
 
       <!-- change here -->
       <select
-        v-if="menuItemColComp === '餐點類型'"
+        v-if="filterConditionComp === 'itemType'"
         class="selectInput selectSomething"
-        id="conditionSelect1"
+        v-model="filterValue"
+        @change="changeCondition(false)"
       >
         <option value="" selected>不分類</option>
         <option value="飲品">飲品</option>
@@ -25,9 +30,10 @@
         <option value="甜點">甜點</option>
       </select>
       <select
-        v-else-if="menuItemColComp === '首頁呈現品項'"
+        v-else-if="filterConditionComp === 'itemMain'"
         class="selectInput selectSomething"
-        id="conditionSelect2"
+        v-model="filterValue"
+        @change="changeCondition(false)"
       >
         <option value="" selected>不分類</option>
         <option value="1">是</option>
@@ -37,8 +43,9 @@
         v-else
         class="selectInput"
         type="text"
-        id="conditionInput"
         placeholder="請輸入值"
+        v-model="filterValue"
+        @input="changeCondition(false)"
       />
     </div>
   </div>
@@ -48,14 +55,24 @@
 const props = defineProps({
   currentPage: String,
   pageDataList: Array,
-  pageDataListTW: Array,
 });
-const tempBool = ref(false);
-let menuItemCol = ref("");
-const menuItemColComp = computed(() => menuItemCol.value);
-function change() {
-  menuItemCol.value = document.getElementById("condition").value;
-  // console.log(menuItemCol.value);
+const emit = defineEmits(["updateData"])
+
+let filterCondition = ref('itemType');
+const filterConditionComp = computed(() => {
+  filterValue.value = ''
+  return filterCondition.value
+});
+const filterValue = ref("");
+function changeCondition(conditionChanged) {
+  if(conditionChanged){
+    filterValue.value = ''
+    emit("updateData", {condition : '', value : ''})
+    return
+  }
+  console.log(filterCondition.value);
+  console.log(filterValue.value);
+  emit("updateData", {condition : filterCondition.value, value : filterValue.value})
 }
 </script>
 
@@ -71,6 +88,7 @@ function change() {
 
 .selectSomething {
   width: 200px;
+  height: 20px;
   border-radius: 20px;
   border: 0cap;
   padding: 0px 10px;
@@ -78,6 +96,7 @@ function change() {
 
 .selectInput {
   width: 200px;
+  height: 20px;
   margin-left: 20px;
   border-radius: 20px;
   border: 0cap;
