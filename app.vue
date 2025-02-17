@@ -164,4 +164,8 @@ body {
 .bc_grey {
   background-color: var(--grey);
 }
+
+button{
+  cursor: pointer
+}
 </style>

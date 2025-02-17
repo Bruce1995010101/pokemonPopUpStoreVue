@@ -1,6 +1,6 @@
 <template>
   <div class="bc_yellow_l2 row">
-    <div class="col-2" id="overAllContainer">
+    <div class="col-2" >
       <div class="bc_yellow" id="nav">
         <div id="logoDiv">
           <img id="logo" src="/assets/logo.png" alt="" />
@@ -30,16 +30,13 @@
       <slot></slot>
     </div>
 
-    <div v-if="tempShow.value" id="editContainer">
-      <div id="editBlack"></div>
+    <div  id="editContainer">
+      <div id="editBlack" v-if="editBlack" @click="closeEditBlack"></div>
       <div id="createUI">
         <slot name="create"></slot>
       </div>
       <div id="editUI">
         <slot name="edit"></slot>
-      </div>
-      <div id="deleteUI">
-        <slot name="delete"></slot>
       </div>
       <div id="removeUI">
         <slot name="remove"></slot>
@@ -52,7 +49,13 @@
 </template>
 
 <script setup>
-let tempShow = ref(false);
+const props = defineProps({
+  editBlack : Boolean,
+});
+const emit = defineEmits(["closeEditBlack"])
+function closeEditBlack(){
+  emit("closeEditBlack")
+}
 </script>
 
 <style scoped>
@@ -124,5 +127,19 @@ let tempShow = ref(false);
   background-color: var(--black);
   border-radius: 30px;
   letter-spacing: 2px;
+}
+
+
+
+#editBlack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 50%);
+
+  z-index: 4;
+
 }
 </style>

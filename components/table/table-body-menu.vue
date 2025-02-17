@@ -24,7 +24,7 @@
       </td>
       <td>
         <button title="編輯資料" class="edit tableBn"></button>
-        <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn"></button>
+        <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI"></button>
         <button v-else title='改成有效資料' class='on tableBn'></button>
       </td>
     </tr>
@@ -36,6 +36,10 @@ const props = defineProps({
   data: Array,
   panelActive: String
 });
+const emit = defineEmits(["openRemoveUI"])
+function openRemoveUI(){
+  emit("openRemoveUI")
+}
 </script>
 
 

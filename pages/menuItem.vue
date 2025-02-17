@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="default">
+  <NuxtLayout name="default" :editBlack="editBlackCom" @closeEditBlack="closeAllEditUI">
     <template #default>
       <div class="f_h4 c_white" id="title">餐點管理</div>
 
@@ -39,18 +39,24 @@
             <table-body-menu
               :panelActive="panelActiveValueCom"
               :data="data"
+              @openRemoveUI="openRemoveUI"
             ></table-body-menu>
           </template>
         </table-slot>
         <div class="addDiv">
-          <button title="新增資料" class="add" onclick="add()"></button>
+          <button title="新增資料" class="add" @click="openAddDataUI"></button>
         </div>
       </article>
     </template>
 
     <template #create>
-      <div>
-        <h1>create</h1>
+      <div class="createEditUI" v-if="createUICom">
+        <ui-create-menu @closeUI="closeAllEditUI"></ui-create-menu>
+      </div>
+    </template>
+    <template #remove>
+      <div class="comfirmUI" v-if="removeUICom">
+        <ui-remove-menu @closeUI="closeAllEditUI"></ui-remove-menu>
       </div>
     </template>
   </NuxtLayout>
@@ -61,6 +67,7 @@
 // const pagesData = usePagesData()
 // pagesData.changePage('menuItem')
 // console.log(pagesData.currentPage);
+// import CreateUserInterface from '~/components/editUI/create-user-interface.vue';
 
 const route = useRoute();
 // 取得最後一段路由
@@ -108,6 +115,29 @@ const { data, pending, error, refresh } = useAsyncData(
     return await $fetch(url);
   }
 );
+//增刪修UI控制
+let editBlack = ref(false)
+const editBlackCom = computed( ()=> editBlack.value)
+function openEditBlack(){
+  editBlack.value = true
+}
+let createUI = ref(false)
+const createUICom = computed( ()=> createUI.value)
+let removeUI = ref(false)
+const removeUICom = computed( ()=> removeUI.value)
+function closeAllEditUI(){
+  editBlack.value = false
+  createUI.value = false
+  removeUI.value = false
+}
+function openAddDataUI(){
+  openEditBlack()
+  createUI.value = true
+}
+function openRemoveUI(){
+  openEditBlack()
+  removeUI.value = true
+}
 
 
 onMounted(async () => {
@@ -160,12 +190,12 @@ input:checked + .bookMarkLabel {
   color: var(--black);
 }
 
-/* 加號--------------------- */
+/* 加號 新增資料按鈕--------------------- */
 
 .addDiv {
   position: absolute;
   right: 20px;
-  bottom: 20px;
+  bottom: 50px;
   opacity: 0.6;
   transition: all 0.5s;
 }
@@ -173,7 +203,7 @@ input:checked + .bookMarkLabel {
   opacity: 1;
 }
 .add {
-  /* background-image: url("../image/plus-circle-fill.svg"); */
+  background-image: url("~/assets/plus-circle-fill.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -186,18 +216,7 @@ input:checked + .bookMarkLabel {
 }
 
 /* edit--------------------------- */
-#editContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 50%);
 
-  z-index: 3;
-
-  display: none;
-}
 #editBlack {
   position: absolute;
   top: 0;
@@ -211,13 +230,12 @@ input:checked + .bookMarkLabel {
   display: none;
 }
 
-#createUI {
+.createEditUI {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
-  height: 500px;
   background-color: var(--yellow);
   border-radius: 20px;
 
@@ -225,32 +243,15 @@ input:checked + .bookMarkLabel {
 
   overflow: auto;
 
-  display: none;
 }
 
-#editUI {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background-color: var(--yellow);
-  border-radius: 20px;
-
-  z-index: 5;
-
-  overflow: auto;
-
-  display: none;
-}
-#deleteUI {
+.comfirmUI {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 250px;
+  /* height: 200px; */
   background-color: var(--yellow);
   border-radius: 20px;
 
@@ -258,204 +259,8 @@ input:checked + .bookMarkLabel {
 
   overflow: auto;
 
-  display: none;
-}
-#removeUI {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 250px;
-  background-color: var(--yellow);
-  border-radius: 20px;
 
-  z-index: 5;
-
-  overflow: auto;
-
-  display: none;
-}
-#onUI {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 250px;
-  background-color: var(--yellow);
-  border-radius: 20px;
-
-  z-index: 5;
-
-  overflow: auto;
-
-  display: none;
 }
 
-.UITitle {
-  text-align: center;
-  margin: 40px 20px 30px 20px;
-}
-
-.UIInputDiv {
-  margin: 10px 70px;
-  text-align: left;
-}
-
-.UILittleDiv {
-  margin-top: 15px;
-}
-
-.UISpan {
-  height: 100%;
-  white-space: nowrap;
-  text-align: left;
-}
-
-.UIInput {
-  width: 100%;
-  border-radius: 20px;
-  border: 0cap;
-
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.selectOption {
-  /* width: 200px; */
-  border-radius: 20px;
-  border: 0cap;
-  padding: 0px 10px;
-}
-
-.UIBNDiv {
-  margin-top: 20px;
-  margin-bottom: 100px;
-}
-
-.UICancelBN {
-  width: 175px;
-  height: 30px;
-  border-radius: 20px;
-  background-color: var(--black);
-  border: 0cap;
-  float: left;
-}
-.UISubmitBN {
-  width: 175px;
-  height: 30px;
-  border-radius: 20px;
-  background-color: var(--red);
-  border: 0cap;
-  float: right;
-}
-.UIDiv {
-  margin: 80px 40px;
-}
-.UIText {
-  text-align: center;
-  font-size: var(--h6);
-}
-
-.createImg {
-  margin-top: 10px;
-  width: 250px;
-  border-radius: 20px;
-}
-.createImgBNDiv {
-  display: flex;
-  width: 100%;
-}
-.createImgBN {
-  font-weight: 400;
-  font-size: var(--p);
-  color: var(--white);
-  margin: auto;
-  /* margin-bottom: 10px; */
-  width: 40px;
-  border-radius: 60px;
-  border: 0cap;
-  background-color: var(--black-l2);
-
-  /* background-image: url(../image/plus-circle-fill.svg); */
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-/* delete */
-
-#deleteUIBnDiv {
-  margin-top: 40px;
-}
-
-#deleteUICancelBn {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--black);
-  color: var(--white);
-  float: left;
-}
-#deleteUISubmit {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--red);
-  color: var(--white);
-  float: right;
-}
-
-/* remove */
-
-#removeUIBnDiv {
-  margin-top: 40px;
-}
-
-#removeUICancelBn {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--black);
-  color: var(--white);
-  float: left;
-}
-#removeUISubmit {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--red);
-  color: var(--white);
-  float: right;
-}
-
-/* on */
-
-#onUIBnDiv {
-  margin-top: 40px;
-}
-
-#onUICancelBn {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--black);
-  color: var(--white);
-  float: left;
-}
-#onUISubmit {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--red);
-  color: var(--white);
-  float: right;
-}
 </style>
 
