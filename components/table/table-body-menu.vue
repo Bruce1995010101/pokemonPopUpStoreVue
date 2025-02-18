@@ -23,9 +23,9 @@
         {{ dataRow.itemDescribe }}
       </td>
       <td>
-        <button title="編輯資料" class="edit tableBn"></button>
+        <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
         <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI"></button>
-        <button v-else title='改成有效資料' class='on tableBn'></button>
+        <button v-else title='改成有效資料' class='on tableBn' @click="openOnUI"></button>
       </td>
     </tr>
   </tbody>
@@ -36,9 +36,18 @@ const props = defineProps({
   data: Array,
   panelActive: String
 });
-const emit = defineEmits(["openRemoveUI"])
+const UIData = inject("UIData");
+const emit = defineEmits(["openEditUI", "openRemoveUI","openOnUI"])
 function openRemoveUI(){
   emit("openRemoveUI")
+}
+function openOnUI(){
+  emit("openOnUI")
+}
+function openEditUI(data){
+  emit("openEditUI")
+  UIData.value.edit = data
+  // console.log(UIData.value.edit);
 }
 </script>
 

@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div class="UITitle f_h6 c_black">新增資料</div>
+    <div class="UITitle f_h6 c_black">修改資料</div>
     <div class="UIInputDiv f_p c_black">
       <div class="UILittleDiv row">
         <div class="UISpan">餐點狀況</div>
-        <div>
-          <select class="selectOption colValue">
+        <div >
+          <select
+            class="selectOption colValue"
+          >
             <option value="1">上架餐點</option>
             <option value="0">下架餐點</option>
           </select>
@@ -14,13 +16,13 @@
 
       <div class="UILittleDiv row">
         <div class="UISpan">餐點名稱</div>
-        <div>
+        <div  >
           <input class="UIInput colValue" type="text" />
         </div>
       </div>
       <div class="UILittleDiv row">
         <div class="UISpan">餐點類型</div>
-        <div>
+        <div  >
           <select class="selectOption colValue">
             <option value="飲品">飲品</option>
             <option value="主餐">主餐</option>
@@ -30,13 +32,16 @@
       </div>
       <div class="UILittleDiv row">
         <div class="UISpan">餐點描述</div>
-        <div>
-          <input class="UIInput colValue" type="text" />
+        <div  >
+          <input
+            class="UIInput colValue"
+            type="text"
+          />
         </div>
       </div>
       <div class="UILittleDiv row">
         <div class="UISpan">首頁呈現品項</div>
-        <div>
+        <div  >
           <select class="selectOption colValue">
             <option value="1">首頁呈現品項</option>
             <option value="0">非首頁呈現品項</option>
@@ -45,22 +50,27 @@
       </div>
       <div class="UILittleDiv row">
         <div class="UISpan">餐點價格</div>
-        <div>
-          <input class="UIInput colValue" type="number" />
+        <div  >
+          <input
+            class="UIInput colValue"
+            type="number"
+          />
         </div>
       </div>
 
       <div class="UILittleDiv row">
         <div class="UISpan">圖片連結</div>
-        <div>
+        <div  >
           <input
-            class="UIInput itemImgCreate colValue"
+            class="UIInput colValue"
             type="text"
             v-model="img"
           />
-          <img class="createImg" :src="imgCom" alt="" />
+          <img class="editImg" :src="imgCom" alt="" />
         </div>
       </div>
+
+      <input type="hidden" class="colValue">
 
       <div class="UIBNDiv">
         <button class="UICancelBN c_white" @click="closeUI">取消</button>
@@ -71,17 +81,45 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["closeUI"]);
-function closeUI() {
-  emit("closeUI");
+const emit = defineEmits(["closeUI"])
+function closeUI(){
+  emit("closeUI")
 }
 
 const img = ref("");
 const imgCom = computed(() => img.value);
 
-async function submit() {
+//取得資料呈現在UI上
+const UIData = inject("UIData");
+function updateData() {
+  const editData = UIData.value.edit
+  img.value = editData.itemImg;
+  const data = [
+    editData.menuExist,
+    editData.itemName,
+    editData.itemType,
+    editData.itemDescribe,
+    editData.itemMain,
+    editData.itemPrice,
+    editData.itemImg,
+    editData.itemID,
+  ];
   let list = document.querySelectorAll(".colValue");
-  let data = {
+  list.forEach((elem, index) => {
+    elem.value = data[index];
+  });
+}
+onMounted(async () => {
+  if (process.client) {
+    updateData();
+  }
+});
+
+//submit
+async function submit(){
+   let list = document.querySelectorAll(".colValue");
+    let data = {
+    itemID: list[7].value,
     menuExist: list[0].value,
     itemName: list[1].value,
     itemType: list[2].value,
@@ -90,45 +128,21 @@ async function submit() {
     itemPrice: list[5].value,
     itemImg: list[6].value,
   };
-  // console.log(data);
+  console.log(data);
   const result = await useAsyncData("menuItemDataPost", async () => {
     let url = "http://localhost:3000/api/menuItem";
     $fetch(url, {
-      method: "POST",
+      method: "PUT",
       body: data,
     });
   });
-  // console.log(result);
+  console.log(result);
   closeUI()
 }
-
-//測試用 先上資料
-function testAllCol() {
-  img.value =
-    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg";
-  const testData = [
-    0,
-    "寶可夢拿鐵",
-    "飲品",
-    "每一杯寶可夢拿鐵都充滿驚喜，選擇你的最愛，讓冒險從咖啡開始！",
-    0,
-    150,
-    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg",
-  ];
-  let list = document.querySelectorAll(".colValue");
-  list.forEach((elem, index) => {
-    elem.value = testData[index];
-  });
-}
-onMounted(async () => {
-  if (process.client) {
-    testAllCol();
-  }
-});
 </script>
 
-
 <style scoped>
+
 .row {
   display: grid;
   grid-template-columns: 25% 75%;
@@ -202,16 +216,16 @@ onMounted(async () => {
   font-size: var(--h6);
 }
 
-.createImg {
+.editImg {
   margin-top: 10px;
   width: 250px;
   border-radius: 20px;
 }
-.createImgBNDiv {
+.editImgBNDiv {
   display: flex;
   width: 100%;
 }
-.createImgBN {
+.editImgBN {
   font-weight: 400;
   font-size: var(--p);
   color: var(--white);

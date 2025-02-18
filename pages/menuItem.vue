@@ -39,7 +39,9 @@
             <table-body-menu
               :panelActive="panelActiveValueCom"
               :data="data"
+              @openEditUI="openEditUI"
               @openRemoveUI="openRemoveUI"
+              @openOnUI="openOnUI"
             ></table-body-menu>
           </template>
         </table-slot>
@@ -54,9 +56,19 @@
         <ui-create-menu @closeUI="closeAllEditUI"></ui-create-menu>
       </div>
     </template>
+    <template #edit>
+      <div class="createEditUI" v-if="editUICom">
+        <ui-edit-menu @closeUI="closeAllEditUI"></ui-edit-menu>
+      </div>
+    </template>
     <template #remove>
       <div class="comfirmUI" v-if="removeUICom">
         <ui-remove-menu @closeUI="closeAllEditUI"></ui-remove-menu>
+      </div>
+    </template>
+    <template #on>
+      <div class="comfirmUI" v-if="onUICom">
+        <ui-on-menu @closeUI="closeAllEditUI"></ui-on-menu>
       </div>
     </template>
   </NuxtLayout>
@@ -115,6 +127,9 @@ const { data, pending, error, refresh } = useAsyncData(
     return await $fetch(url);
   }
 );
+
+
+
 //增刪修UI控制
 let editBlack = ref(false)
 const editBlackCom = computed( ()=> editBlack.value)
@@ -123,31 +138,40 @@ function openEditBlack(){
 }
 let createUI = ref(false)
 const createUICom = computed( ()=> createUI.value)
+let editUI = ref(false)
+const editUICom = computed( ()=> editUI.value)
 let removeUI = ref(false)
 const removeUICom = computed( ()=> removeUI.value)
+let onUI = ref(false)
+const onUICom = computed( ()=> onUI.value)
 function closeAllEditUI(){
   editBlack.value = false
   createUI.value = false
+  editUI.value = false
   removeUI.value = false
+  onUI.value = false
+  refresh()
 }
+
+const UIData = ref({ edit: null, remove: null, on: null })
+provide("UIData", UIData);
 function openAddDataUI(){
   openEditBlack()
   createUI.value = true
+}
+function openEditUI(){
+  openEditBlack()
+  editUI.value = true
 }
 function openRemoveUI(){
   openEditBlack()
   removeUI.value = true
 }
+function openOnUI(){
+  openEditBlack()
+  onUI.value = true
+}
 
-
-onMounted(async () => {
-  if (process.client) {
-    //  console.log(resultR.value.data.value);
-    // console.log(data);
-    // console.log(panelActiveValueCom.value);
-    // console.log(condition.value);
-  }
-});
 </script>
 
 

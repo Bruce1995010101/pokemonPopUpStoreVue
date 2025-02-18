@@ -1,6 +1,6 @@
 <template>
   <div class="UIDiv">
-    <div class="UIText">確定使該品項下架？</div>
+    <div class="UIText">確定使該品項上架？</div>
     <div id="UIBnDiv">
       <button id="UICancelBn" @click="closeUI">取消</button>
       <button id="UISubmit">確定</button>
