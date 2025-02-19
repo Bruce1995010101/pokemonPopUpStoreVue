@@ -129,7 +129,7 @@ async function submit(){
     itemPrice: list[5].value,
     itemImg: list[6].value,
   };
-  console.log(data);
+  // console.log(data);
   const result = await useAsyncData("menuItemDataPost", async () => {
     let url = "http://localhost:3000/api/menuItem";
     $fetch(url, {
@@ -137,7 +137,7 @@ async function submit(){
       body: data,
     });
   });
-  console.log(result);
+  // console.log(result);
   refresh()
   closeUI()
 }

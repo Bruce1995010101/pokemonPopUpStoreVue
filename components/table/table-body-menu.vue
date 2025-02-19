@@ -24,8 +24,8 @@
       </td>
       <td>
         <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
-        <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI"></button>
-        <button v-else title='改成有效資料' class='on tableBn' @click="openOnUI"></button>
+        <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
+        <button v-else title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
       </td>
     </tr>
   </tbody>
@@ -38,17 +38,24 @@ const props = defineProps({
 });
 const UIData = inject("UIData");
 const emit = defineEmits(["openEditUI", "openRemoveUI","openOnUI"])
-function openRemoveUI(){
-  emit("openRemoveUI")
-}
-function openOnUI(){
-  emit("openOnUI")
-}
+
 function openEditUI(data){
   emit("openEditUI")
   UIData.value.edit = data
   // console.log(UIData.value.edit);
 }
+function openRemoveUI(data){
+  emit("openRemoveUI")
+  UIData.value.remove = data
+  console.log(UIData.value.remove);
+}
+function openOnUI(data){
+  emit("openOnUI")
+  UIData.value.on = data
+  // console.log(UIData.value.on);
+  
+}
+
 </script>
 
 

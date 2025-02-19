@@ -3,7 +3,7 @@
     <div class="UIText">確定使該品項下架？</div>
     <div id="UIBnDiv">
       <button id="UICancelBn" @click="closeUI">取消</button>
-      <button id="UISubmit">確定</button>
+      <button id="UISubmit" @click="removeData">確定</button>
     </div>
   </div>
 </template>
@@ -12,6 +12,29 @@
 const emit = defineEmits(["closeUI"])
 function closeUI(){
   emit("closeUI")
+}
+
+
+const refresh = inject("refreshData");
+const UIData = inject("UIData");
+async function removeData() {
+  const data = UIData.value.remove;
+  console.log(data);
+  const payload = {
+    itemID: data.itemID,
+    menuExist: 0,
+  };
+
+  const result = await useAsyncData("menuItemDataPost", async () => {
+    let url = "http://localhost:3000/api/menuItem";
+    $fetch(url, {
+      method: "PATCH",
+      body: payload,
+    });
+  });
+  console.log(result);
+  refresh()
+  closeUI()
 }
 </script>
 
