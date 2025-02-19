@@ -116,6 +116,7 @@ onMounted(async () => {
 });
 
 //submit
+const refresh = inject('refreshData')
 async function submit(){
    let list = document.querySelectorAll(".colValue");
     let data = {
@@ -137,6 +138,7 @@ async function submit(){
     });
   });
   console.log(result);
+  refresh()
   closeUI()
 }
 </script>

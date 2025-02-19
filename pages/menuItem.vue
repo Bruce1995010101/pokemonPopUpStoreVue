@@ -127,6 +127,7 @@ const { data, pending, error, refresh } = useAsyncData(
     return await $fetch(url);
   }
 );
+provide("refreshData", refresh);
 
 
 
