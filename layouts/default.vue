@@ -1,6 +1,6 @@
 <template>
   <div class="bc_yellow_l2 row">
-    <div class="col-2" >
+    <div class="col-2">
       <div class="bc_yellow" id="nav">
         <div id="logoDiv">
           <img id="logo" src="/assets/logo.png" alt="" />
@@ -30,8 +30,11 @@
       <slot></slot>
     </div>
 
-    <div  id="editContainer">
+    <div id="editContainer">
       <div id="editBlack" v-if="editBlack" @click="closeEditBlack"></div>
+      <div id="webStatusUI">
+        <slot name="webStatus"></slot>
+      </div>
       <div id="createUI">
         <slot name="create"></slot>
       </div>
@@ -50,11 +53,11 @@
 
 <script setup>
 const props = defineProps({
-  editBlack : Boolean,
+  editBlack: Boolean,
 });
-const emit = defineEmits(["closeEditBlack"])
-function closeEditBlack(){
-  emit("closeEditBlack")
+const emit = defineEmits(["closeEditBlack"]);
+function closeEditBlack() {
+  emit("closeEditBlack");
 }
 </script>
 
@@ -129,8 +132,6 @@ function closeEditBlack(){
   letter-spacing: 2px;
 }
 
-
-
 #editBlack {
   position: absolute;
   top: 0;
@@ -140,6 +141,5 @@ function closeEditBlack(){
   background-color: rgba(0, 0, 0, 50%);
 
   z-index: 4;
-
 }
 </style>

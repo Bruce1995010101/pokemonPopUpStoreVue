@@ -1,52 +1,125 @@
 <template>
-  <NuxtLayout name="default">
-  <div>
+  <NuxtLayout
+    name="default"
+    :editBlack="editBlackCom"
+    @closeEditBlack="closeAllEditUI"
+  >
     <div class="f_h4 c_white" id="title">總覽</div>
     <div id="tableDiv">
-      <table id="tabl">
-        <tbody class="noto-sans-tc_r c_black" id="overAlltbody"></tbody>
+      <table>
+        <tbody class="noto-sans-tc_r c_black">
+          <tr>
+            <td>
+              上線狀態：{{
+                webStatusResult.data.value[0].webStatus === 1 ? "上線中" : "維護中"
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>商品數量： {{ data[0].productNum }} 個</td>
+          </tr>
+          <tr>
+            <td>交易筆數： {{ data[1].orderNum }} 筆</td>
+          </tr>
+          <tr>
+            <td>交易金額： {{ data[2].amount }} 新台幣</td>
+          </tr>
+          <tr>
+            <td>咖啡廳預定總人數： {{ data[3].cafeBookingNum }} 人</td>
+          </tr>
+          <tr>
+            <td>快閃店預定總人數： {{ data[4].storeBookingNum }} 人</td>
+          </tr>
+        </tbody>
       </table>
       <div>
-        <button class="noto-sans-tc_r f_h6" id="webOnline">網站維護</button>
+        <button
+          class="noto-sans-tc_r f_h6"
+          id="webOnline"
+          @click="openWebStatusUI"
+        >
+          網站維護
+        </button>
       </div>
     </div>
 
-    <div id="editContainer">
-      <div id="editBlack"></div>
-      <div id="webStatusUI">
-        <div class="UIDiv">
-          <div class="UIText">確定改變網站狀態？</div>
-          <div id="webStatusBnDiv">
-            <button id="webStatusCancelBn">取消</button>
-            <button id="webStatusUISubmit">確定</button>
-          </div>
-        </div>
+    <template #webStatus>
+      <div class="webStatusUI" v-if="webStatusCom">
+        <ui-on-over-all
+          @closeUI="closeAllEditUI"
+          @changeWebStatus="changeWebStatus"
+        ></ui-on-over-all>
       </div>
-    </div>
-  </div>
+    </template>
   </NuxtLayout>
 </template>
 
+<script setup>
+const webStatus = ref(false);
+const webStatusCom = computed(() => webStatus.value);
+
+let editBlack = ref(false);
+const editBlackCom = computed(() => editBlack.value);
+function closeAllEditUI() {
+  editBlack.value = false;
+  webStatus.value = false;
+  webStatusResult.refresh()
+}
+function openEditBlack() {
+  editBlack.value = true;
+}
+function openWebStatusUI() {
+  openEditBlack();
+  webStatus.value = true;
+}
+
+const { data, pending, error, refresh } = useAsyncData(
+  "overAllData",
+  async () => {
+    let url = "http://localhost:3000/api/overAll";
+    return await $fetch(url);
+  }
+);
+const webStatusResult = useAsyncData("webStatus", async () => {
+  let url = "http://localhost:3000/api/webStatus";
+  return await $fetch(url);
+});
+
+function changeWebStatus() {
+  const changeWebStatusResult = useAsyncData("changeWebStatus", async () => {
+    let url = "http://localhost:3000/api/webStatus";
+    const payload = {
+      webStatus: webStatusResult.data.value[0].webStatus === 1 ? 0 : 1,
+    };
+    console.log(payload);
+    return await $fetch(url, {
+      method: "PATCH",
+      body: payload,
+    });
+    
+  });
+  
+  
+  webStatusResult.refresh()
+  closeAllEditUI()
+}
+
+onMounted(async () => {
+  if (process.client) {
+    console.log(data.value);
+    console.log(webStatusResult.data.value);
+  }
+});
+</script>
+
+
 <style scoped>
-#title{
-    margin: 30px ;
-    padding-left: 40px;
-    background-color: var(--black);
-    border-radius: 30px;
-    letter-spacing: 2px;
-}
-
-/* -------------------------------- */
-#overAllContainer {
-  /* display: flex; */
-  /* justify-self: center; */
-  height: 101vh;
-  /* position: relative; */
-}
-
-#navOverAll {
-  background-color: var(--red);
-  color: var(--white);
+#title {
+  margin: 30px;
+  padding-left: 40px;
+  background-color: var(--black);
+  border-radius: 30px;
+  letter-spacing: 2px;
 }
 
 #tableDiv {
@@ -75,77 +148,18 @@ td {
   border: 0cap;
 }
 
-#editContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 101vw;
-  height: 101vh;
-  background-color: rgba(0, 0, 0, 50%);
-
-  z-index: 3;
-
-  display: none;
-}
-
-#editBlack {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 103vw;
-  height: 103vh;
-  background-color: rgba(0, 0, 0, 50%);
-
-  z-index: 4;
-
-  display: none;
-}
-#webStatusUI {
+.webStatusUI {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 250px;
+  /* height: 200px; */
   background-color: var(--yellow);
   border-radius: 20px;
 
   z-index: 5;
 
   overflow: auto;
-
-  display: none;
-}
-.UIDiv {
-  margin: 80px 40px;
-}
-.UIText {
-  text-align: center;
-  font-size: var(--h6);
-}
-
-/* delete */
-
-#webStatusBnDiv {
-  margin-top: 40px;
-}
-
-#webStatusCancelBn {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--black);
-  color: var(--white);
-  float: left;
-}
-#webStatusUISubmit {
-  width: 100px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0cap;
-  background-color: var(--red);
-  color: var(--white);
-  float: right;
 }
 </style>

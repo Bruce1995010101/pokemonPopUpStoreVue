@@ -1,7 +1,7 @@
 import conn from "../../sql";
 
 export default defineEventHandler(async (event) => {
-    console.log(event.node.req);
+    // console.log(event.node.req);
     let data = '沒撈到';
 
     try {
