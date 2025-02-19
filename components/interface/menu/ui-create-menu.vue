@@ -79,6 +79,7 @@ function closeUI() {
 const img = ref("");
 const imgCom = computed(() => img.value);
 
+const refresh = inject('refreshData')
 async function submit() {
   let list = document.querySelectorAll(".colValue");
   let data = {
@@ -99,6 +100,7 @@ async function submit() {
     });
   });
   // console.log(result);
+  refresh()
   closeUI()
 }
 

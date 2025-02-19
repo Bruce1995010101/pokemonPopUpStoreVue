@@ -110,7 +110,6 @@ let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
   condition.value = data
-  refresh();
 }
 
 const { data, pending, error, refresh } = useAsyncData(
