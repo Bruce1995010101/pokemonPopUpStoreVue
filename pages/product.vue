@@ -5,7 +5,7 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
-      <div class="f_h4 c_white" id="title">餐點管理</div>
+      <div class="f_h4 c_white" id="title">商品管理</div>
 
       <article class="tabs">
         <data-filter
@@ -88,6 +88,7 @@
 // const pagesData = usePagesData()
 // pagesData.changePage('menuItem')
 // console.log(pagesData.currentPage);
+// import CreateUserInterface from '~/components/editUI/create-user-interface.vue';
 
 const route = useRoute();
 // 取得最後一段路由
