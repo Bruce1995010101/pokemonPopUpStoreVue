@@ -139,6 +139,7 @@ async function submit(){
   });
   // console.log(result);
   refresh()
+  refresh()
   closeUI()
 }
 </script>

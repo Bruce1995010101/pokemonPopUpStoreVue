@@ -11,7 +11,7 @@
           <tr>
             <td>
               上線狀態：{{
-                webStatusResult.data.value[0].webStatus === 1 ? "上線中" : "維護中"
+                webStatusResultDataCom === 1 ? "上線中" : "維護中"
               }}
             </td>
           </tr>
@@ -44,7 +44,7 @@
     </div>
 
     <template #webStatus>
-      <div class="webStatusUI" v-if="webStatusCom">
+      <div class="webStatusUI" v-if="webStatusUICom">
         <ui-on-over-all
           @closeUI="closeAllEditUI"
           @changeWebStatus="changeWebStatus"
@@ -55,22 +55,21 @@
 </template>
 
 <script setup>
-const webStatus = ref(false);
-const webStatusCom = computed(() => webStatus.value);
+const webStatusUI = ref(false);
+const webStatusUICom = computed(() => webStatusUI.value);
 
 let editBlack = ref(false);
 const editBlackCom = computed(() => editBlack.value);
 function closeAllEditUI() {
   editBlack.value = false;
-  webStatus.value = false;
-  webStatusResult.refresh()
+  webStatusUI.value = false;
 }
 function openEditBlack() {
   editBlack.value = true;
 }
 function openWebStatusUI() {
   openEditBlack();
-  webStatus.value = true;
+  webStatusUI.value = true;
 }
 
 const { data, pending, error, refresh } = useAsyncData(
@@ -80,12 +79,15 @@ const { data, pending, error, refresh } = useAsyncData(
     return await $fetch(url);
   }
 );
-const webStatusResult = useAsyncData("webStatus", async () => {
+const webStatusResult = await useAsyncData("webStatus", async () => {
   let url = "http://localhost:3000/api/webStatus";
   return await $fetch(url);
 });
 
-function changeWebStatus() {
+const webStatusResultDataCom = computed(()=>webStatusResult.data.value[0].webStatus)
+
+
+async function changeWebStatus() {
   const changeWebStatusResult = useAsyncData("changeWebStatus", async () => {
     let url = "http://localhost:3000/api/webStatus";
     const payload = {
@@ -100,14 +102,16 @@ function changeWebStatus() {
   });
   
   
-  webStatusResult.refresh()
+  await webStatusResult.refresh()
+  await webStatusResult.refresh()
+  
   closeAllEditUI()
 }
 
 onMounted(async () => {
   if (process.client) {
-    console.log(data.value);
-    console.log(webStatusResult.data.value);
+    // console.log(data.value);
+    // console.log(webStatusResult.data.value);
   }
 });
 </script>

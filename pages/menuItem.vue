@@ -150,7 +150,7 @@ function closeAllEditUI(){
   editUI.value = false
   removeUI.value = false
   onUI.value = false
-  refresh()
+  // refresh()
 }
 
 const UIData = ref({ edit: null, remove: null, on: null })
