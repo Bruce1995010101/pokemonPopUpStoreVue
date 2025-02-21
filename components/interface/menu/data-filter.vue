@@ -17,7 +17,6 @@
         </option>
       </select>
 
-      <!-- change here -->
       <select
         v-if="filterConditionComp === 'itemType'"
         class="selectInput selectSomething"

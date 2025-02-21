@@ -1,8 +1,8 @@
 <template>
   <thead>
     <tr class="bc_yellow">
-      <th v-for="menuDataTitle in menuDataTitleList" :key="menuDataTitle">
-        <span>{{ menuDataTitle.cht }}</span>
+      <th v-for="dataTitle in dataTitleList" :key="dataTitle" :class="{textCenter: dataTitle.style.align==='center'}">
+        <span>{{ dataTitle.title.cht }}</span>
       </th>
       <th>
         <span>編輯</span>
@@ -13,7 +13,8 @@
 
 <script setup>
 const props = defineProps({
-  menuDataTitleList: Array,
+  dataTitleList: Array,
+  currentPage: String,
 });
 </script>
 
@@ -34,10 +35,7 @@ th:first-of-type {
   width: 50px;
 }
 
-th:first-of-type,
-th:nth-of-type(2),
-th:nth-last-of-type(4),
-th:last-of-type {
+.textCenter{
   text-align: center;
 }
 th:last-of-type{

@@ -5,14 +5,15 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
+      <!-- 改這 -->
       <div class="f_h4 c_white" id="title">餐點管理</div>
 
       <article class="tabs">
-        <data-filter
+        <data-filter-all
           :currentPage="page"
-          :pageDataList="filterDataTitle"
+          :pageDataList="dataList"
           @updateData="handleUpdateData"
-        ></data-filter>
+        ></data-filter-all>
 
         <input
           class="bookmark"
@@ -23,6 +24,7 @@
           value="exist"
           @change="changePanal('exist')"
         />
+        <!-- 改這 -->
         <label class="bookMarkLabel" for="one">上架餐點</label>
 
         <input
@@ -33,20 +35,26 @@
           value="noExist"
           @change="changePanal('noExist')"
         />
+        <!-- 改這 -->
         <label class="bookMarkLabel" for="two">下架餐點</label>
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
-            <table-head :menuDataTitleList="menuDataTitle"></table-head>
+            <table-head
+              :currentPage="page"
+              :dataTitleList="tableDataTitle"
+            ></table-head>
           </template>
           <template #tableBody>
-            <table-body-menu
+            <table-body
+              :currentPage="page"
               :panelActive="panelActiveValueCom"
+              :dataTitleList="tableDataTitle"
               :data="data"
               @openEditUI="openEditUI"
               @openRemoveUI="openRemoveUI"
               @openOnUI="openOnUI"
-            ></table-body-menu>
+            ></table-body>
           </template>
         </table-slot>
         <div class="addDiv">
@@ -59,7 +67,8 @@
       <div class="createEditUI" v-if="createUICom">
         <!-- <ui-create-menu @closeUI="closeAllEditUI"></ui-create-menu> -->
         <ui-create
-          :dataTitleUI="menuDataTitleUI"
+          :currentPage="page"
+          :dataTitleUI="dataList"
           @closeUI="closeAllEditUI"
           @createData="createData"
         ></ui-create>
@@ -67,84 +76,158 @@
     </template>
     <template #edit>
       <div class="createEditUI" v-if="editUICom">
-        <ui-edit :dataTitleUI="menuDataTitleUI" @closeUI="closeAllEditUI" @editData="editData"></ui-edit>
+        <ui-edit
+          :currentPage="page"
+          :dataTitleUI="dataList"
+          @closeUI="closeAllEditUI"
+          @editData="editData"
+        ></ui-edit>
       </div>
     </template>
     <template #remove>
       <div class="comfirmUI" v-if="removeUICom">
-        <ui-remove :dataUI='removeUIText' @closeUI="closeAllEditUI" @removeData="removeData"></ui-remove>
+        <ui-remove
+          :currentPage="page"
+          :dataUI="removeUIText"
+          @closeUI="closeAllEditUI"
+          @removeData="removeData"
+        ></ui-remove>
       </div>
     </template>
     <template #on>
       <div class="comfirmUI" v-if="onUICom">
-        <ui-on :dataUI='removeUIText' @closeUI="closeAllEditUI" @onData="onData"></ui-on>
+        <ui-on
+          :currentPage="page"
+          :dataUI="removeUIText"
+          @closeUI="closeAllEditUI"
+          @onData="onData"
+        ></ui-on>
       </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup>
-// import { usePagesData } from '~/stores/pagesData'
-// const pagesData = usePagesData()
-// pagesData.changePage('menuItem')
-// console.log(pagesData.currentPage);
+import { usePagesData } from "~/stores/pagesData";
+const pagesData = usePagesData();
 
 const route = useRoute();
+const path = ref(route.path);
 // 取得最後一段路由
 const page = computed(() => {
-  const segments = route.path.split("/").filter(Boolean);
+  const segments = path.value.split("/");
+  // console.log(segments[segments.length - 1] || "");
+
   return segments[segments.length - 1] || "";
 });
 
-const menuDataTitle = [
-  { eng: "itemID", cht: "餐點編號" },
-  { eng: "itemImg", cht: "餐點圖片" },
-  { eng: "itemName", cht: "餐點名稱" },
-  { eng: "itemType", cht: "餐點類型" },
-  { eng: "itemMain", cht: "首頁呈現品項" },
-  { eng: "itemPrice", cht: "餐點價格" },
-  { eng: "itemDescribe", cht: "餐點描述" },
+onMounted(async () => {
+  if (process.client) {
+    pagesData.changePage(page.value);
+    // console.log(pagesData.currentPage);
+  }
+});
+
+//改這
+const tableDataTitle = [
+  {
+    title: { eng: "itemID", cht: "餐點編號" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "itemImg", cht: "餐點圖片" },
+    type: "image",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "itemName", cht: "餐點名稱" },
+    type: "string",
+    style: { align: "left" },
+  },
+  {
+    title: { eng: "itemType", cht: "餐點類型" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "itemMain", cht: "首頁呈現品項" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "itemPrice", cht: "餐點價格" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "itemDescribe", cht: "餐點描述" },
+    type: "string",
+    style: { align: "left" },
+  },
 ];
-const filterDataTitle = computed(() =>
-  menuDataTitle.filter((title) => title.cht !== "餐點圖片")
-);
-const menuDataTitleUI = [
+const dataList = [
+  {
+    type: "inputText",
+    title: { eng: "itemID", cht: "餐點編號" },
+    display: { filter: true, UI: false, table: true },
+  },
   {
     type: "select",
-    title: "餐點狀況",
+    title: { eng: "menuExist", cht: "餐點狀況" },
     option: [
       { value: 1, text: "上架餐點" },
       { value: 0, text: "下架餐點" },
     ],
+    display: { filter: false, UI: true, table: false },
   },
-  { type: "inputText", title: "餐點名稱" },
+  {
+    type: "inputText",
+    title: { eng: "itemName", cht: "餐點名稱" },
+    display: { filter: true, UI: true, table: true },
+  },
   {
     type: "select",
-    title: "餐點類型",
+    title: { eng: "itemType", cht: "餐點類型" },
     option: [
       { value: "飲品", text: "飲品" },
       { value: "主餐", text: "主餐" },
       { value: "甜點", text: "甜點" },
     ],
+    display: { filter: true, UI: true, table: true },
   },
-  { type: "inputText", title: "餐點描述" },
+  {
+    type: "inputText",
+    title: { eng: "itemDescribe", cht: "餐點描述" },
+    display: { filter: true, UI: true, table: true },
+  },
   {
     type: "select",
-    title: "首頁呈現品項",
+    title: { eng: "itemMain", cht: "首頁呈現品項" },
     option: [
       { value: 1, text: "首頁呈現品項" },
       { value: 0, text: "非首頁呈現品項" },
     ],
+    display: { filter: true, UI: true, table: true },
   },
-  { type: "inputNumber", title: "餐點價格" },
-  { type: "inputImgSingle", title: "圖片連結" },
+  {
+    type: "inputNumber",
+    title: { eng: "itemPrice", cht: "餐點價格" },
+    display: { filter: true, UI: true, table: true },
+  },
+  {
+    type: "inputImgSingle",
+    title: { eng: "itemImg", cht: "餐點圖片" },
+    display: { filter: false, UI: true, table: true },
+  },
 ];
+
 const removeUIText = {
-  titleText: '確定使該品項下架？'
-}
+  titleText: "確定使該品項下架？",
+};
 const onUIText = {
-  titleText: '確定使該品項上架？'
-}
+  titleText: "確定使該品項上架？",
+};
 
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
@@ -157,12 +240,15 @@ let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
   condition.value = data;
+  refresh();
 }
 
 const { data, pending, error, refresh } = useAsyncData(
+  //改這
   "menuItemData",
   async () => {
     let url = "http://localhost:3000/api/menuItem?";
+    //改這
     url +=
       panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
     if (condition.value.value !== "") {
@@ -218,6 +304,7 @@ function openOnUI() {
 }
 
 //編輯data
+//改這
 async function createData(data) {
   const result = await useAsyncData("menuItemDataCreate", async () => {
     let url = "http://localhost:3000/api/menuItem";
@@ -240,8 +327,8 @@ async function editData(data) {
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
 async function removeData(data) {
@@ -253,12 +340,11 @@ async function removeData(data) {
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
 async function onData(data) {
-
   const result = await useAsyncData("menuItemDataOn", async () => {
     let url = "http://localhost:3000/api/menuItem";
     $fetch(url, {
@@ -267,11 +353,10 @@ async function onData(data) {
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
-
 </script>
 
 

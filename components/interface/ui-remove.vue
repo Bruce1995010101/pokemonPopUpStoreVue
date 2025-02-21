@@ -11,6 +11,7 @@
 <script setup>
 const props = defineProps({
   dataUI: Object,
+  currentPage: String,
 });
 const emit = defineEmits(["closeUI", "removeData"])
 function closeUI(){

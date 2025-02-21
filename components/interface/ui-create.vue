@@ -7,8 +7,9 @@
         v-for="dataTitle in dataTitleUI"
         :key="dataTitle"
       >
-        <div v-if="dataTitle.type === 'select'" class="row">
-          <div class="UISpan">{{ dataTitle.title }}</div>
+        <div style="display: none;" v-if="!dataTitle.display.UI"></div>
+        <div v-else-if="dataTitle.type === 'select'" class="row">
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
             <select class="selectOption colValue">
               <option
@@ -23,21 +24,21 @@
         </div>
 
         <div v-else-if="dataTitle.type === 'inputText'" class="row">
-          <div class="UISpan">{{ dataTitle.title }}</div>
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
             <input class="UIInput colValue" type="text" />
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputNumber'" class="row">
-          <div class="UISpan">{{ dataTitle.title }}</div>
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
             <input class="UIInput colValue" type="number" />
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputImgSingle'" class="row">
-          <div class="UISpan">{{ dataTitle.title }}</div>
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
             <input
               class="UIInput itemImgCreate colValue"
@@ -48,7 +49,7 @@
           </div>
         </div>
 
-        <div v-else >[{{ dataTitle.title }}] 欄位沒出來</div>
+        <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
 
       <div class="UIBNDiv">
@@ -62,6 +63,7 @@
 <script setup>
 const props = defineProps({
   dataTitleUI: Array,
+  currentPage: String,
 });
 const emit = defineEmits(["closeUI", "createData"]);
 function closeUI() {
@@ -84,7 +86,7 @@ function submit() {
   };
 
   // console.log(data);
-  emit("createData",data)
+  emit("createData", data);
 }
 
 //測試用 先上資料
