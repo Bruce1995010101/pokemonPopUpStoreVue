@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">餐點管理</div>
+      <div class="f_h4 c_white" id="title">咖啡廳品項管理</div>
 
       <article class="tabs">
         <data-filter-all
