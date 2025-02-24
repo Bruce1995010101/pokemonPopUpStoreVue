@@ -7,7 +7,7 @@
       @change="changeCondition(true)"
     >
       <option
-        v-for="dataCol in pageDataList"
+        v-for="dataCol in dataList"
         :key="dataCol"
         :value="dataCol.title.eng"
         class="selectOption"
@@ -17,7 +17,7 @@
         {{ dataCol.title.cht }}
       </option>
     </select>
-    <div v-for="dataCol in pageDataList" :key="dataCol">
+    <div v-for="dataCol in dataList" :key="dataCol">
       <select
         v-if="filterConditionComp === dataCol.title.eng & dataCol.type === 'select'"
         class="selectInput selectSomething"
@@ -44,7 +44,7 @@
 <script setup>
 const props = defineProps({
   currentPage: String,
-  pageDataList: Array,
+  dataList: Array,
 });
 const emit = defineEmits(["updateData"]);
 

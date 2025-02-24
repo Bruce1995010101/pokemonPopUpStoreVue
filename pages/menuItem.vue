@@ -11,7 +11,7 @@
       <article class="tabs">
         <data-filter-all
           :currentPage="page"
-          :pageDataList="dataList"
+          :dataList="dataList"
           @updateData="handleUpdateData"
         ></data-filter-all>
 
