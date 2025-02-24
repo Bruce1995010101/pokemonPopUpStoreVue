@@ -170,7 +170,7 @@ const dataList = [
   {
     type: "inputText",
     title: { eng: "itemID", cht: "餐點編號" },
-    display: { filter: true, UI: false, table: true },
+    display: { filter: true, UICreate: false, UIEdit: false, table: true },
   },
   {
     type: "select",
@@ -179,12 +179,12 @@ const dataList = [
       { value: 1, text: "上架餐點" },
       { value: 0, text: "下架餐點" },
     ],
-    display: { filter: false, UI: true, table: false },
+    display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
     title: { eng: "itemName", cht: "餐點名稱" },
-    display: { filter: true, UI: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
     type: "select",
@@ -194,12 +194,12 @@ const dataList = [
       { value: "主餐", text: "主餐" },
       { value: "甜點", text: "甜點" },
     ],
-    display: { filter: true, UI: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
     type: "inputText",
     title: { eng: "itemDescribe", cht: "餐點描述" },
-    display: { filter: true, UI: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
     type: "select",
@@ -208,17 +208,17 @@ const dataList = [
       { value: 1, text: "首頁呈現品項" },
       { value: 0, text: "非首頁呈現品項" },
     ],
-    display: { filter: true, UI: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
     type: "inputNumber",
     title: { eng: "itemPrice", cht: "餐點價格" },
-    display: { filter: true, UI: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
     type: "inputImgSingle",
     title: { eng: "itemImg", cht: "餐點圖片" },
-    display: { filter: false, UI: true, table: true },
+    display: { filter: false, UICreate: true, UIEdit: true, table: true },
   },
 ];
 
