@@ -4,7 +4,7 @@
       <th v-for="dataTitle in dataTitleList" :key="dataTitle" :class="{textCenter: dataTitle.style.align==='center'}">
         <span>{{ dataTitle.title.cht }}</span>
       </th>
-      <th>
+      <th class="textCenter">
         <span>編輯</span>
       </th>
     </tr>

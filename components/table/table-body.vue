@@ -8,7 +8,7 @@
         <span v-else-if="colTitle.type === 'string' || colTitle.type === 'number'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
         <img v-else-if="colTitle.type === 'image'" :src="dataRow[`${colTitle.title.eng}`]" :alt="dataRow[`${colTitle.title.eng}`]" />
       </td>
-      <td>
+      <td class="textCenter">
         <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
         <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
         <button v-else title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
