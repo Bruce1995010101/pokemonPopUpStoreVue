@@ -98,7 +98,7 @@
       <div class="comfirmUI" v-if="onUICom">
         <ui-on
           :currentPage="page"
-          :dataUI="removeUIText"
+          :dataUI="onUIText"
           @closeUI="closeAllEditUI"
           @onData="onData"
         ></ui-on>
