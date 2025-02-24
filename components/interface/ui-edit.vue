@@ -7,7 +7,7 @@
         v-for="dataTitle in dataTitleUI"
         :key="dataTitle"
       >
-        <div style="display: none;" v-if="!dataTitle.display.UI"></div>
+        <div v-if="!dataTitle.display.UI"></div>
         <div v-else-if="dataTitle.type === 'select'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
