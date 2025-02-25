@@ -80,16 +80,33 @@ const UIData = inject("UIData");
 function updateData() {
   const editData = UIData.value.edit
   img.value = editData.itemImg;
-  const data = [
-    editData.menuExist,
-    editData.itemName,
-    editData.itemType,
-    editData.itemDescribe,
-    editData.itemMain,
-    editData.itemPrice,
-    editData.itemImg,
-    editData.itemID,
-  ];
+  let data = null
+  console.log(props.currentPage);
+  if(props.currentPage === 'menuitem'){
+    data = [
+      editData.menuExist,
+      editData.itemName,
+      editData.itemType,
+      editData.itemDescribe,
+      editData.itemMain,
+      editData.itemPrice,
+      editData.itemImg,
+      editData.itemID,
+    ];
+  }else if(props.currentPage === 'product'){
+    data = [
+      editData.productExist,
+      editData.productName,
+      editData.productType,
+      editData.productDescribe,
+      editData.productPrice,
+      editData.productInStock,
+      editData.storeOnly,
+      editData.productMain,
+      editData.productImg,
+      editData.itemID,
+    ];
+  }
   let list = document.querySelectorAll(".colValue");
   list.forEach((elem, index) => {
     elem.value = data[index];

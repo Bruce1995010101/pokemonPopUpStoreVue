@@ -6,21 +6,13 @@
           <img id="logo" src="/assets/logo.png" alt="" />
         </div>
         <div class="navList">
-          <div class="navTextDiv noto-sans-tc_r" id="navOverAll">總覽</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navProduct">商品管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navOrder">
-            交易紀錄管理
-          </div>
-          <div class="navTextDiv noto-sans-tc_r" id="navMenu">
-            咖啡廳品項管理
-          </div>
-          <div class="navTextDiv noto-sans-tc_r" id="navCafeBooking">
-            咖啡廳預定管理
-          </div>
-          <div class="navTextDiv noto-sans-tc_r" id="navStoreBooking">
-            快閃店預定管理
-          </div>
-          <div class="navTextDiv noto-sans-tc_r" id="navAccount">帳號管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navOverAll" @click="turnToOverAllPage">總覽</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navProduct" @click="turnToProductPage">商品管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navOrder" @click="turnToOrderListPage">交易紀錄管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navMenu" @click="turnToMenuItemPage">咖啡廳品項管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navCafeBooking" @click="turnToCafeBookingPage">咖啡廳預定管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navStoreBooking" @click="turnToStoreBookingPage">快閃店預定管理</div>
+          <div class="navTextDiv noto-sans-tc_r" id="navAccount" @click="turnToAccountPage">帳號管理</div>
           <button id="logout">LOGOUT</button>
         </div>
       </div>
@@ -58,6 +50,28 @@ const props = defineProps({
 const emit = defineEmits(["closeEditBlack"]);
 function closeEditBlack() {
   emit("closeEditBlack");
+}
+
+function turnToOverAllPage(){
+  window.location.href = "http://localhost:3000/overAll"
+}
+function turnToProductPage(){
+  window.location.href = "http://localhost:3000/product"
+}
+function turnToOrderListPage(){
+  window.location.href = "http://localhost:3000/orderlist"
+}
+function turnToMenuItemPage(){
+  window.location.href = "http://localhost:3000/menuitem"
+}
+function turnToCafeBookingPage(){
+  window.location.href = "http://localhost:3000/cafebooking"
+}
+function turnToStoreBookingPage(){
+  window.location.href = "http://localhost:3000/storebooking"
+}
+function turnToAccountPage(){
+  window.location.href = "http://localhost:3000/Account"
 }
 </script>
 

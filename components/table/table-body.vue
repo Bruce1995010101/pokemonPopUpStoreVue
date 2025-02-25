@@ -5,6 +5,9 @@
 
         <span v-if="colTitle.title.eng === 'itemMain' && currentPage === 'menuItem'">{{ dataRow[`${colTitle.title.eng}`] ? "首頁呈現品項" : "非首頁呈現品項" }}</span>
 
+        <span v-else-if="colTitle.title.eng === 'storeOnly' && currentPage === 'product'">{{ dataRow[`${colTitle.title.eng}`] ? "V" : "X" }}</span>
+        <span v-else-if="colTitle.title.eng === 'productMain' && currentPage === 'product'">{{ dataRow[`${colTitle.title.eng}`] ? "首頁呈現品項" : "非首頁呈現品項" }}</span>
+
         <span v-else-if="colTitle.type === 'string' || colTitle.type === 'number'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
         <img v-else-if="colTitle.type === 'image'" :src="dataRow[`${colTitle.title.eng}`]" :alt="dataRow[`${colTitle.title.eng}`]" />
       </td>

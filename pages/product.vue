@@ -5,14 +5,16 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
+      <!-- 改這 -->
       <div class="f_h4 c_white" id="title">商品管理</div>
 
       <article class="tabs">
-        <data-filter
+        <data-filter-all
           :currentPage="page"
-          :pageDataList="filterDataTitle"
+          :dataList="dataList"
+          :defaultSelected="defaultSelected"
           @updateData="handleUpdateData"
-        ></data-filter>
+        ></data-filter-all>
 
         <input
           class="bookmark"
@@ -23,7 +25,8 @@
           value="exist"
           @change="changePanal('exist')"
         />
-        <label class="bookMarkLabel" for="one">上架餐點</label>
+        <!-- 改這 -->
+        <label class="bookMarkLabel" for="one">上架商品</label>
 
         <input
           class="bookmark"
@@ -33,20 +36,26 @@
           value="noExist"
           @change="changePanal('noExist')"
         />
-        <label class="bookMarkLabel" for="two">下架餐點</label>
+        <!-- 改這 -->
+        <label class="bookMarkLabel" for="two">下架商品</label>
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
-            <table-head :menuDataTitleList="menuDataTitle"></table-head>
+            <table-head
+              :currentPage="page"
+              :dataTitleList="tableDataTitle"
+            ></table-head>
           </template>
           <template #tableBody>
-            <table-body-menu
+            <table-body
+              :currentPage="page"
               :panelActive="panelActiveValueCom"
+              :dataTitleList="tableDataTitle"
               :data="data"
               @openEditUI="openEditUI"
               @openRemoveUI="openRemoveUI"
               @openOnUI="openOnUI"
-            ></table-body-menu>
+            ></table-body>
           </template>
         </table-slot>
         <div class="addDiv">
@@ -57,9 +66,9 @@
 
     <template #create>
       <div class="createEditUI" v-if="createUICom">
-        <!-- <ui-create-menu @closeUI="closeAllEditUI"></ui-create-menu> -->
         <ui-create
-          :dataTitleUI="menuDataTitleUI"
+          :currentPage="page"
+          :dataTitleUI="dataList"
           @closeUI="closeAllEditUI"
           @createData="createData"
         ></ui-create>
@@ -67,85 +76,185 @@
     </template>
     <template #edit>
       <div class="createEditUI" v-if="editUICom">
-        <ui-edit :dataTitleUI="menuDataTitleUI" @closeUI="closeAllEditUI" @editData="editData"></ui-edit>
+        <ui-edit
+          :currentPage="page"
+          :dataTitleUI="dataList"
+          @closeUI="closeAllEditUI"
+          @editData="editData"
+        ></ui-edit>
       </div>
     </template>
     <template #remove>
       <div class="comfirmUI" v-if="removeUICom">
-        <ui-remove :dataUI='removeUIText' @closeUI="closeAllEditUI" @removeData="removeData"></ui-remove>
+        <ui-remove
+          :currentPage="page"
+          :dataUI="removeUIText"
+          @closeUI="closeAllEditUI"
+          @removeData="removeData"
+        ></ui-remove>
       </div>
     </template>
     <template #on>
       <div class="comfirmUI" v-if="onUICom">
-        <ui-on :dataUI='removeUIText' @closeUI="closeAllEditUI" @onData="onData"></ui-on>
+        <ui-on
+          :currentPage="page"
+          :dataUI="onUIText"
+          @closeUI="closeAllEditUI"
+          @onData="onData"
+        ></ui-on>
       </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup>
-// import { usePagesData } from '~/stores/pagesData'
-// const pagesData = usePagesData()
-// pagesData.changePage('menuItem')
-// console.log(pagesData.currentPage);
-// import CreateUserInterface from '~/components/editUI/create-user-interface.vue';
+import { usePagesData } from "~/stores/pagesData";
+const pagesData = usePagesData();
 
 const route = useRoute();
+const path = ref(route.path);
 // 取得最後一段路由
 const page = computed(() => {
-  const segments = route.path.split("/").filter(Boolean);
+  const segments = path.value.split("/");
+  // console.log(segments[segments.length - 1] || "");
+
   return segments[segments.length - 1] || "";
 });
+//預設篩選
+const defaultSelected = "productType";
 
-const menuDataTitle = [
-  { eng: "itemID", cht: "餐點編號" },
-  { eng: "itemImg", cht: "餐點圖片" },
-  { eng: "itemName", cht: "餐點名稱" },
-  { eng: "itemType", cht: "餐點類型" },
-  { eng: "itemMain", cht: "首頁呈現品項" },
-  { eng: "itemPrice", cht: "餐點價格" },
-  { eng: "itemDescribe", cht: "餐點描述" },
+onMounted(async () => {
+  if (process.client) {
+    pagesData.changePage(page.value);
+    // console.log(pagesData.currentPage);
+  }
+});
+
+//改這
+const tableDataTitle = [
+  {
+    title: { eng: "productID", cht: "商品編號" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productName", cht: "商品名稱" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productType", cht: "商品類型" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productPrice", cht: "商品價格" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productInStock", cht: "庫存" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "storeOnly", cht: "快閃店限定" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productMain", cht: "首頁呈現商品" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "productDescribe", cht: "商品描述" },
+    type: "string",
+    style: { align: "left" },
+  },
 ];
-const filterDataTitle = computed(() =>
-  menuDataTitle.filter((title) => title.cht !== "餐點圖片")
-);
-const menuDataTitleUI = [
+const dataList = [
+  {
+    type: "inputText",
+    title: { eng: "productID", cht: "商品編號" },
+    display: { filter: true, UICreate: false, UIEdit: false, table: true },
+  },
   {
     type: "select",
-    title: "餐點狀況",
+    title: { eng: "productExist", cht: "商品狀況" },
     option: [
-      { value: 1, text: "上架餐點" },
-      { value: 0, text: "下架餐點" },
+      { value: 1, text: "上架商品" },
+      { value: 0, text: "下架商品" },
     ],
+    display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
-  { type: "inputText", title: "餐點名稱" },
+  {
+    type: "inputText",
+    title: { eng: "productName", cht: "商品名稱" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
   {
     type: "select",
-    title: "餐點類型",
+    title: { eng: "productType", cht: "商品類型" },
     option: [
-      { value: "飲品", text: "飲品" },
-      { value: "主餐", text: "主餐" },
-      { value: "甜點", text: "甜點" },
+      { value: "decoration", text: "家飾用品" },
+      { value: "jewelry", text: "珠寶首飾" },
+      { value: "model", text: "模型" },
+      { value: "stationery", text: "文具、文創" },
+      { value: "toy", text: "玩具、玩偶" },
     ],
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
-  { type: "inputText", title: "餐點描述" },
+  {
+    type: "inputText",
+    title: { eng: "productDescribe", cht: "商品描述" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
+  {
+    type: "inputNumber",
+    title: { eng: "productPrice", cht: "商品價格" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
+  {
+    type: "inputNumber",
+    title: { eng: "productInStock", cht: "庫存" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
   {
     type: "select",
-    title: "首頁呈現品項",
+    title: { eng: "storeOnly", cht: "快閃店限定" },
     option: [
-      { value: 1, text: "首頁呈現品項" },
-      { value: 0, text: "非首頁呈現品項" },
+      { value: 1, text: "快閃店限定" },
+      { value: 0, text: "非快閃店限定" },
     ],
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
-  { type: "inputNumber", title: "餐點價格" },
-  { type: "inputImgSingle", title: "圖片連結" },
+  {
+    type: "select",
+    title: { eng: "productMain", cht: "首頁呈現商品" },
+    option: [
+      { value: 1, text: "首頁呈現商品" },
+      { value: 0, text: "非首頁呈現商品" },
+    ],
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
+  {
+    type: "inputImgMutiple",
+    title: { eng: "productImg", cht: "圖片連結" },
+    img: [
+      "https://github.com/Bruce1995010101/pkimg/blob/main//productImg/p11/11-3.jpg?raw=true",
+      "https://github.com/Bruce1995010101/pkimg/blob/main//productImg/p11/11-2.jpg?raw=true",
+    ],
+    display: { filter: false, UICreate: true, UIEdit: true, table: true },
+  },
 ];
+
 const removeUIText = {
-  titleText: '確定使該品項下架？'
-}
+  titleText: "確定使該商品下架？",
+};
 const onUIText = {
-  titleText: '確定使該品項上架？'
-}
+  titleText: "確定使該商品上架？",
+};
 
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
@@ -158,14 +267,19 @@ let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
   condition.value = data;
+  refresh();
 }
 
 const { data, pending, error, refresh } = useAsyncData(
-  "menuItemData",
+  //改這
+  "productData",
   async () => {
-    let url = "http://localhost:3000/api/menuItem?";
+    let url = "http://localhost:3000/api/product?";
+    //改這
     url +=
-      panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
+      panelActiveValueCom.value === "exist"
+        ? "productExist=1"
+        : "productExist=0";
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;
@@ -219,9 +333,10 @@ function openOnUI() {
 }
 
 //編輯data
+//改這
 async function createData(data) {
-  const result = await useAsyncData("menuItemDataCreate", async () => {
-    let url = "http://localhost:3000/api/menuItem";
+  const result = await useAsyncData("productDataCreate", async () => {
+    let url = "http://localhost:3000/api/product";
     $fetch(url, {
       method: "POST",
       body: data,
@@ -233,46 +348,44 @@ async function createData(data) {
   closeAllEditUI();
 }
 async function editData(data) {
-  const result = await useAsyncData("menuItemDataEdit", async () => {
-    let url = "http://localhost:3000/api/menuItem";
+  const result = await useAsyncData("productDataEdit", async () => {
+    let url = "http://localhost:3000/api/product";
     $fetch(url, {
       method: "PUT",
       body: data,
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
 async function removeData(data) {
-  const result = await useAsyncData("menuItemDataRemove", async () => {
-    let url = "http://localhost:3000/api/menuItem";
+  const result = await useAsyncData("productDataRemove", async () => {
+    let url = "http://localhost:3000/api/product";
     $fetch(url, {
       method: "PATCH",
       body: data,
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
 async function onData(data) {
-
-  const result = await useAsyncData("menuItemDataOn", async () => {
-    let url = "http://localhost:3000/api/menuItem";
+  const result = await useAsyncData("productDataOn", async () => {
+    let url = "http://localhost:3000/api/product";
     $fetch(url, {
       method: "PATCH",
       body: data,
     });
   });
   // console.log(result);
-  refresh()
-  refresh()
+  refresh();
+  refresh();
   closeAllEditUI();
 }
-
 </script>
 
 

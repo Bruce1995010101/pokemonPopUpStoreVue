@@ -12,6 +12,7 @@
         <data-filter-all
           :currentPage="page"
           :dataList="dataList"
+          :defaultSelected="defaultSelected"
           @updateData="handleUpdateData"
         ></data-filter-all>
 
@@ -120,6 +121,9 @@ const page = computed(() => {
 
   return segments[segments.length - 1] || "";
 });
+
+//預設篩選
+const defaultSelected = 'itemType'
 
 onMounted(async () => {
   if (process.client) {

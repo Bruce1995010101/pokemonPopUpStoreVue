@@ -1,7 +1,7 @@
 import conn from "../../sql";
 
 export default defineEventHandler(async (event) => {
-    console.log(event.node.req);
+    // console.log(event.node.req);
     let data = '沒撈到';
 
     if (event.node.req) {
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
                 params.push(productMain);
             }
 
-            console.log("Generated SQL Query:", query);
+            // console.log("Generated SQL Query:", query);
             console.log("Parameters:", params);
 
             // 執行 SQL 查詢

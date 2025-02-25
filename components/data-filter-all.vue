@@ -45,10 +45,11 @@
 const props = defineProps({
   currentPage: String,
   dataList: Array,
+  defaultSelected: String,
 });
 const emit = defineEmits(["updateData"]);
 
-let filterCondition = ref("itemType");
+let filterCondition = ref(props.defaultSelected);
 const filterConditionComp = computed(() => {
   filterValue.value = "";
   return filterCondition.value;
@@ -91,6 +92,7 @@ function changeCondition(conditionChanged) {
   width: 200px;
   height: 20px;
   margin-left: 20px;
+  padding-left: 20px;
   border-radius: 20px;
   border: 0cap;
 }
@@ -100,7 +102,6 @@ function changeCondition(conditionChanged) {
 
 .selectInput::placeholder {
   font-size: var(--p);
-  padding-left: 10px;
 }
 
 .selectOption {

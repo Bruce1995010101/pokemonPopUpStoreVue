@@ -48,6 +48,28 @@
             <img class="createImg" :src="imgCom" alt="" />
           </div>
         </div>
+        <div v-else-if="dataTitle.type === 'inputImgMutiple'" id="images">
+          <div v-for="number in imgListAmountCom" :key="number" class="orderProductCreateDiv">
+            <div class="UILittleDiv row">
+              <div class="UISpan">圖片連結</div>
+              <div class="UIImageDiv">
+                <input
+                  class="UIInput imgsValue"
+                  type="text"
+                  @input="collectAllImage(number - 1)"
+                />
+                <img
+                  v-if="imgListCom[number - 1] !== ''"
+                  class="createImg"
+                  :src="imgListCom[number - 1]"
+                  :alt="`圖片${number}`"
+                />
+              </div>
+            </div>
+            <button class="plusProduct" @click="moreImage(number)"></button>
+            <button v-if="imgListAmountCom > 1" class="minusButtonMore" @click="lessImage(number)"></button>
+          </div>
+        </div>
 
         <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
@@ -72,6 +94,33 @@ function closeUI() {
 
 const img = ref("");
 const imgCom = computed(() => img.value);
+const imgList = ref(['']);
+const imgListCom = computed(() => imgList.value);
+const imgListAmountCom = computed(() => imgList.value.length);
+
+
+function collectAllImage(number) {
+  const imageElements = document.querySelectorAll(".imgsValue");
+  let tempImageList = [];
+  imageElements.forEach((elem) => {
+    tempImageList.push(elem.value);
+  });
+  imgList.value = tempImageList;
+  // console.log(imgList.value);
+  // console.log(number);
+  
+}
+
+function moreImage(number) {
+  imgList.value.splice(number, 0, '')
+  // console.log(number);
+  // console.log(imgList.value);
+}
+function lessImage(number) {
+  imgList.value.splice(number-1, 1)
+  // console.log(number-1);
+  // console.log(imgList.value);
+}
 
 function submit() {
   let list = document.querySelectorAll(".colValue");
@@ -90,7 +139,7 @@ function submit() {
 }
 
 //測試用 先上資料
-function testAllCol() {
+function testAllColMenu() {
   img.value =
     "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg";
   const testData = [
@@ -107,9 +156,32 @@ function testAllCol() {
     elem.value = testData[index];
   });
 }
+function testAllColProduct() {
+  img.value =
+    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg";
+  const testData = [
+    0,
+    "呆呆獸海報",
+    "decoration",
+    "Slowpoke 並不以聰明或速度而聞名，但這件藝術品可以快速為您的空間增添色彩和歡樂！",
+    300,
+    25,
+    0,
+    0,
+    [],
+  ];
+  let list = document.querySelectorAll(".colValue");
+  list.forEach((elem, index) => {
+    elem.value = testData[index];
+  });
+}
 onMounted(async () => {
   if (process.client) {
-    testAllCol();
+    if (props.currentPage === "menuItem") {
+      testAllColMenu();
+    } else if (props.currentPage === "product") {
+      testAllColProduct();
+    }
   }
 });
 </script>
@@ -213,5 +285,63 @@ onMounted(async () => {
   background-image: url(~/assets/plus-circle-fill.svg);
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.orderProductCreateDiv {
+  background-color: var(--red-l1);
+  box-shadow: 0 0 0 20px var(--red-l1);
+  border-radius: 25px;
+  margin-top: 30px;
+  margin-bottom: 45px;
+  position: relative;
+}
+.UIImageDiv {
+}
+.imgsValue {
+  width: 90%;
+}
+.divMore {
+  margin-top: 45px;
+}
+.createImg {
+  width: 250px;
+  margin-top: 10px;
+  /* width: 50px; */
+  border-radius: 10px;
+}
+
+.plusProduct {
+  background-color: var(--red);
+  background-image: url(~/assets/plus-circle.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 35px;
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 25px;
+}
+
+.plusButtonMore {
+  right: -30px;
+}
+.minusButtonMore {
+  background-color: var(--red);
+  background-image: url(~/assets/minus.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 35px;
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 30px;
+  height: 30px;
+  border: 0cap;
+  border-radius: 25px;
 }
 </style>
