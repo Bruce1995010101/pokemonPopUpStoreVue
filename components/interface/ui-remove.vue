@@ -21,11 +21,19 @@ function closeUI(){
 const UIData = inject("UIData");
 async function removeData() {
   const data = UIData.value.remove;
-  console.log(data);
-  const payload = {
-    itemID: data.itemID,
-    menuExist: 0,
-  };
+  // console.log(data);
+  let payload = null;
+  if (props.currentPage === "menuitem") {
+    payload = {
+      itemID: data.itemID,
+      menuExist: 0,
+    };
+  } else if (props.currentPage === "product") {
+    payload = {
+      productID: data.productID,
+      productExist: 0,
+    };
+  }
 
   emit('removeData', payload)
 }

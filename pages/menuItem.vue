@@ -123,7 +123,7 @@ const page = computed(() => {
 });
 
 //預設篩選
-const defaultSelected = 'itemType'
+const defaultSelected = "itemType";
 
 onMounted(async () => {
   if (process.client) {
@@ -151,13 +151,22 @@ const tableDataTitle = [
   },
   {
     title: { eng: "itemType", cht: "餐點類型" },
-    type: "string",
+    type: "select",
     style: { align: "center" },
+    option: [
+      { value: "飲品", text: "飲品" },
+      { value: "主餐", text: "主餐" },
+      { value: "甜點", text: "甜點" },
+    ],
   },
   {
     title: { eng: "itemMain", cht: "首頁呈現品項" },
-    type: "string",
+    type: "select",
     style: { align: "center" },
+    option: [
+      { value: 1, text: "首頁呈現品項" },
+      { value: 0, text: "非首頁呈現品項" },
+    ],
   },
   {
     title: { eng: "itemPrice", cht: "餐點價格" },
@@ -408,7 +417,7 @@ input:checked + .bookMarkLabel {
 .addDiv {
   position: absolute;
   right: 20px;
-  bottom: 50px;
+  bottom: 10px;
   opacity: 0.6;
   transition: all 0.5s;
 }
@@ -449,6 +458,7 @@ input:checked + .bookMarkLabel {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
+  height: 460px;
   background-color: var(--yellow);
   border-radius: 20px;
 
@@ -470,6 +480,10 @@ input:checked + .bookMarkLabel {
   z-index: 5;
 
   overflow: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 </style>
 

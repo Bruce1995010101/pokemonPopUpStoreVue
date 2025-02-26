@@ -40,19 +40,46 @@
         <div v-else-if="dataTitle.type === 'inputImgSingle'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input
-              class="UIInput colValue"
-              type="text"
-              v-model="img"
-            />
+            <input class="UIInput colValue" type="text" v-model="img" />
             <img class="editImg" :src="imgCom" alt="" />
           </div>
         </div>
 
-        <div v-else >[{{ dataTitle.title.cht }}] 欄位沒出來</div>
+        <div v-else-if="dataTitle.type === 'inputImgMutiple'" id="images">
+          <div
+            v-for="number in imgListAmountCom"
+            :key="number"
+            class="orderProductCreateDiv"
+          >
+            <div class="UILittleDiv row">
+              <div class="UISpan">圖片連結</div>
+              <div class="UIImageDiv">
+                <input
+                  class="UIInput imgsValue"
+                  type="text"
+                  @input="collectAllImage(number - 1)"
+                />
+                <img
+                  v-if="imgListCom[number - 1] !== ''"
+                  class="createImg"
+                  :src="imgListCom[number - 1]"
+                  :alt="`圖片${number}`"
+                />
+              </div>
+            </div>
+            <button class="plusProduct" @click="moreImage(number)"></button>
+            <button
+              v-if="imgListAmountCom > 1"
+              class="minusButtonMore"
+              @click="lessImage(number)"
+            ></button>
+          </div>
+        </div>
+
+        <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
 
-      <input type="hidden" class="colValue">
+      <input type="hidden" class="colValue" />
 
       <div class="UIBNDiv">
         <button class="UICancelBN c_white" @click="closeUI">取消</button>
@@ -67,22 +94,47 @@ const props = defineProps({
   dataTitleUI: Array,
   currentPage: String,
 });
-const emit = defineEmits(["closeUI", "editData"])
-function closeUI(){
-  emit("closeUI")
+const emit = defineEmits(["closeUI", "editData"]);
+function closeUI() {
+  emit("closeUI");
 }
 
 const img = ref("");
 const imgCom = computed(() => img.value);
+const imgList = ref([""]);
+const imgListCom = computed(() => imgList.value);
+const imgListAmountCom = computed(() => imgList.value.length);
+
+function collectAllImage(number) {
+  const imageElements = document.querySelectorAll(".imgsValue");
+  let tempImageList = [];
+  imageElements.forEach((elem) => {
+    tempImageList.push(elem.value);
+  });
+  imgList.value = tempImageList;
+  // console.log(imgList.value);
+  // console.log(number);
+}
+
+function moreImage(number) {
+  imgList.value.splice(number, 0, "");
+  // console.log(number);
+  // console.log(imgList.value);
+}
+function lessImage(number) {
+  imgList.value.splice(number - 1, 1);
+  // console.log(number-1);
+  // console.log(imgList.value);
+}
 
 //取得資料呈現在UI上
 const UIData = inject("UIData");
-function updateData() {
-  const editData = UIData.value.edit
+async function updateData() {
+  const editData = UIData.value.edit;
   img.value = editData.itemImg;
-  let data = null
-  console.log(props.currentPage);
-  if(props.currentPage === 'menuitem'){
+  let data = null;
+  // console.log(props.currentPage);
+  if (props.currentPage === "menuitem") {
     data = [
       editData.menuExist,
       editData.itemName,
@@ -93,7 +145,7 @@ function updateData() {
       editData.itemImg,
       editData.itemID,
     ];
-  }else if(props.currentPage === 'product'){
+  } else if (props.currentPage === "product") {
     data = [
       editData.productExist,
       editData.productName,
@@ -103,9 +155,22 @@ function updateData() {
       editData.productInStock,
       editData.storeOnly,
       editData.productMain,
-      editData.productImg,
-      editData.itemID,
+      // editData.productImg,
+      editData.productID,
     ];
+    // console.log(editData.productImg);
+    const tempImageList = [];
+    for (const imgObj of editData.productImg) {
+      tempImageList.push(imgObj.productImg);
+    }
+
+    imgList.value = tempImageList;
+
+    await nextTick();
+    let list = document.querySelectorAll(".imgsValue");
+    list.forEach((elem, index) => {
+      elem.value = tempImageList[index];
+    });
   }
   let list = document.querySelectorAll(".colValue");
   list.forEach((elem, index) => {
@@ -119,28 +184,45 @@ onMounted(async () => {
 });
 
 //submit
-async function submit(){
-   let list = document.querySelectorAll(".colValue");
-    let data = {
-    itemID: list[7].value,
-    menuExist: list[0].value,
-    itemName: list[1].value,
-    itemType: list[2].value,
-    itemDescribe: list[3].value,
-    itemMain: list[4].value,
-    itemPrice: list[5].value,
-    itemImg: list[6].value,
-  };
-  // console.log(data);
-  emit('editData', data)
-
+async function submit() {
+  let list = document.querySelectorAll(".colValue");
+  let data = null;
+  if (props.currentPage === "menuitem") {
+    data = {
+      itemID: list[7].value,
+      menuExist: list[0].value,
+      itemName: list[1].value,
+      itemType: list[2].value,
+      itemDescribe: list[3].value,
+      itemMain: list[4].value,
+      itemPrice: list[5].value,
+      itemImg: list[6].value,
+    };
+  } else if (props.currentPage === "product") {
+    const tempImageList = [];
+    let imageElemList = document.querySelectorAll(".imgsValue");
+    imageElemList.forEach((elem, index) => {
+      tempImageList.push(elem.value)
+    });
+    data = {
+      productID: list[8].value,
+      productExist: list[0].value,
+      productName: list[1].value,
+      productType: list[2].value,
+      productDescribe: list[3].value,
+      productPrice: list[4].value,
+      productInStock: list[5].value,
+      storeOnly: list[6].value,
+      productMain: list[7].value,
+      productImg: tempImageList,
+    };
+  }
+  console.log(data);
+  emit("editData", data);
 }
 </script>
 
 <style scoped>
-
-
-
 .UITitle {
   text-align: center;
   margin: 40px 20px 30px 20px;
@@ -159,7 +241,7 @@ async function submit(){
   grid-template-columns: 25% 75%;
   height: 100%;
   margin: 0%;
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .UISpan {
@@ -237,5 +319,60 @@ async function submit(){
   background-image: url(~/assets/plus-circle-fill.svg);
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.orderProductCreateDiv {
+  background-color: var(--red-l1);
+  box-shadow: 0 0 0 20px var(--red-l1);
+  border-radius: 25px;
+  margin-top: 30px;
+  margin-bottom: 45px;
+  position: relative;
+}
+.imgsValue {
+  width: 90%;
+}
+.divMore {
+  margin-top: 45px;
+}
+.createImg {
+  margin-top: 10px;
+  width: 250px;
+  border-radius: 20px;
+}
+
+.plusProduct {
+  background-color: var(--red);
+  background-image: url(~/assets/plus-circle.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 35px;
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 25px;
+}
+
+.plusButtonMore {
+  right: -30px;
+}
+.minusButtonMore {
+  background-color: var(--red);
+  background-image: url(~/assets/minus.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 35px;
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 30px;
+  height: 30px;
+  border: 0cap;
+  border-radius: 25px;
 }
 </style>

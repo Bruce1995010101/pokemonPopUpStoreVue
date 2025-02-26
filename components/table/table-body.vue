@@ -3,13 +3,12 @@
     <tr v-for="dataRow in data" :key="dataRow" >
       <td v-for="colTitle in dataTitleList" :key="colTitle" :class="{textCenter: colTitle.style.align==='center'}">
 
-        <span v-if="colTitle.title.eng === 'itemMain' && currentPage === 'menuItem'">{{ dataRow[`${colTitle.title.eng}`] ? "首頁呈現品項" : "非首頁呈現品項" }}</span>
-
-        <span v-else-if="colTitle.title.eng === 'storeOnly' && currentPage === 'product'">{{ dataRow[`${colTitle.title.eng}`] ? "V" : "X" }}</span>
-        <span v-else-if="colTitle.title.eng === 'productMain' && currentPage === 'product'">{{ dataRow[`${colTitle.title.eng}`] ? "首頁呈現品項" : "非首頁呈現品項" }}</span>
-
-        <span v-else-if="colTitle.type === 'string' || colTitle.type === 'number'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
+        <span v-if="colTitle.type === 'string' || colTitle.type === 'number'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
+        <div v-else-if="colTitle.type === 'select'" >
+          <span v-for="option in colTitle.option" :key="option" :class="{displayNone : option.value !== dataRow[`${colTitle.title.eng}`]}"> {{ option.text }} </span>
+        </div>
         <img v-else-if="colTitle.type === 'image'" :src="dataRow[`${colTitle.title.eng}`]" :alt="dataRow[`${colTitle.title.eng}`]" />
+      
       </td>
       <td class="textCenter">
         <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
@@ -130,5 +129,9 @@ img {
   background-image: url("~/assets/trash3-fillwhite.png");
   background-size: 50%;
   background-color: var(--red);
+}
+
+.displayNone{
+  display: none;
 }
 </style>

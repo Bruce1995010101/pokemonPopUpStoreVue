@@ -49,7 +49,11 @@
           </div>
         </div>
         <div v-else-if="dataTitle.type === 'inputImgMutiple'" id="images">
-          <div v-for="number in imgListAmountCom" :key="number" class="orderProductCreateDiv">
+          <div
+            v-for="number in imgListAmountCom"
+            :key="number"
+            class="orderProductCreateDiv"
+          >
             <div class="UILittleDiv row">
               <div class="UISpan">圖片連結</div>
               <div class="UIImageDiv">
@@ -67,7 +71,11 @@
               </div>
             </div>
             <button class="plusProduct" @click="moreImage(number)"></button>
-            <button v-if="imgListAmountCom > 1" class="minusButtonMore" @click="lessImage(number)"></button>
+            <button
+              v-if="imgListAmountCom > 1"
+              class="minusButtonMore"
+              @click="lessImage(number)"
+            ></button>
           </div>
         </div>
 
@@ -94,10 +102,10 @@ function closeUI() {
 
 const img = ref("");
 const imgCom = computed(() => img.value);
-const imgList = ref(['']);
+
+const imgList = ref([""]);
 const imgListCom = computed(() => imgList.value);
 const imgListAmountCom = computed(() => imgList.value.length);
-
 
 function collectAllImage(number) {
   const imageElements = document.querySelectorAll(".imgsValue");
@@ -108,31 +116,51 @@ function collectAllImage(number) {
   imgList.value = tempImageList;
   // console.log(imgList.value);
   // console.log(number);
-  
 }
 
 function moreImage(number) {
-  imgList.value.splice(number, 0, '')
+  imgList.value.splice(number, 0, "");
   // console.log(number);
   // console.log(imgList.value);
 }
 function lessImage(number) {
-  imgList.value.splice(number-1, 1)
+  imgList.value.splice(number - 1, 1);
   // console.log(number-1);
   // console.log(imgList.value);
 }
 
 function submit() {
   let list = document.querySelectorAll(".colValue");
-  let data = {
-    menuExist: list[0].value,
-    itemName: list[1].value,
-    itemType: list[2].value,
-    itemDescribe: list[3].value,
-    itemMain: list[4].value,
-    itemPrice: list[5].value,
-    itemImg: list[6].value,
-  };
+  let data = null;
+  if (props.currentPage === "menuitem") {
+    data = {
+      menuExist: list[0].value,
+      itemName: list[1].value,
+      itemType: list[2].value,
+      itemDescribe: list[3].value,
+      itemMain: list[4].value,
+      itemPrice: list[5].value,
+      itemImg: list[6].value,
+    };
+  } else if (props.currentPage === "product") {
+    const imageListElem = document.querySelectorAll(".imgsValue");
+    let imgs = [];
+    imageListElem.forEach((elem, index) => {
+      imgs.push(elem.value)
+    });
+    
+    data = {
+      productExist: list[0].value,
+      productName: list[1].value,
+      productType: list[2].value,
+      productDescribe: list[3].value,
+      productPrice: list[4].value,
+      productInStock: list[5].value,
+      storeOnly: list[6].value,
+      productMain: list[7].value,
+      productImg: imgs
+    };
+  }
 
   // console.log(data);
   emit("createData", data);
@@ -156,9 +184,7 @@ function testAllColMenu() {
     elem.value = testData[index];
   });
 }
-function testAllColProduct() {
-  img.value =
-    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg";
+async function testAllColProduct() {
   const testData = [
     0,
     "呆呆獸海報",
@@ -168,16 +194,25 @@ function testAllColProduct() {
     25,
     0,
     0,
-    [],
   ];
+  imgList.value = [
+    "https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2023/10/12/draft/26062952.jpg&x=0&y=0&sw=0&sh=0&exp=3600&w=850&nt=1",
+    "https://local.pokemon.jp/img/p/lginfo/89ebf3ab1666417aebc96fe81e1095c3.jpg",
+  ];
+
+  await nextTick();
   let list = document.querySelectorAll(".colValue");
   list.forEach((elem, index) => {
     elem.value = testData[index];
   });
+  let imageList = document.querySelectorAll(".imgsValue");
+  imageList.forEach((elem, index) => {
+    elem.value = imgList.value[index];
+  });
 }
 onMounted(async () => {
   if (process.client) {
-    if (props.currentPage === "menuItem") {
+    if (props.currentPage === "menuitem") {
       testAllColMenu();
     } else if (props.currentPage === "product") {
       testAllColProduct();
@@ -295,20 +330,13 @@ onMounted(async () => {
   margin-bottom: 45px;
   position: relative;
 }
-.UIImageDiv {
-}
 .imgsValue {
   width: 90%;
 }
 .divMore {
   margin-top: 45px;
 }
-.createImg {
-  width: 250px;
-  margin-top: 10px;
-  /* width: 50px; */
-  border-radius: 10px;
-}
+
 
 .plusProduct {
   background-color: var(--red);

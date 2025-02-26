@@ -144,8 +144,15 @@ const tableDataTitle = [
   },
   {
     title: { eng: "productType", cht: "商品類型" },
-    type: "string",
+    type: "select",
     style: { align: "center" },
+    option: [
+      { value: "decoration", text: "家飾用品" },
+      { value: "jewelry", text: "珠寶首飾" },
+      { value: "model", text: "模型" },
+      { value: "stationery", text: "文具、文創" },
+      { value: "toy", text: "玩具、玩偶" },
+    ]
   },
   {
     title: { eng: "productPrice", cht: "商品價格" },
@@ -159,13 +166,21 @@ const tableDataTitle = [
   },
   {
     title: { eng: "storeOnly", cht: "快閃店限定" },
-    type: "string",
+    type: "select",
     style: { align: "center" },
+    option: [
+      { value: 1, text: "V" },
+      { value: 0, text: "X" },
+    ],
   },
   {
     title: { eng: "productMain", cht: "首頁呈現商品" },
-    type: "string",
+    type: "select",
     style: { align: "center" },
+    option: [
+      { value: 1, text: "首頁呈現商品" },
+      { value: 0, text: "非首頁呈現商品" },
+    ],
   },
   {
     title: { eng: "productDescribe", cht: "商品描述" },
@@ -342,7 +357,7 @@ async function createData(data) {
       body: data,
     });
   });
-  // console.log(result);
+  console.log(data);
   refresh();
   refresh();
   closeAllEditUI();
@@ -433,7 +448,7 @@ input:checked + .bookMarkLabel {
 .addDiv {
   position: absolute;
   right: 20px;
-  bottom: 50px;
+  bottom: 10px;
   opacity: 0.6;
   transition: all 0.5s;
 }
@@ -473,7 +488,8 @@ input:checked + .bookMarkLabel {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
+  width: 510px;
+  height: 460px;
   background-color: var(--yellow);
   border-radius: 20px;
 
@@ -488,13 +504,16 @@ input:checked + .bookMarkLabel {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  /* height: 200px; */
   background-color: var(--yellow);
   border-radius: 20px;
 
   z-index: 5;
 
   overflow: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 </style>
 

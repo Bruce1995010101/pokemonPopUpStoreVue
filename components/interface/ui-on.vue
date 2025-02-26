@@ -21,12 +21,20 @@ function closeUI() {
 const UIData = inject("UIData");
 async function onData() {
   const data = UIData.value.on;
-  console.log(data);
-  const payload = {
-    itemID: data.itemID,
-    menuExist: 1,
-  };
-  emit("onData", payload)
+  // console.log(data);
+  let payload = null;
+  if (props.currentPage === "menuitem") {
+    payload = {
+      itemID: data.itemID,
+      menuExist: 1,
+    };
+  } else if (props.currentPage === "product") {
+    payload = {
+      productID: data.productID,
+      productExist: 1,
+    };
+  }
+  emit("onData", payload);
 }
 </script>
 
