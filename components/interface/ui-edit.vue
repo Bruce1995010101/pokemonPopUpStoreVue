@@ -55,9 +55,9 @@
               <div class="UISpan">圖片連結</div>
               <div class="UIImageDiv">
                 <input
-                  class="UIInput imgsValue"
+                  class="UIInput imgsInput"
                   type="text"
-                  @input="collectAllImage(number - 1)"
+                  v-model="imgList[number - 1]"
                 />
                 <img
                   v-if="imgListCom[number - 1] !== ''"
@@ -90,7 +90,7 @@
               <div class="UISpan">{{ title.cht }}</div>
               <div class="UIImageDiv">
                 <input
-                  class="UIInput imgsValue"
+                  class="UIInput imgsInput"
                   type="text"
                   v-model="boughtProductList[0][title.eng]"
                 />
@@ -134,26 +134,11 @@ const imgList = ref([""]);
 const imgListCom = computed(() => imgList.value);
 const imgListAmountCom = computed(() => imgList.value.length);
 
-function collectAllImage(number) {
-  const imageElements = document.querySelectorAll(".imgsValue");
-  let tempImageList = [];
-  imageElements.forEach((elem) => {
-    tempImageList.push(elem.value);
-  });
-  imgList.value = tempImageList;
-  // console.log(imgList.value);
-  // console.log(number);
-}
-
 function moreImage(number) {
   imgList.value.splice(number, 0, "");
-  // console.log(number);
-  // console.log(imgList.value);
 }
 function lessImage(number) {
   imgList.value.splice(number - 1, 1);
-  // console.log(number-1);
-  // console.log(imgList.value);
 }
 
 
@@ -206,14 +191,7 @@ async function updateData() {
     for (const imgObj of editData.productImg) {
       tempImageList.push(imgObj.productImg);
     }
-
     imgList.value = tempImageList;
-
-    await nextTick();
-    let list = document.querySelectorAll(".imgsValue");
-    list.forEach((elem, index) => {
-      elem.value = tempImageList[index];
-    });
   }
   let list = document.querySelectorAll(".colValue");
   list.forEach((elem, index) => {
@@ -242,11 +220,6 @@ async function submit() {
       itemImg: list[6].value,
     };
   } else if (props.currentPage === "product") {
-    const tempImageList = [];
-    let imageElemList = document.querySelectorAll(".imgsValue");
-    imageElemList.forEach((elem, index) => {
-      tempImageList.push(elem.value);
-    });
     data = {
       productID: list[8].value,
       productExist: list[0].value,
@@ -257,10 +230,10 @@ async function submit() {
       productInStock: list[5].value,
       storeOnly: list[6].value,
       productMain: list[7].value,
-      productImg: tempImageList,
+      productImg: imgList.value,
     };
   }
-  console.log(data);
+  // console.log(data);
   emit("editData", data);
 }
 </script>
@@ -372,7 +345,7 @@ async function submit() {
   margin-bottom: 45px;
   position: relative;
 }
-.imgsValue {
+.imgsInput {
   width: 90%;
 }
 .divMore {

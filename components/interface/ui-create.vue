@@ -48,6 +48,7 @@
             <img class="createImg" :src="imgCom" alt="" />
           </div>
         </div>
+
         <div v-else-if="dataTitle.type === 'inputImgMutiple'">
           <div
             v-for="number in imgListAmountCom"
@@ -58,9 +59,9 @@
               <div class="UISpan">圖片連結</div>
               <div class="UIImageDiv">
                 <input
-                  class="UIInput imgsValue"
+                  class="UIInput imgsInput"
                   type="text"
-                  @input="collectAllImage(number - 1)"
+                  v-model="imgList[number - 1]"
                 />
                 <img
                   v-if="imgListCom[number - 1] !== ''"
@@ -85,11 +86,15 @@
             :key="number"
             class="orderProductCreateDiv"
           >
-            <div class="UILittleDiv row" v-for="title in dataTitle.title" :key="title">
+            <div
+              class="UILittleDiv row"
+              v-for="title in dataTitle.title"
+              :key="title"
+            >
               <div class="UISpan">{{ title.cht }}</div>
               <div class="UIImageDiv">
                 <input
-                  class="UIInput imgsValue"
+                  class="UIInput imgsInput"
                   type="text"
                   v-model="boughtProductList[0][title.eng]"
                 />
@@ -132,17 +137,6 @@ const imgList = ref([""]);
 const imgListCom = computed(() => imgList.value);
 const imgListAmountCom = computed(() => imgList.value.length);
 
-function collectAllImage(number) {
-  const imageElements = document.querySelectorAll(".imgsValue");
-  let tempImageList = [];
-  imageElements.forEach((elem) => {
-    tempImageList.push(elem.value);
-  });
-  imgList.value = tempImageList;
-  // console.log(imgList.value);
-  // console.log(number);
-}
-
 function moreImage(number) {
   imgList.value.splice(number, 0, "");
   // console.log(number);
@@ -154,19 +148,18 @@ function lessImage(number) {
   // console.log(imgList.value);
 }
 
-const boughtProductList = ref([{}])
+const boughtProductList = ref([{}]);
 const boughtProductListCom = computed(() => boughtProductList.value);
 const boughtProductListAmount = computed(() => boughtProductList.value.length);
 
 function moreInput(number) {
   console.log(boughtProductList.value);
-  
+
   boughtProductList.value.splice(number, 0, {});
 }
 function lessInput(number) {
   boughtProductList.value.splice(number - 1, 1);
 }
-
 
 function submit() {
   let list = document.querySelectorAll(".colValue");
@@ -182,12 +175,6 @@ function submit() {
       itemImg: list[6].value,
     };
   } else if (props.currentPage === "product") {
-    const imageListElem = document.querySelectorAll(".imgsValue");
-    let imgs = [];
-    imageListElem.forEach((elem, index) => {
-      imgs.push(elem.value)
-    });
-    
     data = {
       productExist: list[0].value,
       productName: list[1].value,
@@ -197,16 +184,15 @@ function submit() {
       productInStock: list[5].value,
       storeOnly: list[6].value,
       productMain: list[7].value,
-      productImg: imgs
+      productImg: imgList.value,
     };
-  } else if(props.currentPage === "orderList"){
-    const orderProductIDList = []
-    const productQList = []
-    for(const i = 0 ; i <= boughtProductList.value.length; i++){
-      orderProductIDList.push(boughtProductList.value[i].orderProductID)
-      productQList.push(boughtProductList.value[i].orderProductQ)
+  } else if (props.currentPage === "orderList") {
+    const orderProductIDList = [];
+    const productQList = [];
+    for (const i = 0; i <= boughtProductList.value.length; i++) {
+      orderProductIDList.push(boughtProductList.value[i].orderProductID);
+      productQList.push(boughtProductList.value[i].orderProductQ);
     }
-
   }
 
   // console.log(data);
@@ -242,20 +228,15 @@ async function testAllColProduct() {
     0,
     0,
   ];
-  imgList.value = [
-    "https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2023/10/12/draft/26062952.jpg&x=0&y=0&sw=0&sh=0&exp=3600&w=850&nt=1",
-    "https://local.pokemon.jp/img/p/lginfo/89ebf3ab1666417aebc96fe81e1095c3.jpg",
-  ];
 
-  await nextTick();
   let list = document.querySelectorAll(".colValue");
   list.forEach((elem, index) => {
     elem.value = testData[index];
   });
-  let imageList = document.querySelectorAll(".imgsValue");
-  imageList.forEach((elem, index) => {
-    elem.value = imgList.value[index];
-  });
+  imgList.value = [
+    "https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2023/10/12/draft/26062952.jpg&x=0&y=0&sw=0&sh=0&exp=3600&w=850&nt=1",
+    "https://local.pokemon.jp/img/p/lginfo/89ebf3ab1666417aebc96fe81e1095c3.jpg",
+  ];
 }
 onMounted(async () => {
   if (process.client) {
@@ -377,13 +358,12 @@ onMounted(async () => {
   margin-bottom: 45px;
   position: relative;
 }
-.imgsValue {
+.imgsInput {
   width: 90%;
 }
 .divMore {
   margin-top: 45px;
 }
-
 
 .plusProduct {
   background-color: var(--red);
