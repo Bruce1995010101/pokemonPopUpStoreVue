@@ -76,6 +76,35 @@
           </div>
         </div>
 
+        <div v-else-if="dataTitle.type === 'mutipleInput'">
+          <div
+            v-for="number in boughtProductListAmount"
+            :key="number"
+            class="orderProductCreateDiv"
+          >
+            <div
+              class="UILittleDiv row"
+              v-for="title in dataTitle.title"
+              :key="title"
+            >
+              <div class="UISpan">{{ title.cht }}</div>
+              <div class="UIImageDiv">
+                <input
+                  class="UIInput imgsValue"
+                  type="text"
+                  v-model="boughtProductList[0][title.eng]"
+                />
+              </div>
+            </div>
+            <button class="plusProduct" @click="moreInput(number)"></button>
+            <button
+              v-if="boughtProductListAmount > 1"
+              class="minusButtonMore"
+              @click="lessInput(number)"
+            ></button>
+          </div>
+        </div>
+
         <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
 
@@ -125,6 +154,20 @@ function lessImage(number) {
   imgList.value.splice(number - 1, 1);
   // console.log(number-1);
   // console.log(imgList.value);
+}
+
+
+const boughtProductList = ref([{}])
+const boughtProductListCom = computed(() => boughtProductList.value);
+const boughtProductListAmount = computed(() => boughtProductList.value.length);
+
+function moreInput(number) {
+  console.log(boughtProductList.value);
+  
+  boughtProductList.value.splice(number, 0, {});
+}
+function lessInput(number) {
+  boughtProductList.value.splice(number - 1, 1);
 }
 
 //取得資料呈現在UI上
@@ -202,7 +245,7 @@ async function submit() {
     const tempImageList = [];
     let imageElemList = document.querySelectorAll(".imgsValue");
     imageElemList.forEach((elem, index) => {
-      tempImageList.push(elem.value)
+      tempImageList.push(elem.value);
     });
     data = {
       productID: list[8].value,

@@ -48,7 +48,7 @@
             <img class="createImg" :src="imgCom" alt="" />
           </div>
         </div>
-        <div v-else-if="dataTitle.type === 'inputImgMutiple'" id="images">
+        <div v-else-if="dataTitle.type === 'inputImgMutiple'">
           <div
             v-for="number in imgListAmountCom"
             :key="number"
@@ -75,6 +75,31 @@
               v-if="imgListAmountCom > 1"
               class="minusButtonMore"
               @click="lessImage(number)"
+            ></button>
+          </div>
+        </div>
+
+        <div v-else-if="dataTitle.type === 'mutipleInput'">
+          <div
+            v-for="number in boughtProductListAmount"
+            :key="number"
+            class="orderProductCreateDiv"
+          >
+            <div class="UILittleDiv row" v-for="title in dataTitle.title" :key="title">
+              <div class="UISpan">{{ title.cht }}</div>
+              <div class="UIImageDiv">
+                <input
+                  class="UIInput imgsValue"
+                  type="text"
+                  v-model="boughtProductList[0][title.eng]"
+                />
+              </div>
+            </div>
+            <button class="plusProduct" @click="moreInput(number)"></button>
+            <button
+              v-if="boughtProductListAmount > 1"
+              class="minusButtonMore"
+              @click="lessInput(number)"
             ></button>
           </div>
         </div>
@@ -129,6 +154,20 @@ function lessImage(number) {
   // console.log(imgList.value);
 }
 
+const boughtProductList = ref([{}])
+const boughtProductListCom = computed(() => boughtProductList.value);
+const boughtProductListAmount = computed(() => boughtProductList.value.length);
+
+function moreInput(number) {
+  console.log(boughtProductList.value);
+  
+  boughtProductList.value.splice(number, 0, {});
+}
+function lessInput(number) {
+  boughtProductList.value.splice(number - 1, 1);
+}
+
+
 function submit() {
   let list = document.querySelectorAll(".colValue");
   let data = null;
@@ -160,6 +199,14 @@ function submit() {
       productMain: list[7].value,
       productImg: imgs
     };
+  } else if(props.currentPage === "orderList"){
+    const orderProductIDList = []
+    const productQList = []
+    for(const i = 0 ; i <= boughtProductList.value.length; i++){
+      orderProductIDList.push(boughtProductList.value[i].orderProductID)
+      productQList.push(boughtProductList.value[i].orderProductQ)
+    }
+
   }
 
   // console.log(data);

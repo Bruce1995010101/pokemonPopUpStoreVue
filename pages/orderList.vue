@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">交易紀錄管理</div>
+      <div class="f_h4 c_white" id="title">商品管理</div>
 
       <article class="tabs">
         <data-filter-all
@@ -26,7 +26,7 @@
           @change="changePanal('exist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="one">上架商品</label>
+        <label class="bookMarkLabel" for="one">有效訂單</label>
 
         <input
           class="bookmark"
@@ -37,7 +37,7 @@
           @change="changePanal('noExist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="two">下架商品</label>
+        <label class="bookMarkLabel" for="two">無效訂單</label>
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
@@ -121,7 +121,7 @@ const page = computed(() => {
   return segments[segments.length - 1] || "";
 });
 //預設篩選
-const defaultSelected = "productType";
+const defaultSelected = "orderStatus";
 
 onMounted(async () => {
   if (process.client) {
@@ -129,13 +129,28 @@ onMounted(async () => {
     // console.log(pagesData.currentPage);
   }
 });
-
+("資料ID	訂單編號	訂單狀態	商品名稱	商品數量	單品總價	買家姓名	信箱	電話	地址	訂單日期	付款方式	發票類別	公司名稱	統一編號	物流備註");
 //改這
 const tableDataTitle = [
   {
-    title: { eng: "productID", cht: "商品編號" },
+    title: { eng: "orderID", cht: "資料ID" },
     type: "number",
     style: { align: "center" },
+  },
+  {
+    title: { eng: "transactionID", cht: "訂單編號" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "orderStatus", cht: "訂單狀態" },
+    type: "select",
+    style: { align: "center" },
+    option: [
+      { value: 0, text: "訂單接收" },
+      { value: 1, text: "待出貨" },
+      { value: 2, text: "已出貨" },
+    ],
   },
   {
     title: { eng: "productName", cht: "商品名稱" },
@@ -143,60 +158,88 @@ const tableDataTitle = [
     style: { align: "center" },
   },
   {
-    title: { eng: "productType", cht: "商品類型" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: "decoration", text: "家飾用品" },
-      { value: "jewelry", text: "珠寶首飾" },
-      { value: "model", text: "模型" },
-      { value: "stationery", text: "文具、文創" },
-      { value: "toy", text: "玩具、玩偶" },
-    ]
-  },
-  {
-    title: { eng: "productPrice", cht: "商品價格" },
+    title: { eng: "productQ", cht: "商品數量" },
     type: "number",
     style: { align: "center" },
   },
   {
-    title: { eng: "productInStock", cht: "庫存" },
+    title: { eng: "orderAmount", cht: "單品總價" },
     type: "number",
     style: { align: "center" },
   },
   {
-    title: { eng: "storeOnly", cht: "快閃店限定" },
-    type: "select",
+    title: { eng: "buyerName", cht: "買家姓名" },
+    type: "string",
     style: { align: "center" },
-    option: [
-      { value: 1, text: "V" },
-      { value: 0, text: "X" },
-    ],
   },
   {
-    title: { eng: "productMain", cht: "首頁呈現商品" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: 1, text: "首頁呈現商品" },
-      { value: 0, text: "非首頁呈現商品" },
-    ],
-  },
-  {
-    title: { eng: "productDescribe", cht: "商品描述" },
+    title: { eng: "buyerEmail", cht: "信箱" },
     type: "string",
     style: { align: "left" },
+  },
+  {
+    title: { eng: "buyerTel", cht: "電話" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "buyerAddr", cht: "地址" },
+    type: "string",
+    style: { align: "left" },
+  },
+  {
+    title: { eng: "orderDate", cht: "訂單日期" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "payment", cht: "付款方式" },
+    type: "select",
+    style: { align: "center" },
+    option: [
+      { value: "貨到付款", text: "貨到付款" },
+      { value: "線上刷卡", text: "線上刷卡" },
+    ],
+  },
+  {
+    title: { eng: "receiptType", cht: "發票類別" },
+    type: "select",
+    style: { align: "center" },
+    option: [
+      { value: "三聯式", text: "三聯式" },
+      { value: "二聯式", text: "二聯式" },
+    ],
+  },
+  {
+    title: { eng: "companyTitle", cht: "公司名稱" },
+    type: "string",
+    style: { align: "left" },
+  },
+  {
+    title: { eng: "taxIDNumber", cht: "統一編號" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "transportNote", cht: "物流備註" },
+    type: "string",
+    style: { align: "center" },
   },
 ];
 const dataList = [
   {
     type: "inputText",
-    title: { eng: "productID", cht: "商品編號" },
+    title: { eng: "orderID", cht: "資料ID" },
     display: { filter: true, UICreate: false, UIEdit: false, table: true },
   },
   {
+    type: "inputText",
+    title: { eng: "transactionID", cht: "訂單編號" },
+    display: { filter: true, UICreate: false, UIEdit: true, table: true },
+  },
+  {
     type: "select",
-    title: { eng: "productExist", cht: "商品狀況" },
+    title: { eng: "productExist", cht: "訂單狀況" },
     option: [
       { value: 1, text: "上架商品" },
       { value: 0, text: "下架商品" },
@@ -204,60 +247,82 @@ const dataList = [
     display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "inputText",
-    title: { eng: "productName", cht: "商品名稱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "productType", cht: "商品類型" },
-    option: [
-      { value: "decoration", text: "家飾用品" },
-      { value: "jewelry", text: "珠寶首飾" },
-      { value: "model", text: "模型" },
-      { value: "stationery", text: "文具、文創" },
-      { value: "toy", text: "玩具、玩偶" },
+    type: "mutipleInput",
+    title: [
+      { eng: "orderProductID", cht: "產品ID" },
+      { eng: "orderProductQ", cht: "產品數量" },
     ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "productDescribe", cht: "商品描述" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    title: { eng: "productExist", cht: "產品ID" },
+    display: { filter: true, UICreate: false, UIEdit: false, table: false },
   },
   {
-    type: "inputNumber",
-    title: { eng: "productPrice", cht: "商品價格" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    type: "inputText",
+    title: { eng: "buyerName", cht: "客戶名稱" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "inputNumber",
-    title: { eng: "productInStock", cht: "庫存" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    type: "inputText",
+    title: { eng: "buyerEmail", cht: "客戶信箱" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
+  },
+  {
+    type: "inputText",
+    title: { eng: "buyerTel", cht: "客戶電話" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
+  },
+  {
+    type: "inputText",
+    title: { eng: "buyerAddr", cht: "客戶地址" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
+  },
+  {
+    type: "inputText",
+    title: { eng: "transportNote", cht: "物流備註" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "select",
-    title: { eng: "storeOnly", cht: "快閃店限定" },
+    title: { eng: "payment", cht: "付款方式" },
     option: [
-      { value: 1, text: "快閃店限定" },
-      { value: 0, text: "非快閃店限定" },
+      { value: "貨到付款", text: "貨到付款" },
+      { value: "線上刷卡", text: "線上刷卡" },
     ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "select",
-    title: { eng: "productMain", cht: "首頁呈現商品" },
+    title: { eng: "receiptType", cht: "發票類型" },
     option: [
-      { value: 1, text: "首頁呈現商品" },
-      { value: 0, text: "非首頁呈現商品" },
+      { value: "二聯式", text: "二聯式" },
+      { value: "三聯式", text: "三聯式" },
     ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "inputImgMutiple",
-    title: { eng: "productImg", cht: "圖片連結" },
-    display: { filter: false, UICreate: true, UIEdit: true, table: true },
+    type: "inputText",
+    title: { eng: "companyTitle", cht: "公司名稱" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
+  {
+    type: "inputText",
+    title: { eng: "taxIDNumber", cht: "統一編號" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
+  },
+  {
+    type: "select",
+    title: { eng: "orderStatus", cht: "訂單狀態" },
+    option: [
+      { value: 0, text: "訂單接收" },
+      { value: 1, text: "待出貨" },
+      { value: 2, text: "已出貨" },
+    ],
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
+  },
+
 ];
 
 const removeUIText = {
@@ -283,23 +348,24 @@ function handleUpdateData(data) {
 
 const { data, pending, error, refresh } = useAsyncData(
   //改這
-  "productData",
+  "orderListData",
   async () => {
-    let url = "http://localhost:3000/api/product?";
+    let url = "http://localhost:3000/api/orderList?";
     //改這
     url +=
-      panelActiveValueCom.value === "exist"
-        ? "productExist=1"
-        : "productExist=0";
+      panelActiveValueCom.value === "exist" ? "orderExist=1" : "orderExist=0";
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;
       url += "=";
       url += condition.value.value;
     }
+
     return await $fetch(url);
   }
 );
+// console.log(data.value);
+
 provide("refreshData", refresh);
 
 //增刪修UI控制
@@ -346,8 +412,8 @@ function openOnUI() {
 //編輯data
 //改這
 async function createData(data) {
-  const result = await useAsyncData("productDataCreate", async () => {
-    let url = "http://localhost:3000/api/product";
+  const result = await useAsyncData("orderListDataCreate", async () => {
+    let url = "http://localhost:3000/api/orderList";
     $fetch(url, {
       method: "POST",
       body: data,
@@ -359,8 +425,8 @@ async function createData(data) {
   closeAllEditUI();
 }
 async function editData(data) {
-  const result = await useAsyncData("productDataEdit", async () => {
-    let url = "http://localhost:3000/api/product";
+  const result = await useAsyncData("orderListDataEdit", async () => {
+    let url = "http://localhost:3000/api/orderList";
     $fetch(url, {
       method: "PUT",
       body: data,
@@ -372,8 +438,8 @@ async function editData(data) {
   closeAllEditUI();
 }
 async function removeData(data) {
-  const result = await useAsyncData("productDataRemove", async () => {
-    let url = "http://localhost:3000/api/product";
+  const result = await useAsyncData("orderListDataRemove", async () => {
+    let url = "http://localhost:3000/api/orderList";
     $fetch(url, {
       method: "PATCH",
       body: data,
@@ -385,8 +451,8 @@ async function removeData(data) {
   closeAllEditUI();
 }
 async function onData(data) {
-  const result = await useAsyncData("productDataOn", async () => {
-    let url = "http://localhost:3000/api/product";
+  const result = await useAsyncData("orderListDataOn", async () => {
+    let url = "http://localhost:3000/api/orderList";
     $fetch(url, {
       method: "PATCH",
       body: data,
