@@ -11,7 +11,7 @@
         <div v-else-if="dataTitle.type === 'select'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <select class="selectOption colValue">
+            <select class="selectOption" v-model="rowData[dataTitle.title.eng]">
               <option
                 v-for="option in dataTitle.option"
                 :key="option"
@@ -26,21 +26,21 @@
         <div v-else-if="dataTitle.type === 'inputText'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput colValue" type="text" />
+            <input class="UIInput" type="text" v-model="rowData[dataTitle.title.eng]"/>
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputNumber'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput colValue" type="number" />
+            <input class="UIInput" type="number" v-model="rowData[dataTitle.title.eng]"/>
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputImgSingle'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput colValue" type="text" v-model="img" />
+            <input class="UIInput" type="text" v-model="img" />
             <img class="editImg" :src="imgCom" alt="" />
           </div>
         </div>
@@ -105,10 +105,12 @@
           </div>
         </div>
 
+        <input v-else-if="dataTitle.type === 'inputTextID'" type="hidden" v-model="rowData[dataTitle.title.eng]"/>
+
         <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
 
-      <input type="hidden" class="colValue" />
+
 
       <div class="UIBNDiv">
         <button class="UICancelBN c_white" @click="closeUI">取消</button>
@@ -127,6 +129,8 @@ const emit = defineEmits(["closeUI", "editData"]);
 function closeUI() {
   emit("closeUI");
 }
+
+const rowData = ref({})
 
 const img = ref("");
 const imgCom = computed(() => img.value);
@@ -163,40 +167,17 @@ async function updateData() {
   let data = null;
   // console.log(props.currentPage);
   if (props.currentPage === "menuitem") {
-    data = [
-      editData.menuExist,
-      editData.itemName,
-      editData.itemType,
-      editData.itemDescribe,
-      editData.itemMain,
-      editData.itemPrice,
-      editData.itemImg,
-      editData.itemID,
-    ];
+    rowData.value = editData
+    img.value = editData.itemImg
   } else if (props.currentPage === "product") {
-    data = [
-      editData.productExist,
-      editData.productName,
-      editData.productType,
-      editData.productDescribe,
-      editData.productPrice,
-      editData.productInStock,
-      editData.storeOnly,
-      editData.productMain,
-      // editData.productImg,
-      editData.productID,
-    ];
-    // console.log(editData.productImg);
+    rowData.value = editData
+
     const tempImageList = [];
     for (const imgObj of editData.productImg) {
       tempImageList.push(imgObj.productImg);
     }
     imgList.value = tempImageList;
   }
-  let list = document.querySelectorAll(".colValue");
-  list.forEach((elem, index) => {
-    elem.value = data[index];
-  });
 }
 onMounted(async () => {
   if (process.client) {
@@ -206,32 +187,11 @@ onMounted(async () => {
 
 //submit
 async function submit() {
-  let list = document.querySelectorAll(".colValue");
   let data = null;
   if (props.currentPage === "menuitem") {
-    data = {
-      itemID: list[7].value,
-      menuExist: list[0].value,
-      itemName: list[1].value,
-      itemType: list[2].value,
-      itemDescribe: list[3].value,
-      itemMain: list[4].value,
-      itemPrice: list[5].value,
-      itemImg: list[6].value,
-    };
+    data = {...rowData.value, itemImg: img.value}
   } else if (props.currentPage === "product") {
-    data = {
-      productID: list[8].value,
-      productExist: list[0].value,
-      productName: list[1].value,
-      productType: list[2].value,
-      productDescribe: list[3].value,
-      productPrice: list[4].value,
-      productInStock: list[5].value,
-      storeOnly: list[6].value,
-      productMain: list[7].value,
-      productImg: imgList.value,
-    };
+    data = {...rowData.value, productImg: imgList.value}
   }
   // console.log(data);
   emit("editData", data);

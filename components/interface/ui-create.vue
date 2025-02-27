@@ -11,7 +11,10 @@
         <div v-else-if="dataTitle.type === 'select'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <select class="selectOption colValue">
+            <select
+              class="selectOption"
+              v-model="rowData[dataTitle.title.eng]"
+            >
               <option
                 v-for="option in dataTitle.option"
                 :key="option"
@@ -26,14 +29,22 @@
         <div v-else-if="dataTitle.type === 'inputText'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput colValue" type="text" />
+            <input
+              class="UIInput"
+              type="text"
+              v-model="rowData[dataTitle.title.eng]"
+            />
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputNumber'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput colValue" type="number" />
+            <input
+              class="UIInput"
+              type="number"
+              v-model="rowData[dataTitle.title.eng]"
+            />
           </div>
         </div>
 
@@ -41,7 +52,7 @@
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
             <input
-              class="UIInput itemImgCreate colValue"
+              class="UIInput itemImgCreate"
               type="text"
               v-model="img"
             />
@@ -130,6 +141,8 @@ function closeUI() {
   emit("closeUI");
 }
 
+const rowData = ref({});
+
 const img = ref("");
 const imgCom = computed(() => img.value);
 
@@ -162,30 +175,11 @@ function lessInput(number) {
 }
 
 function submit() {
-  let list = document.querySelectorAll(".colValue");
   let data = null;
   if (props.currentPage === "menuitem") {
-    data = {
-      menuExist: list[0].value,
-      itemName: list[1].value,
-      itemType: list[2].value,
-      itemDescribe: list[3].value,
-      itemMain: list[4].value,
-      itemPrice: list[5].value,
-      itemImg: list[6].value,
-    };
+    data = { ...rowData.value, itemImg: img.value };
   } else if (props.currentPage === "product") {
-    data = {
-      productExist: list[0].value,
-      productName: list[1].value,
-      productType: list[2].value,
-      productDescribe: list[3].value,
-      productPrice: list[4].value,
-      productInStock: list[5].value,
-      storeOnly: list[6].value,
-      productMain: list[7].value,
-      productImg: imgList.value,
-    };
+    data = { ...rowData.value, productImg: imgList.value };
   } else if (props.currentPage === "orderList") {
     const orderProductIDList = [];
     const productQList = [];
@@ -201,38 +195,29 @@ function submit() {
 
 //測試用 先上資料
 function testAllColMenu() {
+  rowData.value = {
+    menuExist: 0,
+    itemName: "寶可夢拿鐵",
+    itemType: "飲品",
+    itemDescribe:
+      "每一杯寶可夢拿鐵都充滿驚喜，選擇你的最愛，讓冒險從咖啡開始！",
+    itemMain: 0,
+    itemPrice: 150,
+  };
   img.value =
-    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg";
-  const testData = [
-    0,
-    "寶可夢拿鐵",
-    "飲品",
-    "每一杯寶可夢拿鐵都充滿驚喜，選擇你的最愛，讓冒險從咖啡開始！",
-    0,
-    150,
-    "https://www.pokemoncenter-online.com/cafe/common/img/menu/2024/photo_special11.jpg",
-  ];
-  let list = document.querySelectorAll(".colValue");
-  list.forEach((elem, index) => {
-    elem.value = testData[index];
-  });
+    "https://www.pokemon-cafe.jp/zh-TW/5678fb1669451032b8fc990be2ca684e8cecd500.jpg";
 }
 async function testAllColProduct() {
-  const testData = [
-    0,
-    "呆呆獸海報",
-    "decoration",
-    "Slowpoke 並不以聰明或速度而聞名，但這件藝術品可以快速為您的空間增添色彩和歡樂！",
-    300,
-    25,
-    0,
-    0,
-  ];
-
-  let list = document.querySelectorAll(".colValue");
-  list.forEach((elem, index) => {
-    elem.value = testData[index];
-  });
+  rowData.value = {
+    productExist: 0,
+    productName: "呆呆獸海報",
+    productType: "decoration",
+    productDescribe: "Slowpoke 並不以聰明或速度而聞名，但這件藝術品可以快速為您的空間增添色彩和歡樂！",
+    productPrice: 300,
+    productInStock: 25,
+    storeOnly: 0,
+    productMain: 0,
+  };
   imgList.value = [
     "https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2023/10/12/draft/26062952.jpg&x=0&y=0&sw=0&sh=0&exp=3600&w=850&nt=1",
     "https://local.pokemon.jp/img/p/lginfo/89ebf3ab1666417aebc96fe81e1095c3.jpg",

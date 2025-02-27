@@ -190,9 +190,9 @@ const tableDataTitle = [
 ];
 const dataList = [
   {
-    type: "inputText",
+    type: "inputTextID",
     title: { eng: "productID", cht: "商品編號" },
-    display: { filter: true, UICreate: false, UIEdit: false, table: true },
+    display: { filter: true, UICreate: false, UIEdit: true, table: true },
   },
   {
     type: "select",
