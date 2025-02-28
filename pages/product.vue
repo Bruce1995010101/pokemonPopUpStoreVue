@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">交易紀錄管理</div>
+      <div class="f_h4 c_white" id="title">商品管理</div>
 
       <article class="tabs">
         <data-filter-all

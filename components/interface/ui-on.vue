@@ -33,6 +33,11 @@ async function onData() {
       productID: data.productID,
       productExist: 1,
     };
+  } else if (props.currentPage === "orderlist") {
+    payload = {
+      orderID: data.orderID,
+      orderExist: 1,
+    };
   }
   emit("onData", payload);
 }

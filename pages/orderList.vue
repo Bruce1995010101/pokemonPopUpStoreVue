@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">商品管理</div>
+      <div class="f_h4 c_white" id="title">交易紀錄管理</div>
 
       <article class="tabs">
         <data-filter-all
@@ -239,10 +239,10 @@ const dataList = [
   },
   {
     type: "select",
-    title: { eng: "productExist", cht: "訂單狀況" },
+    title: { eng: "orderExist", cht: "訂單狀況" },
     option: [
-      { value: 1, text: "上架商品" },
-      { value: 0, text: "下架商品" },
+      { value: 1, text: "有效訂單" },
+      { value: 0, text: "無效訂單" },
     ],
     display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
@@ -250,13 +250,13 @@ const dataList = [
     type: "mutipleInput",
     title: [
       { eng: "orderProductID", cht: "產品ID" },
-      { eng: "orderProductQ", cht: "產品數量" },
+      { eng: "productQ", cht: "產品數量" },
     ],
     display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "productExist", cht: "產品ID" },
+    title: { eng: "productID", cht: "產品ID" },
     display: { filter: true, UICreate: false, UIEdit: false, table: false },
   },
   {
@@ -419,7 +419,7 @@ async function createData(data) {
       body: data,
     });
   });
-  console.log(data);
+  // console.log(data);
   refresh();
   refresh();
   closeAllEditUI();
@@ -432,7 +432,7 @@ async function editData(data) {
       body: data,
     });
   });
-  // console.log(result);
+  console.log(result);
   refresh();
   refresh();
   closeAllEditUI();

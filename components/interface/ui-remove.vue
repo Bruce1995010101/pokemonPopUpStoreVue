@@ -33,6 +33,11 @@ async function removeData() {
       productID: data.productID,
       productExist: 0,
     };
+  } else if (props.currentPage === "orderlist") {
+    payload = {
+      orderID: data.orderID,
+      orderExist: 0,
+    };
   }
 
   emit('removeData', payload)

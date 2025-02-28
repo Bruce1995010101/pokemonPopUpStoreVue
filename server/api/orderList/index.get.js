@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
                 params.push(`%${productName}%`);
             }
 
-            console.log("Generated SQL Query:", query);
+            // console.log("Generated SQL Query:", query);
             console.log("Parameters:", params);
 
             // 執行 SQL 查詢

@@ -150,9 +150,7 @@ const boughtProductList = ref([{}])
 const boughtProductListCom = computed(() => boughtProductList.value);
 const boughtProductListAmount = computed(() => boughtProductList.value.length);
 
-function moreInput(number) {
-  console.log(boughtProductList.value);
-  
+function moreInput(number) {  
   boughtProductList.value.splice(number, 0, {});
 }
 function lessInput(number) {
@@ -164,7 +162,6 @@ const UIData = inject("UIData");
 async function updateData() {
   const editData = UIData.value.edit;
   img.value = editData.itemImg;
-  let data = null;
   // console.log(props.currentPage);
   if (props.currentPage === "menuitem") {
     rowData.value = editData
@@ -177,6 +174,13 @@ async function updateData() {
       tempImageList.push(imgObj.productImg);
     }
     imgList.value = tempImageList;
+  }else if (props.currentPage === "orderlist") {
+    rowData.value = editData
+    // console.log('ui印上的資料:',editData);
+    
+
+    const tempImageList = [{orderProductID: editData.productID, productQ: editData.productQ}];
+    boughtProductList.value = tempImageList;
   }
 }
 onMounted(async () => {
@@ -192,8 +196,10 @@ async function submit() {
     data = {...rowData.value, itemImg: img.value}
   } else if (props.currentPage === "product") {
     data = {...rowData.value, productImg: imgList.value}
+  }else if (props.currentPage === "orderlist") {
+    data = {...rowData.value, ...boughtProductList.value[0]}
   }
-  // console.log(data);
+  // console.log('submit的資料',data);
   emit("editData", data);
 }
 </script>

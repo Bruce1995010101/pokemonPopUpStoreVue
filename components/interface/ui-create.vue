@@ -107,7 +107,7 @@
                 <input
                   class="UIInput imgsInput"
                   type="text"
-                  v-model="boughtProductList[0][title.eng]"
+                  v-model="boughtProductList[number-1][title.eng]"
                 />
               </div>
             </div>
@@ -166,8 +166,7 @@ const boughtProductListCom = computed(() => boughtProductList.value);
 const boughtProductListAmount = computed(() => boughtProductList.value.length);
 
 function moreInput(number) {
-  console.log(boughtProductList.value);
-
+  // console.log(boughtProductList.value);
   boughtProductList.value.splice(number, 0, {});
 }
 function lessInput(number) {
@@ -180,13 +179,14 @@ function submit() {
     data = { ...rowData.value, itemImg: img.value };
   } else if (props.currentPage === "product") {
     data = { ...rowData.value, productImg: imgList.value };
-  } else if (props.currentPage === "orderList") {
-    const orderProductIDList = [];
-    const productQList = [];
-    for (const i = 0; i <= boughtProductList.value.length; i++) {
+  } else if (props.currentPage === "orderlist") {
+    let orderProductIDList = [];
+    let productQList = [];
+    for (let i = 0; i < boughtProductListAmount.value; i++) {
       orderProductIDList.push(boughtProductList.value[i].orderProductID);
-      productQList.push(boughtProductList.value[i].orderProductQ);
+      productQList.push(boughtProductList.value[i].productQ);
     }
+    data = { ...rowData.value, orderProductIDList: orderProductIDList,  productQList: productQList}
   }
 
   // console.log(data);
@@ -207,7 +207,7 @@ function testAllColMenu() {
   img.value =
     "https://www.pokemon-cafe.jp/zh-TW/5678fb1669451032b8fc990be2ca684e8cecd500.jpg";
 }
-async function testAllColProduct() {
+function testAllColProduct() {
   rowData.value = {
     productExist: 0,
     productName: "呆呆獸海報",
@@ -223,12 +223,34 @@ async function testAllColProduct() {
     "https://local.pokemon.jp/img/p/lginfo/89ebf3ab1666417aebc96fe81e1095c3.jpg",
   ];
 }
+function testAllColOrderList() {
+  rowData.value = {
+    orderExist: 0,
+    buyerName: "莊家為",
+    buyerEmail: "boi@gmail.com",
+    buyerTel: "0912123123",
+    buyerAddr: '台中市沙鹿區',
+    transportNote: '儘速抵達',
+    payment: '貨到付款',
+    receiptType: '二聯式',
+    companyTitle: '株式會社',
+    taxIDNumber: '54685485',
+    orderStatus: 0,
+  };
+  boughtProductList.value = [
+    {orderProductID: 1, productQ: 1},
+    {orderProductID: 2, productQ: 2},
+    {orderProductID: 3, productQ: 3}
+  ]
+}
 onMounted(async () => {
   if (process.client) {
     if (props.currentPage === "menuitem") {
       testAllColMenu();
     } else if (props.currentPage === "product") {
       testAllColProduct();
+    } else if (props.currentPage === "orderlist") {
+      testAllColOrderList();
     }
   }
 });
