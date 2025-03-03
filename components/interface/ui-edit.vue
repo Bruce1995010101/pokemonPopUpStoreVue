@@ -218,6 +218,9 @@ async function updateData() {
       { orderProductID: editData.productID, productQ: editData.productQ },
     ];
     boughtProductList.value = tempImageList;
+
+    dateTime.value.orderDateDate = editData.orderDate.split(' ')[0]
+    dateTime.value.orderDateTime = editData.orderDate.split(' ')[1]
   } else if (props.currentPage === "cafebooking") {
     rowData.value = editData;
 
@@ -242,7 +245,8 @@ async function submit() {
   } else if (props.currentPage === "product") {
     data = { ...rowData.value, productImg: imgList.value };
   } else if (props.currentPage === "orderlist") {
-    data = { ...rowData.value, ...boughtProductList.value[0] };
+    const orderDate = {orderDate: dateTime.value.orderDateDate + ' ' + dateTime.value.orderDateTime}  
+    data = { ...rowData.value, ...boughtProductList.value[0], ...orderDate };
   } else if (props.currentPage === "cafebooking") {
     const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
     const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  

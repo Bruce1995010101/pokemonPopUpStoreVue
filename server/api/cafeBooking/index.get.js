@@ -56,6 +56,8 @@ export default defineEventHandler(async (event) => {
             // console.log(query);
             // console.log(params);
             // console.log(data);
+
+            // 修改時間格式
             data = data.map(booking => ({
                 ...booking,
                 bookingDate: new Date(booking.bookingDate).toLocaleString("zh-TW", {
