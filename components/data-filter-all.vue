@@ -19,7 +19,7 @@
     <div  v-for="dataCol in dataList" :key="dataCol">
       <select
         v-if="filterConditionComp === dataCol.title.eng & dataCol.type === 'select'"
-        class="selectInput selectSomething"
+        class="selectInput selectSomething marginLeft"
         :class="{displayNone : !dataCol.display.filter}"
         v-model="filterValue"
         @change="changeCondition(false)"
@@ -29,8 +29,8 @@
       </select>
 
       <div class="selectLittleDiv" v-else-if="filterConditionComp === dataCol.title.eng & dataCol.type.includes('time')">
-        <input type="date" class="selectInput selectSomething" v-model="date" @input="changeCondition(false)">
-        <select class="selectInput selectSomething" v-model="time" @change="changeCondition(false)">
+        <input type="date" class="selectTime selectSomething" v-model="date" @input="changeCondition(false)">
+        <select class="selectTime selectSomething" v-model="time" @change="changeCondition(false)">
           <option value=""  selected>不分時段</option>
           <option v-for="timeOption in dataCol.timeOption" :key="timeOption" :value="timeOption.value"  >{{ timeOption.text }}</option>
         </select>
@@ -112,6 +112,15 @@ function changeCondition(isConditionChanged) {
 
 
 .selectInput {
+  height: 20px;
+  padding-left: 10px;
+  border-radius: 20px;
+  border: 0cap;
+}
+.selectInput::placeholder {
+  font-size: var(--p);
+}
+.selectTime {
   /* width: 200px; */
   width: 100%;
   height: 20px;
@@ -119,13 +128,14 @@ function changeCondition(isConditionChanged) {
   border-radius: 20px;
   border: 0cap;
 }
+.selectTime::placeholder {
+  font-size: var(--p);
+}
 #conditionInput {
   padding-left: 10px;
 }
 
-.selectInput::placeholder {
-  font-size: var(--p);
-}
+
 
 .selectOption {
   font-size: var(--p);
