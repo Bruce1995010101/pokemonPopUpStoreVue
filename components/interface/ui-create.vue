@@ -11,10 +11,7 @@
         <div v-else-if="dataTitle.type === 'select'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <select
-              class="selectOption"
-              v-model="rowData[dataTitle.title.eng]"
-            >
+            <select class="selectOption" v-model="rowData[dataTitle.title.eng]">
               <option
                 v-for="option in dataTitle.option"
                 :key="option"
@@ -51,11 +48,7 @@
         <div v-else-if="dataTitle.type === 'inputImgSingle'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input
-              class="UIInput itemImgCreate"
-              type="text"
-              v-model="img"
-            />
+            <input class="UIInput itemImgCreate" type="text" v-model="img" />
             <img class="createImg" :src="imgCom" alt="" />
           </div>
         </div>
@@ -107,7 +100,7 @@
                 <input
                   class="UIInput imgsInput"
                   type="text"
-                  v-model="boughtProductList[number-1][title.eng]"
+                  v-model="boughtProductList[number - 1][title.eng]"
                 />
               </div>
             </div>
@@ -117,6 +110,26 @@
               class="minusButtonMore"
               @click="lessInput(number)"
             ></button>
+          </div>
+        </div>
+        <div v-else-if="dataTitle.type === 'timeOption'">
+          <div class="row">
+            <div class="UISpan">{{ dataTitle.title.cht }}</div>
+            <div>
+              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]">
+              <select
+                class="selectOption"
+                v-model="dateTime[`${dataTitle.title.eng}Time`]"
+              >
+                <option
+                  v-for="option in dataTitle.timeOption"
+                  :key="option"
+                  :value="option.value"
+                >
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -173,6 +186,8 @@ function lessInput(number) {
   boughtProductList.value.splice(number - 1, 1);
 }
 
+const dateTime = ref([{}])
+
 function submit() {
   let data = null;
   if (props.currentPage === "menuitem") {
@@ -186,7 +201,16 @@ function submit() {
       orderProductIDList.push(boughtProductList.value[i].orderProductID);
       productQList.push(boughtProductList.value[i].productQ);
     }
-    data = { ...rowData.value, orderProductIDList: orderProductIDList,  productQList: productQList}
+    data = {
+      ...rowData.value,
+      orderProductIDList: orderProductIDList,
+      productQList: productQList,
+    };
+  } else if(props.currentPage === "cafebooking"){
+    data = {
+      ...rowData.value,
+      bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime
+    };
   }
 
   // console.log(data);
@@ -212,7 +236,8 @@ function testAllColProduct() {
     productExist: 0,
     productName: "呆呆獸海報",
     productType: "decoration",
-    productDescribe: "Slowpoke 並不以聰明或速度而聞名，但這件藝術品可以快速為您的空間增添色彩和歡樂！",
+    productDescribe:
+      "Slowpoke 並不以聰明或速度而聞名，但這件藝術品可以快速為您的空間增添色彩和歡樂！",
     productPrice: 300,
     productInStock: 25,
     storeOnly: 0,
@@ -229,19 +254,30 @@ function testAllColOrderList() {
     buyerName: "莊家為",
     buyerEmail: "boi@gmail.com",
     buyerTel: "0912123123",
-    buyerAddr: '台中市沙鹿區',
-    transportNote: '儘速抵達',
-    payment: '貨到付款',
-    receiptType: '二聯式',
-    companyTitle: '株式會社',
-    taxIDNumber: '54685485',
+    buyerAddr: "台中市沙鹿區",
+    transportNote: "儘速抵達",
+    payment: "貨到付款",
+    receiptType: "二聯式",
+    companyTitle: "株式會社",
+    taxIDNumber: "54685485",
     orderStatus: 0,
   };
   boughtProductList.value = [
-    {orderProductID: 1, productQ: 1},
-    {orderProductID: 2, productQ: 2},
-    {orderProductID: 3, productQ: 3}
-  ]
+    { orderProductID: 1, productQ: 1 },
+    { orderProductID: 2, productQ: 2 },
+    { orderProductID: 3, productQ: 3 },
+  ];
+}
+function testAllCafeBooking() {
+  rowData.value = {
+    bookingExist: 0,
+    bookingName: "莊家為",
+    bookingEmail: "boi@gmail.com",
+    bookingTel: "0912123123",
+    bookingNumber: 5,
+  };
+  dateTime.value.bookingTimePeriodDate = '2025-03-03'
+  dateTime.value.bookingTimePeriodTime = '11'
 }
 onMounted(async () => {
   if (process.client) {
@@ -251,6 +287,8 @@ onMounted(async () => {
       testAllColProduct();
     } else if (props.currentPage === "orderlist") {
       testAllColOrderList();
+    } else if (props.currentPage === "cafebooking") {
+      testAllCafeBooking();
     }
   }
 });

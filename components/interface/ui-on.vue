@@ -38,6 +38,11 @@ async function onData() {
       orderID: data.orderID,
       orderExist: 1,
     };
+  } else if (props.currentPage === "cafebooking") {
+    payload = {
+      cafeBookingID: data.cafeBookingID,
+      bookingExist: 1,
+    };
   }
   emit("onData", payload);
 }

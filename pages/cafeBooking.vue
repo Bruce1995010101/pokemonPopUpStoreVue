@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">交易紀錄管理</div>
+      <div class="f_h4 c_white" id="title">咖啡廳預定管理</div>
 
       <article class="tabs">
         <data-filter-all
@@ -26,7 +26,7 @@
           @change="changePanal('exist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="one">有效訂單</label>
+        <label class="bookMarkLabel" for="one">有效預定</label>
 
         <input
           class="bookmark"
@@ -37,7 +37,7 @@
           @change="changePanal('noExist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="two">無效訂單</label>
+        <label class="bookMarkLabel" for="two">無效預定</label>
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
@@ -121,7 +121,7 @@ const page = computed(() => {
   return segments[segments.length - 1] || "";
 });
 //預設篩選
-const defaultSelected = "orderStatus";
+const defaultSelected = "bookingTimePeriod";
 
 onMounted(async () => {
   if (process.client) {
@@ -129,99 +129,40 @@ onMounted(async () => {
     // console.log(pagesData.currentPage);
   }
 });
-("資料ID	訂單編號	訂單狀態	商品名稱	商品數量	單品總價	買家姓名	信箱	電話	地址	訂單日期	付款方式	發票類別	公司名稱	統一編號	物流備註");
 //改這
 const tableDataTitle = [
   {
-    title: { eng: "orderID", cht: "資料ID" },
+    title: { eng: "cafeBookingID", cht: "預定編號" },
     type: "number",
     style: { align: "center" },
   },
   {
-    title: { eng: "transactionID", cht: "訂單編號" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "orderStatus", cht: "訂單狀態" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: 0, text: "訂單接收" },
-      { value: 1, text: "待出貨" },
-      { value: 2, text: "已出貨" },
-    ],
-  },
-  {
-    title: { eng: "productName", cht: "商品名稱" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "productQ", cht: "商品數量" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "orderAmount", cht: "單品總價" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "buyerName", cht: "買家姓名" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "buyerEmail", cht: "信箱" },
-    type: "string",
-    style: { align: "left" },
-  },
-  {
-    title: { eng: "buyerTel", cht: "電話" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "buyerAddr", cht: "地址" },
-    type: "string",
-    style: { align: "left" },
-  },
-  {
-    title: { eng: "orderDate", cht: "訂單日期" },
+    title: { eng: "bookingTimePeriod", cht: "預定時段" },
     type: "time",
     style: { align: "center" },
   },
   {
-    title: { eng: "payment", cht: "付款方式" },
-    type: "select",
+    title: { eng: "bookingDate", cht: "下訂日期" },
+    type: "time",
     style: { align: "center" },
-    option: [
-      { value: "貨到付款", text: "貨到付款" },
-      { value: "線上刷卡", text: "線上刷卡" },
-    ],
   },
   {
-    title: { eng: "receiptType", cht: "發票類別" },
-    type: "select",
+    title: { eng: "bookingNumber", cht: "預定人數" },
+    type: "number",
     style: { align: "center" },
-    option: [
-      { value: "三聯式", text: "三聯式" },
-      { value: "二聯式", text: "二聯式" },
-    ],
   },
   {
-    title: { eng: "companyTitle", cht: "公司名稱" },
+    title: { eng: "bookingName", cht: "預約姓名" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "bookingEmail", cht: "信箱" },
     type: "string",
     style: { align: "left" },
   },
   {
-    title: { eng: "taxIDNumber", cht: "統一編號" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "transportNote", cht: "物流備註" },
+    title: { eng: "bookingTel", cht: "電話" },
     type: "string",
     style: { align: "center" },
   },
@@ -229,107 +170,90 @@ const tableDataTitle = [
 const dataList = [
   {
     type: "inputTextID",
-    title: { eng: "orderID", cht: "資料ID" },
-    display: { filter: true, UICreate: false, UIEdit: true, table: true },
-  },
-  {
-    type: "inputText",
-    title: { eng: "transactionID", cht: "訂單編號" },
+    title: { eng: "cafeBookingID", cht: "預定編號" },
     display: { filter: true, UICreate: false, UIEdit: true, table: true },
   },
   {
     type: "select",
-    title: { eng: "orderExist", cht: "訂單狀況" },
+    title: { eng: "bookingExist", cht: "預定狀況" },
     option: [
-      { value: 1, text: "有效訂單" },
-      { value: 0, text: "無效訂單" },
+      { value: 1, text: "有效預定" },
+      { value: 0, text: "無效預定" },
     ],
     display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "mutipleInput",
-    title: [
-      { eng: "orderProductID", cht: "產品ID" },
-      { eng: "productQ", cht: "產品數量" },
+    type: "timeOption",
+    title: { eng: "bookingTimePeriod", cht: "預定時段" },
+    timeOption: [
+      {text: '10:00', value: '10'},
+      {text: '11:00', value: '11'},
+      {text: '12:00', value: '12'},
+      {text: '13:00', value: '13'},
+      {text: '14:00', value: '14'},
+      {text: '15:00', value: '15'},
+      {text: '16:00', value: '16'},
     ],
-    display: { filter: false, UICreate: true, UIEdit: true, table: false },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
   },
   {
-    type: "inputText",
-    title: { eng: "productID", cht: "產品ID" },
-    display: { filter: true, UICreate: false, UIEdit: false, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "buyerName", cht: "客戶名稱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "buyerEmail", cht: "客戶信箱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "buyerTel", cht: "客戶電話" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "buyerAddr", cht: "客戶地址" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "transportNote", cht: "物流備註" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "select",
-    title: { eng: "payment", cht: "付款方式" },
-    option: [
-      { value: "貨到付款", text: "貨到付款" },
-      { value: "線上刷卡", text: "線上刷卡" },
+    type: "timeInput",
+    title: { eng: "bookingDate", cht: "下訂日期" },
+    display: { filter: true, UICreate: false, UIEdit: true, table: true },
+    timeOption: [
+      {text: '00:00', value: '00'},
+      {text: '01:00', value: '01'},
+      {text: '02:00', value: '02'},
+      {text: '03:00', value: '03'},
+      {text: '04:00', value: '04'},
+      {text: '05:00', value: '05'},
+      {text: '06:00', value: '06'},
+      {text: '07:00', value: '07'},
+      {text: '08:00', value: '08'},
+      {text: '09:00', value: '09'},
+      {text: '10:00', value: '10'},
+      {text: '11:00', value: '11'},
+      {text: '12:00', value: '12'},
+      {text: '13:00', value: '13'},
+      {text: '14:00', value: '14'},
+      {text: '15:00', value: '15'},
+      {text: '16:00', value: '16'},
+      {text: '17:00', value: '17'},
+      {text: '18:00', value: '18'},
+      {text: '19:00', value: '19'},
+      {text: '20:00', value: '20'},
+      {text: '21:00', value: '21'},
+      {text: '22:00', value: '22'},
+      {text: '23:00', value: '23'},
     ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "select",
-    title: { eng: "receiptType", cht: "發票類型" },
-    option: [
-      { value: "二聯式", text: "二聯式" },
-      { value: "三聯式", text: "三聯式" },
-    ],
+    type: "inputNumber",
+    title: { eng: "bookingNumber", cht: "預定人數" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+  },
+  {
+    type: "inputText",
+    title: { eng: "bookingName", cht: "預約姓名" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "companyTitle", cht: "公司名稱" },
+    title: { eng: "bookingEmail", cht: "信箱" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "taxIDNumber", cht: "統一編號" },
+    title: { eng: "bookingTel", cht: "電話" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
-  {
-    type: "select",
-    title: { eng: "orderStatus", cht: "訂單狀態" },
-    option: [
-      { value: 0, text: "訂單接收" },
-      { value: 1, text: "待出貨" },
-      { value: 2, text: "已出貨" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-
 ];
 
 const removeUIText = {
-  titleText: "確定使該商品下架？",
+  titleText: "確定使該筆預定無效？",
 };
 const onUIText = {
-  titleText: "確定使該商品上架？",
+  titleText: "確定使該預筆定無效？",
 };
 
 let panelActiveValue = ref("exist");
@@ -348,12 +272,12 @@ function handleUpdateData(data) {
 
 const { data, pending, error, refresh } = useAsyncData(
   //改這
-  "orderListData",
+  "cafeBookingData",
   async () => {
-    let url = "http://localhost:3000/api/orderList?";
+    let url = "http://localhost:3000/api/cafeBooking?";
     //改這
     url +=
-      panelActiveValueCom.value === "exist" ? "orderExist=1" : "orderExist=0";
+      panelActiveValueCom.value === "exist" ? "bookingExist=1" : "bookingExist=0";
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;
@@ -412,8 +336,8 @@ function openOnUI() {
 //編輯data
 //改這
 async function createData(data) {
-  const result = await useAsyncData("orderListDataCreate", async () => {
-    let url = "http://localhost:3000/api/orderList";
+  const result = await useAsyncData("cafeBookingDataCreate", async () => {
+    let url = "http://localhost:3000/api/cafeBooking";
     $fetch(url, {
       method: "POST",
       body: data,
@@ -425,8 +349,8 @@ async function createData(data) {
   closeAllEditUI();
 }
 async function editData(data) {
-  const result = await useAsyncData("orderListDataEdit", async () => {
-    let url = "http://localhost:3000/api/orderList";
+  const result = await useAsyncData("cafeBookingDataEdit", async () => {
+    let url = "http://localhost:3000/api/cafeBooking";
     $fetch(url, {
       method: "PUT",
       body: data,
@@ -438,8 +362,8 @@ async function editData(data) {
   closeAllEditUI();
 }
 async function removeData(data) {
-  const result = await useAsyncData("orderListDataRemove", async () => {
-    let url = "http://localhost:3000/api/orderList";
+  const result = await useAsyncData("cafeBookingDataRemove", async () => {
+    let url = "http://localhost:3000/api/cafeBooking";
     $fetch(url, {
       method: "PATCH",
       body: data,
@@ -451,8 +375,8 @@ async function removeData(data) {
   closeAllEditUI();
 }
 async function onData(data) {
-  const result = await useAsyncData("orderListDataOn", async () => {
-    let url = "http://localhost:3000/api/orderList";
+  const result = await useAsyncData("cafeBookingDataOn", async () => {
+    let url = "http://localhost:3000/api/cafeBooking";
     $fetch(url, {
       method: "PATCH",
       body: data,

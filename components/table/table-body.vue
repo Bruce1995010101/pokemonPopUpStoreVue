@@ -8,6 +8,7 @@
           <span v-for="option in colTitle.option" :key="option" :class="{displayNone : option.value !== dataRow[`${colTitle.title.eng}`]}"> {{ option.text }} </span>
         </div>
         <img v-else-if="colTitle.type === 'image'" :src="dataRow[`${colTitle.title.eng}`]" :alt="dataRow[`${colTitle.title.eng}`]" />
+        <span v-else-if="colTitle.type === 'time'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
       
       </td>
       <td class="textCenter">

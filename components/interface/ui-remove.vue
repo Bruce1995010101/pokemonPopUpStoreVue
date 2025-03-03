@@ -13,9 +13,9 @@ const props = defineProps({
   dataUI: Object,
   currentPage: String,
 });
-const emit = defineEmits(["closeUI", "removeData"])
-function closeUI(){
-  emit("closeUI")
+const emit = defineEmits(["closeUI", "removeData"]);
+function closeUI() {
+  emit("closeUI");
 }
 
 const UIData = inject("UIData");
@@ -38,24 +38,27 @@ async function removeData() {
       orderID: data.orderID,
       orderExist: 0,
     };
+  } else if (props.currentPage === "cafebooking") {
+    payload = {
+      cafeBookingID: data.cafeBookingID,
+      bookingExist: 0,
+    };
   }
 
-  emit('removeData', payload)
+  emit("removeData", payload);
 }
 </script>
 
 
 <style scoped>
-
 .UIDiv {
   margin: 50px 40px 40px 40px;
   text-align: center;
 }
 .UIText {
-  text-align:center;
+  text-align: center;
   font-size: var(--h6);
 }
-
 
 #UIBnDiv {
   margin-top: 40px;

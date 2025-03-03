@@ -26,14 +26,22 @@
         <div v-else-if="dataTitle.type === 'inputText'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput" type="text" v-model="rowData[dataTitle.title.eng]"/>
+            <input
+              class="UIInput"
+              type="text"
+              v-model="rowData[dataTitle.title.eng]"
+            />
           </div>
         </div>
 
         <div v-else-if="dataTitle.type === 'inputNumber'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
-            <input class="UIInput" type="number" v-model="rowData[dataTitle.title.eng]"/>
+            <input
+              class="UIInput"
+              type="number"
+              v-model="rowData[dataTitle.title.eng]"
+            />
           </div>
         </div>
 
@@ -105,12 +113,39 @@
           </div>
         </div>
 
-        <input v-else-if="dataTitle.type === 'inputTextID'" type="hidden" v-model="rowData[dataTitle.title.eng]"/>
+        <div v-else-if="dataTitle.type.includes('time')">
+          <div v-if="dataTitle.type === 'timeOption'" class="row">
+            <div class="UISpan">{{ dataTitle.title.cht }}</div>
+            <div>
+              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]" />
+              <select  class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Time`]">
+                <option
+                  v-for="option in dataTitle.timeOption"
+                  :key="option"
+                  :value="option.value"
+                >
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div v-if="dataTitle.type === 'timeInput'" class="row">
+            <div class="UISpan">{{ dataTitle.title.cht }}</div>
+            <div>
+              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]" />
+              <input  class="timeInput" type="time" v-model="dateTime[`${dataTitle.title.eng}Time`]">
+            </div>
+          </div>
+        </div>
+
+        <input
+          v-else-if="dataTitle.type === 'inputTextID'"
+          type="hidden"
+          v-model="rowData[dataTitle.title.eng]"
+        />
 
         <div v-else>[{{ dataTitle.title.cht }}] 欄位沒出來</div>
       </div>
-
-
 
       <div class="UIBNDiv">
         <button class="UICancelBN c_white" @click="closeUI">取消</button>
@@ -130,7 +165,7 @@ function closeUI() {
   emit("closeUI");
 }
 
-const rowData = ref({})
+const rowData = ref({});
 
 const img = ref("");
 const imgCom = computed(() => img.value);
@@ -145,17 +180,18 @@ function lessImage(number) {
   imgList.value.splice(number - 1, 1);
 }
 
-
-const boughtProductList = ref([{}])
+const boughtProductList = ref([{}]);
 const boughtProductListCom = computed(() => boughtProductList.value);
 const boughtProductListAmount = computed(() => boughtProductList.value.length);
 
-function moreInput(number) {  
+function moreInput(number) {
   boughtProductList.value.splice(number, 0, {});
 }
 function lessInput(number) {
   boughtProductList.value.splice(number - 1, 1);
 }
+
+const dateTime = ref({})
 
 //取得資料呈現在UI上
 const UIData = inject("UIData");
@@ -164,23 +200,32 @@ async function updateData() {
   img.value = editData.itemImg;
   // console.log(props.currentPage);
   if (props.currentPage === "menuitem") {
-    rowData.value = editData
-    img.value = editData.itemImg
+    rowData.value = editData;
+    img.value = editData.itemImg;
   } else if (props.currentPage === "product") {
-    rowData.value = editData
+    rowData.value = editData;
 
     const tempImageList = [];
     for (const imgObj of editData.productImg) {
       tempImageList.push(imgObj.productImg);
     }
     imgList.value = tempImageList;
-  }else if (props.currentPage === "orderlist") {
-    rowData.value = editData
+  } else if (props.currentPage === "orderlist") {
+    rowData.value = editData;
     // console.log('ui印上的資料:',editData);
-    
 
-    const tempImageList = [{orderProductID: editData.productID, productQ: editData.productQ}];
+    const tempImageList = [
+      { orderProductID: editData.productID, productQ: editData.productQ },
+    ];
     boughtProductList.value = tempImageList;
+  } else if (props.currentPage === "cafebooking") {
+    rowData.value = editData;
+
+    dateTime.value.bookingTimePeriodDate = editData.bookingTimePeriod.split(' ')[0]
+    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod.split(' ')[1].slice(0, 2)
+    dateTime.value.bookingDateDate = editData.bookingDate.split(' ')[0]
+    dateTime.value.bookingDateTime = editData.bookingDate.split(' ')[1]
+    
   }
 }
 onMounted(async () => {
@@ -193,13 +238,18 @@ onMounted(async () => {
 async function submit() {
   let data = null;
   if (props.currentPage === "menuitem") {
-    data = {...rowData.value, itemImg: img.value}
+    data = { ...rowData.value, itemImg: img.value };
   } else if (props.currentPage === "product") {
-    data = {...rowData.value, productImg: imgList.value}
-  }else if (props.currentPage === "orderlist") {
-    data = {...rowData.value, ...boughtProductList.value[0]}
+    data = { ...rowData.value, productImg: imgList.value };
+  } else if (props.currentPage === "orderlist") {
+    data = { ...rowData.value, ...boughtProductList.value[0] };
+  } else if (props.currentPage === "cafebooking") {
+    const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
+    const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  
+    data = { ...rowData.value, ...bookingTimePeriod, ...bookingDate };
   }
   // console.log('submit的資料',data);
+  
   emit("editData", data);
 }
 </script>
@@ -240,6 +290,12 @@ async function submit() {
 
   padding-left: 10px;
   padding-right: 10px;
+}
+.timeInput {
+  height: 20px;
+  border-radius: 20px;
+  border: 0cap;
+  padding-left: 10px;
 }
 
 .selectOption {

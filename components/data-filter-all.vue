@@ -2,7 +2,6 @@
   <div class="conditionDiv">
     <select
       class="selectSomething"
-      id="condition"
       v-model="filterCondition"
       @change="changeCondition(true)"
     >
@@ -17,7 +16,7 @@
         {{ dataCol.title.cht }}
       </option>
     </select>
-    <div v-for="dataCol in dataList" :key="dataCol">
+    <div  v-for="dataCol in dataList" :key="dataCol">
       <select
         v-if="filterConditionComp === dataCol.title.eng & dataCol.type === 'select'"
         class="selectInput selectSomething"
@@ -29,14 +28,23 @@
         <option v-for="option in dataCol.option" :key="option" :value="option.value">{{ option.text }}</option>
       </select>
 
+      <div class="selectLittleDiv" v-else-if="filterConditionComp === dataCol.title.eng & dataCol.type.includes('time')">
+        <input type="date" class="selectInput selectSomething" v-model="date" @input="changeCondition(false)">
+        <select class="selectInput selectSomething" v-model="time" @change="changeCondition(false)">
+          <option value=""  selected>不分時段</option>
+          <option v-for="timeOption in dataCol.timeOption" :key="timeOption" :value="timeOption.value"  >{{ timeOption.text }}</option>
+        </select>
+      </div>
+
       <input
           v-else-if="filterConditionComp === dataCol.title.eng"
-          class="selectInput"
+          class="selectInput marginLeft"
           type="text"
           placeholder="請輸入值"
           v-model="filterValue"
           @input="changeCondition(false)"
         />
+
     </div>
   </div>
 </template>
@@ -50,16 +58,28 @@ const props = defineProps({
 const emit = defineEmits(["updateData"]);
 
 let filterCondition = ref(props.defaultSelected);
+const filterConditionType= ref('')
 const filterConditionComp = computed(() => {
   filterValue.value = "";
+  date.value = ""
+  time.value = ""
   return filterCondition.value;
 });
 const filterValue = ref("");
-function changeCondition(conditionChanged) {
-  if (conditionChanged) {
-    filterValue.value = "";
+
+const date = ref('')
+const time = ref('')
+
+function changeCondition(isConditionChanged) {
+  // 找到被選擇的條件的欄位類型
+  filterConditionType.value = props.dataList.filter( (dataCol) => dataCol.title.eng === filterCondition.value)[0].type
+  
+  if (isConditionChanged) {
     emit("updateData", { condition: "", value: "" });
     return;
+  }
+  if(filterConditionType.value.includes('time')){
+    filterValue.value = date.value + ' ' + time.value
   }
   // console.log(filterCondition.value);
   // console.log(filterValue.value);
@@ -77,8 +97,9 @@ function changeCondition(conditionChanged) {
   right: 0%;
   top: 0%;
   display: flex;
-  padding: 10px;
+  margin: 10px 0px 10px 10px;
 }
+
 
 .selectSomething {
   width: 200px;
@@ -88,11 +109,13 @@ function changeCondition(conditionChanged) {
   padding: 0px 10px;
 }
 
+
+
 .selectInput {
-  width: 200px;
+  /* width: 200px; */
+  width: 100%;
   height: 20px;
-  margin-left: 20px;
-  padding-left: 20px;
+  padding-left: 10px;
   border-radius: 20px;
   border: 0cap;
 }
@@ -114,5 +137,14 @@ function changeCondition(conditionChanged) {
 
 .displayNone{
   display: none;
+}
+
+.selectLittleDiv{
+  width: 100%;
+  display: flex;
+}
+
+.marginLeft{
+  margin-left: 20px;
 }
 </style>
