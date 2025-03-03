@@ -8,10 +8,11 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event);
         
         // 設定台北時區並取得當前時間
-        const now = new Date();
-        // 調整為台北時區 (UTC+8)
-        const taiwanTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
-        const bookingDate = taiwanTime.toISOString().slice(0, 19).replace('T', ' ');
+        const bookingDate = new Date().toLocaleString("zh-TW", {
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            hourCycle: "h23", timeZone: "Asia/Taipei"
+        }).replace(/\//g, "-")
 
         // 解構其他表單資料
         const {

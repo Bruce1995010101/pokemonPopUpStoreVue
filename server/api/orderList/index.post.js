@@ -33,8 +33,15 @@ export default defineEventHandler(async (event) => {
         // const productQList = productQ.split(",").map(Number);
 
         // 取得當前時間 & 生成交易 ID
-        const orderDate = new Date().toISOString().slice(0, 19).replace("T", " ");
-        const transactionID = new Date().toISOString().replace(/[-T:.Z]/g, "");
+        const orderDate = new Date().toLocaleString("zh-TW", {
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            hourCycle: "h23", timeZone: "Asia/Taipei"
+        }).replace(/\//g, "-")
+        const transactionID = new Date().toLocaleString("zh-TW", {
+             year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",hourCycle: "h23",
+        }).replace(/[-T:.Z]/g, "").replace(/[\/\s:]/g, "")
 
         for (let i = 0; i < orderProductIDList.length; i++) {
             const orderProductID = orderProductIDList[i];

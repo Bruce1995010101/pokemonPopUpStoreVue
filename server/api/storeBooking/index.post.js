@@ -16,7 +16,13 @@ export default defineEventHandler(async (event) => {
         } = body;
 
         // 設定台灣時區，取得當前時間
-        const bookingDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+        const bookingDate = new Date().toLocaleString("zh-TW", {
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            hourCycle: "h23", timeZone: "Asia/Taipei"
+        }).replace(/\//g, "-")
+        // console.log(bookingDate);
+
 
         // 插入預訂資訊
         const [result] = await conn.query(
