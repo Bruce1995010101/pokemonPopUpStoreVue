@@ -54,12 +54,29 @@ export default defineEventHandler(async (event) => {
                 params.push(`%${bookingTel}%`);
             }
 
-            console.log("Generated SQL Query:", query);
+            // console.log("Generated SQL Query:", query);
             console.log("Parameters:", params);
 
             // 執行 SQL 查詢
             const [dataResult] = await conn.query(query, params);
             data = dataResult.length > 0 ? dataResult : '沒撈到';
+
+            
+            // 修改時間格式
+            data = data.map(booking => ({
+                ...booking,
+                bookingDate: new Date(booking.bookingDate).toLocaleString("zh-TW", {
+                  year: "numeric", month: "2-digit", day: "2-digit",
+                  hour: "2-digit", minute: "2-digit", second: "2-digit",
+                  hourCycle: "h23", timeZone: "Asia/Taipei"
+                }).replace(/\//g, "-"),
+              
+                bookingTimePeriod: new Date(booking.bookingTimePeriod).toLocaleString("zh-TW", {
+                  year: "numeric", month: "2-digit", day: "2-digit",
+                  hour: "2-digit", minute: "2-digit", second: "2-digit",
+                  hourCycle: "h23", timeZone: "Asia/Taipei"
+                }).replace(/\//g, "-")
+              }));
 
         } catch (err) {
             console.error("Error:", err);

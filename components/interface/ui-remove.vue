@@ -43,6 +43,11 @@ async function removeData() {
       cafeBookingID: data.cafeBookingID,
       bookingExist: 0,
     };
+  } else if (props.currentPage === "storebooking") {
+    payload = {
+      storeBookingID: data.storeBookingID,
+      storeBookingExist: 0,
+    };
   }
 
   emit("removeData", payload);

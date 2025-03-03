@@ -211,6 +211,11 @@ function submit() {
       ...rowData.value,
       bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime
     };
+  } else if(props.currentPage === "storebooking"){
+    data = {
+      ...rowData.value,
+      bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime
+    };
   }
 
   // console.log(data);
@@ -279,6 +284,17 @@ function testAllCafeBooking() {
   dateTime.value.bookingTimePeriodDate = '2025-03-03'
   dateTime.value.bookingTimePeriodTime = '11'
 }
+function testAllStoreBooking() {
+  rowData.value = {
+    storeBookingExist: 0,
+    bookingName: "莊家為",
+    bookingEmail: "boi@gmail.com",
+    bookingTel: "0912123123",
+    bookingNumber: 5,
+  };
+  dateTime.value.bookingTimePeriodDate = '2025-03-03'
+  dateTime.value.bookingTimePeriodTime = '11'
+}
 onMounted(async () => {
   if (process.client) {
     if (props.currentPage === "menuitem") {
@@ -289,6 +305,8 @@ onMounted(async () => {
       testAllColOrderList();
     } else if (props.currentPage === "cafebooking") {
       testAllCafeBooking();
+    } else if (props.currentPage === "storebooking") {
+      testAllStoreBooking();
     }
   }
 });

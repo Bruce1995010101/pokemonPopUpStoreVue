@@ -228,7 +228,13 @@ async function updateData() {
     dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod.split(' ')[1].slice(0, 2)
     dateTime.value.bookingDateDate = editData.bookingDate.split(' ')[0]
     dateTime.value.bookingDateTime = editData.bookingDate.split(' ')[1]
-    
+  } else if (props.currentPage === "storebooking") {
+    rowData.value = editData;
+
+    dateTime.value.bookingTimePeriodDate = editData.bookingTimePeriod.split(' ')[0]
+    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod.split(' ')[1].slice(0, 2)
+    dateTime.value.bookingDateDate = editData.bookingDate.split(' ')[0]
+    dateTime.value.bookingDateTime = editData.bookingDate.split(' ')[1]
   }
 }
 onMounted(async () => {
@@ -248,6 +254,10 @@ async function submit() {
     const orderDate = {orderDate: dateTime.value.orderDateDate + ' ' + dateTime.value.orderDateTime}  
     data = { ...rowData.value, ...boughtProductList.value[0], ...orderDate };
   } else if (props.currentPage === "cafebooking") {
+    const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
+    const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  
+    data = { ...rowData.value, ...bookingTimePeriod, ...bookingDate };
+  } else if (props.currentPage === "storebooking") {
     const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
     const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  
     data = { ...rowData.value, ...bookingTimePeriod, ...bookingDate };
