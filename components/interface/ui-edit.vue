@@ -45,6 +45,17 @@
           </div>
         </div>
 
+        <div v-else-if="dataTitle.type === 'inputPassword'" class="row">
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
+          <div>
+            <input
+              class="UIInput"
+              type="password"
+              v-model="rowData[dataTitle.title.eng]"
+            />
+          </div>
+        </div>
+
         <div v-else-if="dataTitle.type === 'inputImgSingle'" class="row">
           <div class="UISpan">{{ dataTitle.title.cht }}</div>
           <div>
@@ -117,8 +128,15 @@
           <div v-if="dataTitle.type === 'timeOption'" class="row">
             <div class="UISpan">{{ dataTitle.title.cht }}</div>
             <div>
-              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]" />
-              <select  class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Time`]">
+              <input
+                type="date"
+                class="selectOption"
+                v-model="dateTime[`${dataTitle.title.eng}Date`]"
+              />
+              <select
+                class="selectOption"
+                v-model="dateTime[`${dataTitle.title.eng}Time`]"
+              >
                 <option
                   v-for="option in dataTitle.timeOption"
                   :key="option"
@@ -132,8 +150,16 @@
           <div v-if="dataTitle.type === 'timeInput'" class="row">
             <div class="UISpan">{{ dataTitle.title.cht }}</div>
             <div>
-              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]" />
-              <input  class="timeInput" type="time" v-model="dateTime[`${dataTitle.title.eng}Time`]">
+              <input
+                type="date"
+                class="selectOption"
+                v-model="dateTime[`${dataTitle.title.eng}Date`]"
+              />
+              <input
+                class="timeInput"
+                type="time"
+                v-model="dateTime[`${dataTitle.title.eng}Time`]"
+              />
             </div>
           </div>
         </div>
@@ -191,7 +217,7 @@ function lessInput(number) {
   boughtProductList.value.splice(number - 1, 1);
 }
 
-const dateTime = ref({})
+const dateTime = ref({});
 
 //取得資料呈現在UI上
 const UIData = inject("UIData");
@@ -219,22 +245,33 @@ async function updateData() {
     ];
     boughtProductList.value = tempImageList;
 
-    dateTime.value.orderDateDate = editData.orderDate.split(' ')[0]
-    dateTime.value.orderDateTime = editData.orderDate.split(' ')[1]
+    dateTime.value.orderDateDate = editData.orderDate.split(" ")[0];
+    dateTime.value.orderDateTime = editData.orderDate.split(" ")[1];
   } else if (props.currentPage === "cafebooking") {
     rowData.value = editData;
 
-    dateTime.value.bookingTimePeriodDate = editData.bookingTimePeriod.split(' ')[0]
-    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod.split(' ')[1].slice(0, 2)
-    dateTime.value.bookingDateDate = editData.bookingDate.split(' ')[0]
-    dateTime.value.bookingDateTime = editData.bookingDate.split(' ')[1]
+    dateTime.value.bookingTimePeriodDate =
+      editData.bookingTimePeriod.split(" ")[0];
+    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod
+      .split(" ")[1]
+      .slice(0, 2);
+    dateTime.value.bookingDateDate = editData.bookingDate.split(" ")[0];
+    dateTime.value.bookingDateTime = editData.bookingDate.split(" ")[1];
   } else if (props.currentPage === "storebooking") {
     rowData.value = editData;
 
-    dateTime.value.bookingTimePeriodDate = editData.bookingTimePeriod.split(' ')[0]
-    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod.split(' ')[1].slice(0, 2)
-    dateTime.value.bookingDateDate = editData.bookingDate.split(' ')[0]
-    dateTime.value.bookingDateTime = editData.bookingDate.split(' ')[1]
+    dateTime.value.bookingTimePeriodDate =
+      editData.bookingTimePeriod.split(" ")[0];
+    dateTime.value.bookingTimePeriodTime = editData.bookingTimePeriod
+      .split(" ")[1]
+      .slice(0, 2);
+    dateTime.value.bookingDateDate = editData.bookingDate.split(" ")[0];
+    dateTime.value.bookingDateTime = editData.bookingDate.split(" ")[1];
+  } else if (props.currentPage === "account") {
+    rowData.value = editData;
+    rowData.value.userOriginPassword = editData.userPassword
+  } else {
+    rowData.value = editData;
   }
 }
 onMounted(async () => {
@@ -251,19 +288,40 @@ async function submit() {
   } else if (props.currentPage === "product") {
     data = { ...rowData.value, productImg: imgList.value };
   } else if (props.currentPage === "orderlist") {
-    const orderDate = {orderDate: dateTime.value.orderDateDate + ' ' + dateTime.value.orderDateTime}  
+    const orderDate = {
+      orderDate:
+        dateTime.value.orderDateDate + " " + dateTime.value.orderDateTime,
+    };
     data = { ...rowData.value, ...boughtProductList.value[0], ...orderDate };
   } else if (props.currentPage === "cafebooking") {
-    const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
-    const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  
+    const bookingTimePeriod = {
+      bookingTimePeriod:
+        dateTime.value.bookingTimePeriodDate +
+        " " +
+        dateTime.value.bookingTimePeriodTime,
+    };
+    const bookingDate = {
+      bookingDate:
+        dateTime.value.bookingDateDate + " " + dateTime.value.bookingDateTime,
+    };
     data = { ...rowData.value, ...bookingTimePeriod, ...bookingDate };
   } else if (props.currentPage === "storebooking") {
-    const bookingTimePeriod = {bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime}  
-    const bookingDate = {bookingDate: dateTime.value.bookingDateDate + ' ' + dateTime.value.bookingDateTime}  
+    const bookingTimePeriod = {
+      bookingTimePeriod:
+        dateTime.value.bookingTimePeriodDate +
+        " " +
+        dateTime.value.bookingTimePeriodTime,
+    };
+    const bookingDate = {
+      bookingDate:
+        dateTime.value.bookingDateDate + " " + dateTime.value.bookingDateTime,
+    };
     data = { ...rowData.value, ...bookingTimePeriod, ...bookingDate };
+  } else {
+    data = { ...rowData.value};
   }
   // console.log('submit的資料',data);
-  
+
   emit("editData", data);
 }
 </script>

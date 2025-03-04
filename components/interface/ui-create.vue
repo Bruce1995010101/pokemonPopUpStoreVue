@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="UITitle f_h6 c_black">新增資料</div>
+    <div v-if="wrongSignCom" id="loginWrong">帳號重複</div>
     <div class="UIInputDiv f_p c_black">
       <div
         class="UILittleDiv"
@@ -40,6 +41,17 @@
             <input
               class="UIInput"
               type="number"
+              v-model="rowData[dataTitle.title.eng]"
+            />
+          </div>
+        </div>
+
+        <div v-else-if="dataTitle.type === 'inputPassword'" class="row">
+          <div class="UISpan">{{ dataTitle.title.cht }}</div>
+          <div>
+            <input
+              class="UIInput"
+              type="password"
               v-model="rowData[dataTitle.title.eng]"
             />
           </div>
@@ -116,7 +128,11 @@
           <div class="row">
             <div class="UISpan">{{ dataTitle.title.cht }}</div>
             <div>
-              <input type="date" class="selectOption" v-model="dateTime[`${dataTitle.title.eng}Date`]">
+              <input
+                type="date"
+                class="selectOption"
+                v-model="dateTime[`${dataTitle.title.eng}Date`]"
+              />
               <select
                 class="selectOption"
                 v-model="dateTime[`${dataTitle.title.eng}Time`]"
@@ -186,9 +202,12 @@ function lessInput(number) {
   boughtProductList.value.splice(number - 1, 1);
 }
 
-const dateTime = ref([{}])
+const dateTime = ref([{}]);
 
-function submit() {
+const wrongSign = ref(false);
+const wrongSignCom = computed(() => wrongSign.value);
+
+async function submit() {
   let data = null;
   if (props.currentPage === "menuitem") {
     data = { ...rowData.value, itemImg: img.value };
@@ -206,15 +225,39 @@ function submit() {
       orderProductIDList: orderProductIDList,
       productQList: productQList,
     };
-  } else if(props.currentPage === "cafebooking"){
+  } else if (props.currentPage === "cafebooking") {
     data = {
       ...rowData.value,
-      bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime
+      bookingTimePeriod:
+        dateTime.value.bookingTimePeriodDate +
+        " " +
+        dateTime.value.bookingTimePeriodTime,
     };
-  } else if(props.currentPage === "storebooking"){
+  } else if (props.currentPage === "storebooking") {
     data = {
       ...rowData.value,
-      bookingTimePeriod: dateTime.value.bookingTimePeriodDate + ' ' + dateTime.value.bookingTimePeriodTime
+      bookingTimePeriod:
+        dateTime.value.bookingTimePeriodDate +
+        " " +
+        dateTime.value.bookingTimePeriodTime,
+    };
+  } else if (props.currentPage === "account") {
+    const accountdata = await $fetch(
+      `http://localhost:3000/api/account/checkAccount?userAccount=${rowData.value.userAccount}`
+    );
+    if (accountdata.length === 0) {
+      console.log("可新增帳號");
+      data = {
+        ...rowData.value,
+      };
+    } else {
+      console.log("不可");
+      wrongSign.value = true
+      return
+    }
+  } else {
+    data = {
+      ...rowData.value,
     };
   }
 
@@ -281,8 +324,8 @@ function testAllCafeBooking() {
     bookingTel: "0912123123",
     bookingNumber: 5,
   };
-  dateTime.value.bookingTimePeriodDate = '2025-03-03'
-  dateTime.value.bookingTimePeriodTime = '11'
+  dateTime.value.bookingTimePeriodDate = "2025-03-03";
+  dateTime.value.bookingTimePeriodTime = "11";
 }
 function testAllStoreBooking() {
   rowData.value = {
@@ -292,8 +335,18 @@ function testAllStoreBooking() {
     bookingTel: "0912123123",
     bookingNumber: 5,
   };
-  dateTime.value.bookingTimePeriodDate = '2025-03-03'
-  dateTime.value.bookingTimePeriodTime = '11'
+  dateTime.value.bookingTimePeriodDate = "2025-03-03";
+  dateTime.value.bookingTimePeriodTime = "11";
+}
+function testAllAccount() {
+  rowData.value = {
+    userExist: 0,
+    userAccount: "addWay",
+    userPassword: "a",
+    userName: "莊家為",
+    userTitle: "行銷專員",
+    userEmail: "boi@gmail.com",
+  };
 }
 onMounted(async () => {
   if (process.client) {
@@ -307,6 +360,8 @@ onMounted(async () => {
       testAllCafeBooking();
     } else if (props.currentPage === "storebooking") {
       testAllStoreBooking();
+    } else if (props.currentPage === "account") {
+      testAllAccount();
     }
   }
 });
@@ -316,7 +371,16 @@ onMounted(async () => {
 <style scoped>
 .UITitle {
   text-align: center;
-  margin: 40px 20px 30px 20px;
+  margin: 40px 20px 10px 20px;
+}
+
+#loginWrong {
+  margin: auto;
+  width: 150px;
+  text-align: center;
+  border-radius: 10px;
+  color: var(--white);
+  background-color: var(--red);
 }
 
 .UIInputDiv {

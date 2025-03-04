@@ -48,6 +48,11 @@ async function onData() {
       storeBookingID: data.storeBookingID,
       storeBookingExist: 1,
     };
+  } else if (props.currentPage === "account") {
+    payload = {
+      userID: data.userID,
+      userExist: 1,
+    };
   }
   emit("onData", payload);
 }

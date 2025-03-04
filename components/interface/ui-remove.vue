@@ -48,7 +48,13 @@ async function removeData() {
       storeBookingID: data.storeBookingID,
       storeBookingExist: 0,
     };
+  } else if (props.currentPage === "account") {
+    payload = {
+      userID: data.userID,
+      userExist: 0,
+    };
   }
+  
 
   emit("removeData", payload);
 }

@@ -7,12 +7,7 @@ export default defineEventHandler(async (event) => {
         try {
             const {
                 userID,
-                userExist,
-                userName,
                 userAccount,
-                userPassword,
-                userTitle,
-                userEmail,
             } = event.node.req.query;
             // 基本SQL查詢
             let query = 'SELECT * FROM userInfo WHERE 1 = 1';
@@ -23,31 +18,11 @@ export default defineEventHandler(async (event) => {
                 query += ' AND userID = ?';
                 params.push(userID);
             }
-            if (userExist !== undefined) {
-                query += ' AND userExist = ?';
-                params.push(userExist);
-            }
-            if (userName !== undefined) {
-                query += ' AND userName LIKE ?';
-                params.push(`%${userName}%`);
-            }
             if (userAccount !== undefined) {
                 query += ' AND userAccount LIKE ?';
                 params.push(`%${userAccount}%`);
             }
-            if (userPassword !== undefined) {
-                query += ' AND userPassword LIKE ?';
-                params.push(`%${userPassword}%`);
-            }
-            if (userTitle !== undefined) {
-                query += ' AND userTitle LIKE ?';
-                params.push(userTitle);
-            }
-            if (userEmail !== undefined) {
-                query += ' AND userEmail LIKE ?';
-                params.push(`%${userEmail}%`);
-            }
-
+            
             console.log('Generated SQL Query:', query);
             console.log('Parameters:', params);
 

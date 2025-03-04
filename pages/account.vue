@@ -6,7 +6,7 @@
   >
     <template #default>
       <!-- 改這 -->
-      <div class="f_h4 c_white" id="title">快閃店預定管理</div>
+      <div class="f_h4 c_white" id="title">帳號管理</div>
 
       <article class="tabs">
         <data-filter-all
@@ -26,7 +26,7 @@
           @change="changePanal('exist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="one">有效預定</label>
+        <label class="bookMarkLabel" for="one">有效帳號</label>
 
         <input
           class="bookmark"
@@ -37,7 +37,7 @@
           @change="changePanal('noExist')"
         />
         <!-- 改這 -->
-        <label class="bookMarkLabel" for="two">無效預定</label>
+        <label class="bookMarkLabel" for="two">無效帳號</label>
 
         <table-slot :panelActive="panelActiveValueCom">
           <template #tableHead>
@@ -121,7 +121,7 @@ const page = computed(() => {
   return segments[segments.length - 1] || "";
 });
 //預設篩選
-const defaultSelected = "bookingTimePeriod";
+const defaultSelected = "userID";
 
 onMounted(async () => {
   if (process.client) {
@@ -132,128 +132,78 @@ onMounted(async () => {
 //改這
 const tableDataTitle = [
   {
-    title: { eng: "storeBookingID", cht: "預定編號" },
+    title: { eng: "userID", cht: "管理者編號" },
     type: "number",
     style: { align: "center" },
   },
   {
-    title: { eng: "bookingTimePeriod", cht: "預定時段" },
-    type: "time",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "bookingDate", cht: "下訂日期" },
-    type: "time",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "bookingNumber", cht: "預定人數" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "bookingName", cht: "預約姓名" },
+    title: { eng: "userName", cht: "姓名" },
     type: "string",
     style: { align: "center" },
   },
   {
-    title: { eng: "bookingEmail", cht: "信箱" },
+    title: { eng: "userAccount", cht: "帳號" },
+    type: "string",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "userTitle", cht: "職稱" },
+    type: "number",
+    style: { align: "center" },
+  },
+  {
+    title: { eng: "userEmail", cht: "信箱" },
     type: "string",
     style: { align: "left" },
-  },
-  {
-    title: { eng: "bookingTel", cht: "電話" },
-    type: "string",
-    style: { align: "center" },
   },
 ];
 const dataList = [
   {
     type: "inputTextID",
-    title: { eng: "storeBookingID", cht: "預定編號" },
+    title: { eng: "userID", cht: "管理者編號" },
     display: { filter: true, UICreate: false, UIEdit: true, table: true },
   },
   {
     type: "select",
-    title: { eng: "storeBookingExist", cht: "預定狀況" },
+    title: { eng: "userExist", cht: "帳號狀態" },
     option: [
-      { value: 1, text: "有效預定" },
-      { value: 0, text: "無效預定" },
+      { value: 1, text: "有效帳號" },
+      { value: 0, text: "無效帳號" },
     ],
     display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "timeOption",
-    title: { eng: "bookingTimePeriod", cht: "預定時段" },
-    timeOption: [
-      {text: '10:00', value: '10'},
-      {text: '11:00', value: '11'},
-      {text: '12:00', value: '12'},
-      {text: '13:00', value: '13'},
-      {text: '14:00', value: '14'},
-      {text: '15:00', value: '15'},
-      {text: '16:00', value: '16'},
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    type: "inputText",
+    title: { eng: "userAccount", cht: "帳號" },
+    display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
-    type: "timeInput",
-    title: { eng: "bookingDate", cht: "下訂日期" },
-    display: { filter: true, UICreate: false, UIEdit: true, table: true },
-    timeOption: [
-      {text: '00:00', value: '00'},
-      {text: '01:00', value: '01'},
-      {text: '02:00', value: '02'},
-      {text: '03:00', value: '03'},
-      {text: '04:00', value: '04'},
-      {text: '05:00', value: '05'},
-      {text: '06:00', value: '06'},
-      {text: '07:00', value: '07'},
-      {text: '08:00', value: '08'},
-      {text: '09:00', value: '09'},
-      {text: '10:00', value: '10'},
-      {text: '11:00', value: '11'},
-      {text: '12:00', value: '12'},
-      {text: '13:00', value: '13'},
-      {text: '14:00', value: '14'},
-      {text: '15:00', value: '15'},
-      {text: '16:00', value: '16'},
-      {text: '17:00', value: '17'},
-      {text: '18:00', value: '18'},
-      {text: '19:00', value: '19'},
-      {text: '20:00', value: '20'},
-      {text: '21:00', value: '21'},
-      {text: '22:00', value: '22'},
-      {text: '23:00', value: '23'},
-    ],
-  },
-  {
-    type: "inputNumber",
-    title: { eng: "bookingNumber", cht: "預定人數" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
+    type: "inputPassword",
+    title: { eng: "userPassword", cht: "密碼" },
+    display: { filter: false, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "bookingName", cht: "預約姓名" },
+    title: { eng: "userName", cht: "管理者姓名" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "bookingEmail", cht: "信箱" },
+    title: { eng: "userTitle", cht: "職稱" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
   {
     type: "inputText",
-    title: { eng: "bookingTel", cht: "電話" },
+    title: { eng: "userEmail", cht: "信箱" },
     display: { filter: true, UICreate: true, UIEdit: true, table: false },
   },
 ];
 
 const removeUIText = {
-  titleText: "確定使該筆預定無效？",
+  titleText: "確定使該管理者帳號無效？",
 };
 const onUIText = {
-  titleText: "確定使該筆預定無效？",
+  titleText: "確定使該管理者帳號無效？",
 };
 
 let panelActiveValue = ref("exist");
@@ -272,12 +222,12 @@ function handleUpdateData(data) {
 
 const { data, pending, error, refresh } = useAsyncData(
   //改這
-  "storeBookingData",
+  "accountData",
   async () => {
-    let url = "http://localhost:3000/api/storeBooking?";
+    let url = "http://localhost:3000/api/account?";
     //改這
     url +=
-      panelActiveValueCom.value === "exist" ? "storeBookingExist=1" : "storeBookingExist=0";
+      panelActiveValueCom.value === "exist" ? "userExist=1" : "userExist=0";
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;
@@ -336,8 +286,8 @@ function openOnUI() {
 //編輯data
 //改這
 async function createData(data) {
-  const result = await useAsyncData("storeBookingDataCreate", async () => {
-    let url = "http://localhost:3000/api/storeBooking";
+  const result = await useAsyncData("accountDataCreate", async () => {
+    let url = "http://localhost:3000/api/account";
     $fetch(url, {
       method: "POST",
       body: data,
@@ -349,8 +299,8 @@ async function createData(data) {
   closeAllEditUI();
 }
 async function editData(data) {
-  const result = await useAsyncData("storeBookingDataEdit", async () => {
-    let url = "http://localhost:3000/api/storeBooking";
+  const result = await useAsyncData("accountDataEdit", async () => {
+    let url = "http://localhost:3000/api/account";
     $fetch(url, {
       method: "PUT",
       body: data,
@@ -362,8 +312,8 @@ async function editData(data) {
   closeAllEditUI();
 }
 async function removeData(data) {
-  const result = await useAsyncData("storeBookingDataRemove", async () => {
-    let url = "http://localhost:3000/api/storeBooking";
+  const result = await useAsyncData("accountDataRemove", async () => {
+    let url = "http://localhost:3000/api/account";
     $fetch(url, {
       method: "PATCH",
       body: data,
@@ -375,8 +325,8 @@ async function removeData(data) {
   closeAllEditUI();
 }
 async function onData(data) {
-  const result = await useAsyncData("storeBookingDataOn", async () => {
-    let url = "http://localhost:3000/api/storeBooking";
+  const result = await useAsyncData("accountDataOn", async () => {
+    let url = "http://localhost:3000/api/account";
     $fetch(url, {
       method: "PATCH",
       body: data,

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         let userNewPassword = currentHashedPassword;
 
         // 若原始密碼與現有密碼不同，則重新 Hash
-        if (!bcrypt.compareSync(userOriginPassword, currentHashedPassword)) {
+        if (userPassword !== userOriginPassword) {
             userNewPassword = bcrypt.hashSync(userPassword, 10);
         }
 
