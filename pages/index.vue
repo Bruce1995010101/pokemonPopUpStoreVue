@@ -48,6 +48,7 @@ async function login() {
     $fetch("http://localhost:3000/loginApi", {
       method: "POST",
       body: payload,
+      credentials: "include",
     })
   );
   console.log("Result:", data.value);
@@ -71,8 +72,6 @@ const wrongLoginSignCom = computed(() => wrongLoginSign.value);
 // const pagesData = usePagesData()
 // pagesData.changePage('index')
 // console.log(pagesData.currentPage);
-
-
 </script>
 
 

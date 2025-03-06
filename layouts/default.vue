@@ -5,15 +5,57 @@
         <div id="logoDiv">
           <img id="logo" src="/assets/logo.png" alt="" />
         </div>
-        <div class="navList">
-          <div class="navTextDiv noto-sans-tc_r" id="navOverAll" @click="turnToOverAllPage">總覽</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navProduct" @click="turnToProductPage">商品管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navOrder" @click="turnToOrderListPage">交易紀錄管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navMenu" @click="turnToMenuItemPage">咖啡廳品項管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navCafeBooking" @click="turnToCafeBookingPage">咖啡廳預定管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navStoreBooking" @click="turnToStoreBookingPage">快閃店預定管理</div>
-          <div class="navTextDiv noto-sans-tc_r" id="navAccount" @click="turnToAccountPage">帳號管理</div>
-          <button id="logout">LOGOUT</button>
+        <div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('overAll')"
+            @click="turnToOverAllPage"
+          >
+            總覽
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('product')"
+            @click="turnToProductPage"
+          >
+            商品管理
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('orderList')"
+            @click="turnToOrderListPage"
+          >
+            交易紀錄管理
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('menuItem')"
+            @click="turnToMenuItemPage"
+          >
+            咖啡廳品項管理
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('cafeBooking')"
+            @click="turnToCafeBookingPage"
+          >
+            咖啡廳預定管理
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('storeBooking')"
+            @click="turnToStoreBookingPage"
+          >
+            快閃店預定管理
+          </div>
+          <div
+            class="navTextDiv noto-sans-tc_r"
+            v-if="pageList.includes('account')"
+            @click="turnToAccountPage"
+          >
+            帳號管理
+          </div>
+          <button id="logout" @click="logOut">LOGOUT</button>
         </div>
       </div>
     </div>
@@ -52,27 +94,68 @@ function closeEditBlack() {
   emit("closeEditBlack");
 }
 
-function turnToOverAllPage(){
-  window.location.href = "http://localhost:3000/overAll"
+function turnToOverAllPage() {
+  window.location.href = "http://localhost:3000/overAll";
 }
-function turnToProductPage(){
-  window.location.href = "http://localhost:3000/product"
+function turnToProductPage() {
+  window.location.href = "http://localhost:3000/product";
 }
-function turnToOrderListPage(){
-  window.location.href = "http://localhost:3000/orderlist"
+function turnToOrderListPage() {
+  window.location.href = "http://localhost:3000/orderlist";
 }
-function turnToMenuItemPage(){
-  window.location.href = "http://localhost:3000/menuitem"
+function turnToMenuItemPage() {
+  window.location.href = "http://localhost:3000/menuitem";
 }
-function turnToCafeBookingPage(){
-  window.location.href = "http://localhost:3000/cafebooking"
+function turnToCafeBookingPage() {
+  window.location.href = "http://localhost:3000/cafebooking";
 }
-function turnToStoreBookingPage(){
-  window.location.href = "http://localhost:3000/storebooking"
+function turnToStoreBookingPage() {
+  window.location.href = "http://localhost:3000/storebooking";
 }
-function turnToAccountPage(){
-  window.location.href = "http://localhost:3000/Account"
+function turnToAccountPage() {
+  window.location.href = "http://localhost:3000/Account";
 }
+
+const { data, pending, error, refresh } = await useAsyncData(
+  "checkUserAuthority",
+  async () => {
+    if (process.client) {
+      return await $fetch("http://localhost:3000/checkUserAuthority", {
+        credentials: "include",
+      });
+    }
+    return null;
+  }
+);
+
+const pageList = computed(() => {
+  if (!data.value || !data.value.accountAuthority) {
+    return []; // 避免 data.value 為 null 時報錯
+  }
+  return data.value.accountAuthority.map((page) => page.pageName);
+});
+
+async function logOut() {
+  const result = await useAsyncData("logout", async () => {
+    return await $fetch("http://localhost:3000/logout", {
+      credentials: "include",
+    });
+  });
+  console.log(result);
+  if (result.data.value === "out") {
+    window.location.href = "/";
+  }
+  console.log(data.value);
+}
+
+const { checkUserAuthority } = useAuth();
+onMounted(async () => {
+  if (process.client) {
+    checkUserAuthority()
+  }
+});
+
+
 </script>
 
 <style scoped>

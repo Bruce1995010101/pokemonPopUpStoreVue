@@ -55,8 +55,14 @@
 </template>
 
 <script setup>
+definePageMeta({
+  // middleware: ['auth'],
+  ssr: false,
+});
 const webStatusUI = ref(false);
 const webStatusUICom = computed(() => webStatusUI.value);
+
+
 
 let editBlack = ref(false);
 const editBlackCom = computed(() => editBlack.value);
@@ -108,12 +114,7 @@ async function changeWebStatus() {
   closeAllEditUI()
 }
 
-onMounted(async () => {
-  if (process.client) {
-    // console.log(data.value);
-    // console.log(webStatusResult.data.value);
-  }
-});
+
 </script>
 
 

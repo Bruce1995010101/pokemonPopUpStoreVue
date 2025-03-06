@@ -128,7 +128,6 @@ const defaultSelected = "itemType";
 onMounted(async () => {
   if (process.client) {
     pagesData.changePage(page.value);
-    // console.log(pagesData.currentPage);
   }
 });
 

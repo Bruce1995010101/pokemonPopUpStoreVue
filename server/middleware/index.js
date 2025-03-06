@@ -5,6 +5,8 @@ import session from "express-session"
 import conn from "../sql.js"
 import nodemailer from "nodemailer"
 import bcrypt from "bcryptjs"
+import cors from "cors";
+
 
 const app = express();
 
@@ -12,12 +14,24 @@ const app = express();
 app.use(bp.urlencoded({ extended: true }));
 app.use(bp.json());
 
+app.use(
+    cors({
+        origin: "http://localhost:3000", // 你的前端網址
+        credentials: true, // 🔹 允許跨域傳送 Cookie
+    })
+);
+
 
 //導入express-session 以儲存各網頁互傳時的資料
 app.use(session({
-    secret: "password",
-    resave: false,
+    secret: 'password',
+    resave: true,
     saveUninitialized: true,
+    cookie: {
+        secure: false, // ⚠️ 本地測試要設 `false`，否則 session 無法存入
+        httpOnly: true,
+        sameSite: "lax", // 避免 CSRF 問題
+    }
 }))
 
 //sql
@@ -110,10 +124,16 @@ app.post('/loginApi', async function (req, res) {
     if (result[0] !== undefined) {
         console.log("有人登入");
         await verifyPassword(password, result[0].userPassword)
-            .then(function (check) {
+            .then(async function (check) {
                 if (check) {
                     //存入session
-                    req.session.account = req.body.account;
+                    const [resultAuthority, err] = await conn.query(`SELECT * FROM userInfo INNER JOIN userAuthority INNER JOIN page on userInfo.userID = userAuthority.authorityUserID AND userAuthority.authorityPageID = page.pageID WHERE userAccount = ?`, [account])
+                    req.session.account = account;
+                    req.session.accountAuthority = resultAuthority;
+                    // console.log(resultAuthority);
+                    // console.log('/loginApi:',req.session);
+                    // console.log('🟢 /loginApi session ID:', req.sessionID);
+
                     res.send(true);
                     // console.log("登入成功");
                 } else {
@@ -166,54 +186,47 @@ app.post('/loginForgetApi', async function (req, res) {
         res.send(false);
     }
 })
-app.post('/loginForgetCheckApi', function (req, res) {
-    let code = req.body.code
-    if (code === req.session.code) {
-        console.log('good');
-        res.send(true)
-    } else {
-        console.log('notPass');
-        res.send(false)
-    }
+// app.post('/loginForgetCheckApi', function (req, res) {
+//     let code = req.body.code
+//     if (code === req.session.code) {
+//         console.log('good');
+//         res.send(true)
+//     } else {
+//         console.log('notPass');
+//         res.send(false)
+//     }
 
-})
-app.post('/changePWApi', function (req, res) {
-    let account = req.session.accountForget;
-    res.send(account)
-})
-app.post('/updatePWApi', function (req, res) {
-    let account = req.session.accountForget
-    let password = req.body.userPassword
+// })
+// app.post('/changePWApi', function (req, res) {
+//     let account = req.session.accountForget;
+//     res.send(account)
+// })
+// app.post('/updatePWApi', function (req, res) {
+//     let account = req.session.accountForget
+//     let password = req.body.userPassword
 
-    let hashedPassword = hashPasswordSync(password);
-    // console.log('Hashed password:', hashedPassword);
+//     let hashedPassword = hashPasswordSync(password);
+//     // console.log('Hashed password:', hashedPassword);
 
-    conn.query(`UPDATE userInfo SET userPassword = '${hashedPassword}' WHERE userAccount = '${account}'`,
-        [],
-        function (err, result) {
-            if (err) {
-                res.send(false)
-                console.log(err);
-            } else {
-                res.send(true)
-                console.log(result);
-            }
-        })
-})
+//     conn.query(`UPDATE userInfo SET userPassword = '${hashedPassword}' WHERE userAccount = '${account}'`,
+//         [],
+//         function (err, result) {
+//             if (err) {
+//                 res.send(false)
+//                 console.log(err);
+//             } else {
+//                 res.send(true)
+//                 console.log(result);
+//             }
+//         })
+// })
 
-app.get('/checkUserAuthority', function (req, res) {
+app.get('/checkUserAuthority', async function (req, res) {
     let account = req.session.account
-
-    conn.query(`SELECT * FROM userInfo INNER JOIN userAuthority INNER JOIN page on userInfo.userID = userAuthority.authorityUserID AND userAuthority.authorityPageID = page.pageID WHERE userAccount = '${account}'`,
-        [],
-        function (err, result) {
-            if (err) {
-                res.send(false)
-                console.log(err);
-            } else {
-                res.send(result)
-            }
-        })
+    let accountAuthority = req.session.accountAuthority
+    // console.log('存在/checkUserAuthority的session:', account);
+    // console.log('🟢 /checkUserAuthority session ID:', req.sessionID);
+    res.send({account, accountAuthority})
 })
 
 
@@ -225,17 +238,18 @@ app.post('/mailSomeone', async function (req, res) {
     res.send(result)
 
 })
-app.get('/check', function (req, res) {
-    if (req.session.account !== undefined) {
-        // res.send(true);
-        res.send(req.session.account);
-    } else {
-        res.send(false);
+// app.get('/check', function (req, res) {
+//     if (req.session.account !== undefined) {
+//         // res.send(true);
+//         res.send(req.session.account);
+//     } else {
+//         res.send(false);
 
-    }
-})
+//     }
+// })
 app.get('/logout', function (req, res) {
     delete req.session.account;
+    delete req.session.accountAuthority;
     res.send('out')
 })
 
