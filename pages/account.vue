@@ -5,7 +5,6 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
-      <!-- 改這 -->
       <div class="f_h4 c_white" id="title">帳號管理</div>
 
       <article class="tabs">
@@ -25,7 +24,6 @@
           value="exist"
           @change="changePanal('exist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="one">有效帳號</label>
 
         <input
@@ -36,7 +34,6 @@
           value="noExist"
           @change="changePanal('noExist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="two">無效帳號</label>
 
         <table-slot :panelActive="panelActiveValueCom">
@@ -112,20 +109,21 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+// 取得目前頁面並存入pinia
 import { usePagesData } from "~/stores/pagesData";
 const pagesData = usePagesData();
 
 const route = useRoute();
 const path = ref(route.path);
-// 取得最後一段路由
+  // 取得最後一段路由
 const page = computed(() => {
   const segments = path.value.split("/");
   // console.log(segments[segments.length - 1] || "");
 
   return segments[segments.length - 1] || "";
 });
-//預設篩選
-const defaultSelected = "userID";
+
+
 
 onMounted(async () => {
   if (process.client) {
@@ -133,83 +131,15 @@ onMounted(async () => {
     // console.log(pagesData.currentPage);
   }
 });
-//改這
-const tableDataTitle = [
-  {
-    title: { eng: "userID", cht: "管理者編號" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "userName", cht: "姓名" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "userAccount", cht: "帳號" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "userTitle", cht: "職稱" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "userEmail", cht: "信箱" },
-    type: "string",
-    style: { align: "left" },
-  },
-];
-const dataList = [
-  {
-    type: "inputTextID",
-    title: { eng: "userID", cht: "管理者編號" },
-    display: { filter: true, UICreate: false, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "userExist", cht: "帳號狀態" },
-    option: [
-      { value: 1, text: "有效帳號" },
-      { value: 0, text: "無效帳號" },
-    ],
-    display: { filter: false, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "userAccount", cht: "帳號" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputPassword",
-    title: { eng: "userPassword", cht: "密碼" },
-    display: { filter: false, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "userName", cht: "管理者姓名" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "userTitle", cht: "職稱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "userEmail", cht: "信箱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: false },
-  },
-];
 
-const removeUIText = {
-  titleText: "確定使該管理者帳號無效？",
-};
-const onUIText = {
-  titleText: "確定使該管理者帳號無效？",
-};
+//導入頁面資訊
+import {account} from '../constants.js'
+const tableDataTitle = account.tableDataTitle
+const dataList = account.dataList
+const removeUIText = account.removeUIText
+const onUIText = account.onUIText
 
+//有效無效資料頁切控制
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
   panelActiveValue.value = panalName;
@@ -217,6 +147,10 @@ async function changePanal(panalName) {
 }
 const panelActiveValueCom = computed(() => panelActiveValue.value);
 
+
+//預設篩選
+const defaultSelected = "userID";
+//篩選器控制
 let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
@@ -225,11 +159,9 @@ function handleUpdateData(data) {
 }
 
 const { data, pending, error, refresh } = useAsyncData(
-  //改這
   "accountData",
   async () => {
     let url = "http://localhost:3000/api/account?";
-    //改這
     url +=
       panelActiveValueCom.value === "exist" ? "userExist=1" : "userExist=0";
     if (condition.value.value !== "") {
@@ -287,8 +219,7 @@ function openOnUI() {
   onUI.value = true;
 }
 
-//編輯data
-//改這
+//增刪修Api
 async function createData(data) {
   const result = await useAsyncData("accountDataCreate", async () => {
     let url = "http://localhost:3000/api/account";

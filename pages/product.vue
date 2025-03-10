@@ -5,7 +5,6 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
-      <!-- 改這 -->
       <div class="f_h4 c_white" id="title">商品管理</div>
 
       <article class="tabs">
@@ -25,7 +24,6 @@
           value="exist"
           @change="changePanal('exist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="one">上架商品</label>
 
         <input
@@ -36,7 +34,6 @@
           value="noExist"
           @change="changePanal('noExist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="two">下架商品</label>
 
         <table-slot :panelActive="panelActiveValueCom">
@@ -112,20 +109,19 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+// 取得目前頁面並存入pinia
 import { usePagesData } from "~/stores/pagesData";
 const pagesData = usePagesData();
 
 const route = useRoute();
 const path = ref(route.path);
-// 取得最後一段路由
+  // 取得最後一段路由
 const page = computed(() => {
   const segments = path.value.split("/");
   // console.log(segments[segments.length - 1] || "");
 
   return segments[segments.length - 1] || "";
 });
-//預設篩選
-const defaultSelected = "productType";
 
 onMounted(async () => {
   if (process.client) {
@@ -134,143 +130,14 @@ onMounted(async () => {
   }
 });
 
-//改這
-const tableDataTitle = [
-  {
-    title: { eng: "productID", cht: "商品編號" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "productName", cht: "商品名稱" },
-    type: "string",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "productType", cht: "商品類型" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: "decoration", text: "家飾用品" },
-      { value: "jewelry", text: "珠寶首飾" },
-      { value: "model", text: "模型" },
-      { value: "stationery", text: "文具、文創" },
-      { value: "toy", text: "玩具、玩偶" },
-    ]
-  },
-  {
-    title: { eng: "productPrice", cht: "商品價格" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "productInStock", cht: "庫存" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "storeOnly", cht: "快閃店限定" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: 1, text: "V" },
-      { value: 0, text: "X" },
-    ],
-  },
-  {
-    title: { eng: "productMain", cht: "首頁呈現商品" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: 1, text: "首頁呈現商品" },
-      { value: 0, text: "非首頁呈現商品" },
-    ],
-  },
-  {
-    title: { eng: "productDescribe", cht: "商品描述" },
-    type: "string",
-    style: { align: "left" },
-  },
-];
-const dataList = [
-  {
-    type: "inputTextID",
-    title: { eng: "productID", cht: "商品編號" },
-    display: { filter: true, UICreate: false, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "productExist", cht: "商品狀況" },
-    option: [
-      { value: 1, text: "上架商品" },
-      { value: 0, text: "下架商品" },
-    ],
-    display: { filter: false, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "productName", cht: "商品名稱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "productType", cht: "商品類型" },
-    option: [
-      { value: "decoration", text: "家飾用品" },
-      { value: "jewelry", text: "珠寶首飾" },
-      { value: "model", text: "模型" },
-      { value: "stationery", text: "文具、文創" },
-      { value: "toy", text: "玩具、玩偶" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputText",
-    title: { eng: "productDescribe", cht: "商品描述" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputNumber",
-    title: { eng: "productPrice", cht: "商品價格" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputNumber",
-    title: { eng: "productInStock", cht: "庫存" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "storeOnly", cht: "快閃店限定" },
-    option: [
-      { value: 1, text: "快閃店限定" },
-      { value: 0, text: "非快閃店限定" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "productMain", cht: "首頁呈現商品" },
-    option: [
-      { value: 1, text: "首頁呈現商品" },
-      { value: 0, text: "非首頁呈現商品" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputImgMutiple",
-    title: { eng: "productImg", cht: "圖片連結" },
-    display: { filter: false, UICreate: true, UIEdit: true, table: true },
-  },
-];
+//導入頁面資訊
+import {product} from '../constants.js'
+const tableDataTitle = product.tableDataTitle
+const dataList = product.dataList
+const removeUIText = product.removeUIText
+const onUIText = product.onUIText
 
-const removeUIText = {
-  titleText: "確定使該商品下架？",
-};
-const onUIText = {
-  titleText: "確定使該商品上架？",
-};
-
+//有效無效資料頁切控制
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
   panelActiveValue.value = panalName;
@@ -278,6 +145,9 @@ async function changePanal(panalName) {
 }
 const panelActiveValueCom = computed(() => panelActiveValue.value);
 
+//預設篩選
+const defaultSelected = "productType";
+//篩選器控制
 let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
@@ -286,11 +156,9 @@ function handleUpdateData(data) {
 }
 
 const { data, pending, error, refresh } = useAsyncData(
-  //改這
   "productData",
   async () => {
     let url = "http://localhost:3000/api/product?";
-    //改這
     url +=
       panelActiveValueCom.value === "exist"
         ? "productExist=1"
@@ -347,8 +215,7 @@ function openOnUI() {
   onUI.value = true;
 }
 
-//編輯data
-//改這
+//增刪修Api
 async function createData(data) {
   const result = await useAsyncData("productDataCreate", async () => {
     let url = "http://localhost:3000/api/product";

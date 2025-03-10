@@ -5,7 +5,6 @@
     @closeEditBlack="closeAllEditUI"
   >
     <template #default>
-      <!-- 改這 -->
       <div class="f_h4 c_white" id="title">咖啡廳品項管理</div>
 
       <article class="tabs">
@@ -25,7 +24,6 @@
           value="exist"
           @change="changePanal('exist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="one">上架餐點</label>
 
         <input
@@ -36,7 +34,6 @@
           value="noExist"
           @change="changePanal('noExist')"
         />
-        <!-- 改這 -->
         <label class="bookMarkLabel" for="two">下架餐點</label>
 
         <table-slot :panelActive="panelActiveValueCom">
@@ -113,12 +110,13 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+// 取得目前頁面並存入pinia
 import { usePagesData } from "~/stores/pagesData";
 const pagesData = usePagesData();
 
 const route = useRoute();
 const path = ref(route.path);
-// 取得最後一段路由
+  // 取得最後一段路由
 const page = computed(() => {
   const segments = path.value.split("/");
   // console.log(segments[segments.length - 1] || "");
@@ -126,125 +124,21 @@ const page = computed(() => {
   return segments[segments.length - 1] || "";
 });
 
-//預設篩選
-const defaultSelected = "itemType";
-
 onMounted(async () => {
   if (process.client) {
     pagesData.changePage(page.value);
   }
 });
 
-//改這
-const tableDataTitle = [
-  {
-    title: { eng: "itemID", cht: "餐點編號" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "itemImg", cht: "餐點圖片" },
-    type: "image",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "itemName", cht: "餐點名稱" },
-    type: "string",
-    style: { align: "left" },
-  },
-  {
-    title: { eng: "itemType", cht: "餐點類型" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: "飲品", text: "飲品" },
-      { value: "主餐", text: "主餐" },
-      { value: "甜點", text: "甜點" },
-    ],
-  },
-  {
-    title: { eng: "itemMain", cht: "首頁呈現品項" },
-    type: "select",
-    style: { align: "center" },
-    option: [
-      { value: 1, text: "首頁呈現品項" },
-      { value: 0, text: "非首頁呈現品項" },
-    ],
-  },
-  {
-    title: { eng: "itemPrice", cht: "餐點價格" },
-    type: "number",
-    style: { align: "center" },
-  },
-  {
-    title: { eng: "itemDescribe", cht: "餐點描述" },
-    type: "string",
-    style: { align: "left" },
-  },
-];
-const dataList = [
-  {
-    type: "inputTextID",
-    title: { eng: "itemID", cht: "餐點編號" },
-    display: { filter: true, UICreate: false, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "menuExist", cht: "餐點狀況" },
-    option: [
-      { value: 1, text: "上架餐點" },
-      { value: 0, text: "下架餐點" },
-    ],
-    display: { filter: false, UICreate: true, UIEdit: true, table: false },
-  },
-  {
-    type: "inputText",
-    title: { eng: "itemName", cht: "餐點名稱" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "itemType", cht: "餐點類型" },
-    option: [
-      { value: "飲品", text: "飲品" },
-      { value: "主餐", text: "主餐" },
-      { value: "甜點", text: "甜點" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputText",
-    title: { eng: "itemDescribe", cht: "餐點描述" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "select",
-    title: { eng: "itemMain", cht: "首頁呈現品項" },
-    option: [
-      { value: 1, text: "首頁呈現品項" },
-      { value: 0, text: "非首頁呈現品項" },
-    ],
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputNumber",
-    title: { eng: "itemPrice", cht: "餐點價格" },
-    display: { filter: true, UICreate: true, UIEdit: true, table: true },
-  },
-  {
-    type: "inputImgSingle",
-    title: { eng: "itemImg", cht: "餐點圖片" },
-    display: { filter: false, UICreate: true, UIEdit: true, table: true },
-  },
-];
 
-const removeUIText = {
-  titleText: "確定使該品項下架？",
-};
-const onUIText = {
-  titleText: "確定使該品項上架？",
-};
+//導入頁面資訊
+import {menuItem} from '../constants.js'
+const tableDataTitle = menuItem.tableDataTitle
+const dataList = menuItem.dataList
+const removeUIText = menuItem.removeUIText
+const onUIText = menuItem.onUIText
 
+//有效無效資料頁切控制
 let panelActiveValue = ref("exist");
 async function changePanal(panalName) {
   panelActiveValue.value = panalName;
@@ -252,6 +146,9 @@ async function changePanal(panalName) {
 }
 const panelActiveValueCom = computed(() => panelActiveValue.value);
 
+//預設篩選
+const defaultSelected = "itemType";
+//篩選器控制
 let condition = ref({ condition: "", value: "" });
 function handleUpdateData(data) {
   // console.log(data);
@@ -260,11 +157,9 @@ function handleUpdateData(data) {
 }
 
 const { data, pending, error, refresh } = useAsyncData(
-  //改這
   "menuItemData",
   async () => {
     let url = "http://localhost:3000/api/menuItem?";
-    //改這
     url +=
       panelActiveValueCom.value === "exist" ? "menuExist=1" : "menuExist=0";
     if (condition.value.value !== "") {
@@ -319,8 +214,7 @@ function openOnUI() {
   onUI.value = true;
 }
 
-//編輯data
-//改這
+//增刪修Api
 async function createData(data) {
   const result = await useAsyncData("menuItemDataCreate", async () => {
     let url = "http://localhost:3000/api/menuItem";
