@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-// definePageMeta({
-//   layout: "login-layout",
-// });
+definePageMeta({
+  ssr: false
+});
 
 const account = ref("");
 const password = ref("");
@@ -68,10 +68,6 @@ function turnToForgetPassword() {
 
 const wrongLoginSignCom = computed(() => wrongLoginSign.value);
 
-// import { usePagesData } from '~/stores/pagesData'
-// const pagesData = usePagesData()
-// pagesData.changePage('index')
-// console.log(pagesData.currentPage);
 </script>
 
 

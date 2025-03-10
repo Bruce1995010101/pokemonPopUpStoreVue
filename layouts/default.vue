@@ -148,13 +148,6 @@ async function logOut() {
   console.log(data.value);
 }
 
-const { checkUserAuthority } = useAuth();
-onMounted(async () => {
-  if (process.client) {
-    checkUserAuthority()
-  }
-});
-
 
 </script>
 

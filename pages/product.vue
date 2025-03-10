@@ -108,6 +108,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['auth'],
+});
+
 import { usePagesData } from "~/stores/pagesData";
 const pagesData = usePagesData();
 

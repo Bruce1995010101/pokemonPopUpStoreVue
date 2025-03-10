@@ -10,11 +10,12 @@ export const useAuth = () => {
                 });
             }
         );
-        if (!result.data.value.account) {
-            // console.log(result.data.value.account);
-            // window.location.href = "/";
-            navigateTo('/'); 
-
+        // console.log('useAuth',result.data.value);
+        if (result.data.value.accountAuthority !== undefined) {
+            // console.log('useAuthTrue',result.data.value);
+            return true;
+        }else{
+            return false
         }
     };
 

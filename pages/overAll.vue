@@ -56,8 +56,7 @@
 
 <script setup>
 definePageMeta({
-  // middleware: ['auth'],
-  ssr: false,
+  middleware: ['auth'],
 });
 const webStatusUI = ref(false);
 const webStatusUICom = computed(() => webStatusUI.value);

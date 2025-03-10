@@ -34,21 +34,6 @@ app.use(session({
     }
 }))
 
-//sql
-// const conn = myspl.createConnection({
-//     user: "root",
-//     password: '',
-//     host: 'localhost',
-//     port: 3306,
-//     database: 'mfeeDB'
-// })
-// conn.connect(function (err) {
-//     if (!err) {
-//         console.log('連線成功');
-//     } else {
-//         console.log(err);
-//     }
-// })
 
 
 //nodemailer
@@ -122,7 +107,7 @@ app.post('/loginApi', async function (req, res) {
     const [result] = await conn.query(`select * from userInfo where userExist = 1 AND userAccount = ?`, [account])
 
     if (result[0] !== undefined) {
-        console.log("有人登入");
+        // console.log("有人登入");
         await verifyPassword(password, result[0].userPassword)
             .then(async function (check) {
                 if (check) {
@@ -132,7 +117,6 @@ app.post('/loginApi', async function (req, res) {
                     req.session.accountAuthority = resultAuthority;
                     // console.log(resultAuthority);
                     // console.log('/loginApi:',req.session);
-                    // console.log('🟢 /loginApi session ID:', req.sessionID);
 
                     res.send(true);
                     // console.log("登入成功");
@@ -186,45 +170,12 @@ app.post('/loginForgetApi', async function (req, res) {
         res.send(false);
     }
 })
-// app.post('/loginForgetCheckApi', function (req, res) {
-//     let code = req.body.code
-//     if (code === req.session.code) {
-//         console.log('good');
-//         res.send(true)
-//     } else {
-//         console.log('notPass');
-//         res.send(false)
-//     }
 
-// })
-// app.post('/changePWApi', function (req, res) {
-//     let account = req.session.accountForget;
-//     res.send(account)
-// })
-// app.post('/updatePWApi', function (req, res) {
-//     let account = req.session.accountForget
-//     let password = req.body.userPassword
-
-//     let hashedPassword = hashPasswordSync(password);
-//     // console.log('Hashed password:', hashedPassword);
-
-//     conn.query(`UPDATE userInfo SET userPassword = '${hashedPassword}' WHERE userAccount = '${account}'`,
-//         [],
-//         function (err, result) {
-//             if (err) {
-//                 res.send(false)
-//                 console.log(err);
-//             } else {
-//                 res.send(true)
-//                 console.log(result);
-//             }
-//         })
-// })
 
 app.get('/checkUserAuthority', async function (req, res) {
     let account = req.session.account
     let accountAuthority = req.session.accountAuthority
-    // console.log('存在/checkUserAuthority的session:', account);
+    console.log('存在/checkUserAuthority的session:', account);
     // console.log('🟢 /checkUserAuthority session ID:', req.sessionID);
     res.send({account, accountAuthority})
 })
@@ -238,15 +189,7 @@ app.post('/mailSomeone', async function (req, res) {
     res.send(result)
 
 })
-// app.get('/check', function (req, res) {
-//     if (req.session.account !== undefined) {
-//         // res.send(true);
-//         res.send(req.session.account);
-//     } else {
-//         res.send(false);
 
-//     }
-// })
 app.get('/logout', function (req, res) {
     delete req.session.account;
     delete req.session.accountAuthority;

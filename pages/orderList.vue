@@ -108,6 +108,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['auth'],
+});
+
 import { usePagesData } from "~/stores/pagesData";
 const pagesData = usePagesData();
 
@@ -129,7 +133,6 @@ onMounted(async () => {
     // console.log(pagesData.currentPage);
   }
 });
-("資料ID	訂單編號	訂單狀態	商品名稱	商品數量	單品總價	買家姓名	信箱	電話	地址	訂單日期	付款方式	發票類別	公司名稱	統一編號	物流備註");
 //改這
 const tableDataTitle = [
   {
