@@ -55,7 +55,7 @@
             ></table-body>
           </template>
         </table-slot>
-        <div class="addDiv">
+        <div class="addDiv" v-if="userInfo.userInfo.userTitle === 'HR'">
           <button title="新增資料" class="add" @click="openAddDataUI"></button>
         </div>
       </article>
@@ -129,8 +129,14 @@ onMounted(async () => {
   if (process.client) {
     pagesData.changePage(page.value);
     // console.log(pagesData.currentPage);
+
   }
 });
+
+//導入user資料
+import { useUserInfo } from "~/stores/userInfo";
+const userInfo = useUserInfo();
+
 
 //導入頁面資訊
 import {account} from '../constants.js'
@@ -164,6 +170,9 @@ const { data, pending, error, refresh } = useAsyncData(
     let url = "http://localhost:3000/api/account?";
     url +=
       panelActiveValueCom.value === "exist" ? "userExist=1" : "userExist=0";
+    // 只有HR能看到並修改刪除其他人資料
+    url +=
+      userInfo.userInfo.userTitle === "HR" ? "" : `&userAccount=${userInfo.userInfo.account}`;
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;

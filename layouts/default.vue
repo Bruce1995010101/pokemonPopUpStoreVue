@@ -113,7 +113,7 @@ function turnToStoreBookingPage() {
   window.location.href = "http://localhost:3000/storebooking";
 }
 function turnToAccountPage() {
-  window.location.href = "http://localhost:3000/Account";
+  window.location.href = "http://localhost:3000/account";
 }
 
 const { data, pending, error, refresh } = await useAsyncData(

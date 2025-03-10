@@ -11,10 +11,15 @@
         <span v-else-if="colTitle.type === 'time'">{{ dataRow[`${colTitle.title.eng}`] }}</span>
       
       </td>
-      <td class="textCenter">
+      <td v-if="currentPage !== 'account'" class="textCenter">
         <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
         <button v-if="props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
         <button v-else title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
+      </td>
+      <td v-else class="textCenter">
+        <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
+        <button v-if="userInfo.userInfo.userTitle === 'HR' && props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
+        <button v-if="userInfo.userInfo.userTitle === 'HR' && props.panelActive === 'noExist'" title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
       </td>
     </tr>
   </tbody>
@@ -27,10 +32,18 @@ const props = defineProps({
   panelActive: String,
   dataTitleList: Array,
 });
+
+//導入user資料
+import { useUserInfo } from "~/stores/userInfo";
+const userInfo = useUserInfo();
+
 const UIData = inject("UIData");
 const emit = defineEmits(["openEditUI", "openRemoveUI","openOnUI"])
 
 function openEditUI(data){
+  console.log(userInfo.userInfo.userTitle);
+  console.log(props.currentPage);
+  
   emit("openEditUI")
   UIData.value.edit = data
   // console.log(UIData.value.edit);

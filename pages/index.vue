@@ -42,7 +42,7 @@ const password = ref("");
 let wrongLoginSign = ref(false);
 
 async function login() {
-  console.log("Account:", account.value, "Password:", password.value);
+  // console.log("Account:", account.value, "Password:", password.value);
   const payload = { account: account.value, password: password.value };
   const { data, error } = await useAsyncData("userLogin", () =>
     $fetch("http://localhost:3000/loginApi", {
@@ -51,9 +51,10 @@ async function login() {
       credentials: "include",
     })
   );
-  console.log("Result:", data.value);
-  console.log("err:", error.value);
+  // console.log("Result:", data.value);
+  // console.log("err:", error.value);
   if (data.value ?? false) {
+    
     window.location.href = "http://localhost:3000/overAll";
   } else {
     wrongLoginSign.value = true;

@@ -13,6 +13,6 @@ export default defineNuxtConfig({
     '/menuitem': { ssr: false },
     '/cafebooking': { ssr: false },
     '/storebooking': { ssr: false },
-    '/Account': { ssr: false },
+    '/account': { ssr: false },
   }
 })

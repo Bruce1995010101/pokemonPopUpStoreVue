@@ -115,6 +115,7 @@ app.post('/loginApi', async function (req, res) {
                     const [resultAuthority, err] = await conn.query(`SELECT * FROM userInfo INNER JOIN userAuthority INNER JOIN page on userInfo.userID = userAuthority.authorityUserID AND userAuthority.authorityPageID = page.pageID WHERE userAccount = ?`, [account])
                     req.session.account = account;
                     req.session.accountAuthority = resultAuthority;
+                    req.session.userTitle = resultAuthority[0].userTitle;
                     // console.log(resultAuthority);
                     // console.log('/loginApi:',req.session);
 
@@ -174,10 +175,11 @@ app.post('/loginForgetApi', async function (req, res) {
 
 app.get('/checkUserAuthority', async function (req, res) {
     let account = req.session.account
+    let userTitle = req.session.userTitle
     let accountAuthority = req.session.accountAuthority
     console.log('存在/checkUserAuthority的session:', account);
     // console.log('🟢 /checkUserAuthority session ID:', req.sessionID);
-    res.send({account, accountAuthority})
+    res.send({account, userTitle, accountAuthority})
 })
 
 
