@@ -44,9 +44,6 @@
 </template>
 
 <script setup>
-// definePageMeta({
-//   layout: "login-layout",
-// });
 
 const account = ref("");
 let wrongLoginSign = ref(false);
@@ -105,8 +102,8 @@ async function verifyAccountAndSentEmail() {
       })
     );
     pendingSign.value = false;
-    window.location.href = "http://localhost:3000/forgetPassword/success";
-    console.log(mailResult);
+    navigateTo('/forgetPassword/success')
+    // console.log(mailResult);
   } else {
     console.log("無資料");
     wrongLoginSign.value = true;
@@ -115,7 +112,7 @@ async function verifyAccountAndSentEmail() {
 }
 
 function turnToLogin() {
-  window.location.href = "http://localhost:3000";
+  navigateTo('/')
 }
 </script>
 

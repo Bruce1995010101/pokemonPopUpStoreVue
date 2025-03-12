@@ -55,7 +55,7 @@
             ></table-body>
           </template>
         </table-slot>
-        <div class="addDiv" v-if="userInfo.userInfo.userTitle === 'HR'">
+        <div class="addDiv" v-if="userInfo.currentUser.userTitle === 'HR'">
           <button title="新增資料" class="add" @click="openAddDataUI"></button>
         </div>
       </article>
@@ -172,7 +172,9 @@ const { data, pending, error, refresh } = useAsyncData(
       panelActiveValueCom.value === "exist" ? "userExist=1" : "userExist=0";
     // 只有HR能看到並修改刪除其他人資料
     url +=
-      userInfo.userInfo.userTitle === "HR" ? "" : `&userAccount=${userInfo.userInfo.account}`;
+      userInfo.currentUser.userTitle === "HR" ? "" : `&userAccount=${userInfo.currentUser.account}`;
+    console.log(userInfo.currentUser);
+    
     if (condition.value.value !== "") {
       url += "&";
       url += condition.value.condition;

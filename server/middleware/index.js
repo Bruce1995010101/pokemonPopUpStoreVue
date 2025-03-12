@@ -118,8 +118,8 @@ app.post('/loginApi', async function (req, res) {
                     req.session.userTitle = resultAuthority[0].userTitle;
                     // console.log(resultAuthority);
                     // console.log('/loginApi:',req.session);
-
-                    res.send(true);
+                    const userInfo = {account, accountAuthority:resultAuthority, userTitle: resultAuthority[0].userTitle};
+                    res.send(userInfo);
                     // console.log("登入成功");
                 } else {
                     res.send(false);

@@ -22,12 +22,9 @@
 </template>
 
 <script setup>
-// definePageMeta({
-//   layout: "login-layout",
-// });
 
 function turnToLogin() {
-  window.location.href = "http://localhost:3000";
+  navigateTo('/')
 }
 </script>
 

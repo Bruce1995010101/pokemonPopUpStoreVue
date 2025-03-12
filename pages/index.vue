@@ -33,14 +33,13 @@
 </template>
 
 <script setup>
-definePageMeta({
-  ssr: false
-});
 
 const account = ref("");
 const password = ref("");
 let wrongLoginSign = ref(false);
 
+import { useUserInfo } from "~/stores/userInfo";
+const userInfo = useUserInfo();
 async function login() {
   // console.log("Account:", account.value, "Password:", password.value);
   const payload = { account: account.value, password: password.value };
@@ -53,9 +52,10 @@ async function login() {
   );
   // console.log("Result:", data.value);
   // console.log("err:", error.value);
-  if (data.value ?? false) {
-    
-    window.location.href = "http://localhost:3000/overAll";
+  if (data.value.account ?? false) {
+    userInfo.changeUser(data.value);
+    // console.log(userInfo.userInfo);
+    navigateTo('/overAll')
   } else {
     wrongLoginSign.value = true;
     console.log(wrongLoginSign);
@@ -64,7 +64,7 @@ async function login() {
 }
 
 function turnToForgetPassword() {
-  window.location.href = "http://localhost:3000/forgetPassword";
+  navigateTo('/forgetPassword')
 }
 
 const wrongLoginSignCom = computed(() => wrongLoginSign.value);

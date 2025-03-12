@@ -1,13 +1,21 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const userSession = useAuth()
-  const isLoggedIn = await userSession.checkUserAuthority()
+  const userInfo = await userSession.checkUserAuthority()
 
-
-  // console.log('Auth的資料', isLoggedIn);
-  if (isLoggedIn) {
-    return 
-  }else{
-    return navigateTo('/'); // 未登入跳轉至登入頁面
+  if (userInfo) {
+    for (let i = 0; i < userInfo.accountAuthority.length; i++) {
+        if (userInfo.accountAuthority[i].pageName === to.name) {
+            return;
+        }
+    }
   }
-
+  const result = await useAsyncData("logout", async () => {
+    return await $fetch("http://localhost:3000/logout", {
+      credentials: "include",
+    });
+  });
+  // console.log(result);
+  if (result.data.value === "out") {
+    return navigateTo('/');
+  }
 });

@@ -95,25 +95,25 @@ function closeEditBlack() {
 }
 
 function turnToOverAllPage() {
-  window.location.href = "http://localhost:3000/overAll";
+  navigateTo('/overAll')
 }
 function turnToProductPage() {
-  window.location.href = "http://localhost:3000/product";
+  navigateTo('/product')
 }
 function turnToOrderListPage() {
-  window.location.href = "http://localhost:3000/orderlist";
+  navigateTo('/orderlist')
 }
 function turnToMenuItemPage() {
-  window.location.href = "http://localhost:3000/menuitem";
+  navigateTo('/menuitem')
 }
 function turnToCafeBookingPage() {
-  window.location.href = "http://localhost:3000/cafebooking";
+  navigateTo('/cafebooking')
 }
 function turnToStoreBookingPage() {
-  window.location.href = "http://localhost:3000/storebooking";
+  navigateTo('/storebooking')
 }
 function turnToAccountPage() {
-  window.location.href = "http://localhost:3000/account";
+  navigateTo('/account')
 }
 
 const { data, pending, error, refresh } = await useAsyncData(
@@ -141,11 +141,11 @@ async function logOut() {
       credentials: "include",
     });
   });
-  console.log(result);
+  // console.log(result);
   if (result.data.value === "out") {
-    window.location.href = "/";
+    navigateTo('/')
   }
-  console.log(data.value);
+  // console.log(data.value);
 }
 
 

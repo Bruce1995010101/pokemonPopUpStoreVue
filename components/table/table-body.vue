@@ -18,8 +18,8 @@
       </td>
       <td v-else class="textCenter">
         <button title="編輯資料" class="edit tableBn" @click="openEditUI(dataRow)"></button>
-        <button v-if="userInfo.userInfo.userTitle === 'HR' && props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
-        <button v-if="userInfo.userInfo.userTitle === 'HR' && props.panelActive === 'noExist'" title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
+        <button v-if="userInfo.currentUser.userTitle === 'HR' && props.panelActive === 'exist'" title="改成無效資料" class="remove tableBn" @click="openRemoveUI(dataRow)"></button>
+        <button v-if="userInfo.currentUser.userTitle === 'HR' && props.panelActive === 'noExist'" title='改成有效資料' class='on tableBn' @click="openOnUI(dataRow)"></button>
       </td>
     </tr>
   </tbody>
