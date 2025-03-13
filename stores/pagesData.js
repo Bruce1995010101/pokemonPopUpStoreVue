@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const usePagesData = defineStore('counter', () => {
+export const usePagesData = defineStore('pagesData', () => {
   let page = ref('loginPage')
 
   const changePage = (pageName) => {
