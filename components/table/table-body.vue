@@ -41,8 +41,8 @@ const UIData = inject("UIData");
 const emit = defineEmits(["openEditUI", "openRemoveUI","openOnUI"])
 
 function openEditUI(data){
-  console.log(userInfo.userInfo.userTitle);
-  console.log(props.currentPage);
+  // console.log(userInfo.userInfo.userTitle);
+  // console.log(props.currentPage);
   
   emit("openEditUI")
   UIData.value.edit = data
@@ -51,7 +51,7 @@ function openEditUI(data){
 function openRemoveUI(data){
   emit("openRemoveUI")
   UIData.value.remove = data
-  console.log(UIData.value.remove);
+  // console.log(UIData.value.remove);
 }
 function openOnUI(data){
   emit("openOnUI")

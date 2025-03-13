@@ -224,7 +224,7 @@ async function createData(data) {
       body: data,
     });
   });
-  console.log(data);
+  // console.log(data);
   refresh();
   refresh();
   closeAllEditUI();

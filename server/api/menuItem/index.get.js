@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
             }
 
             // console.log("Generated SQL Query:", query);
-            console.log("Parameters:", params);
+            // console.log("Parameters:", params);
 
             // 執行查詢
             [data] = await conn.query(query, params);

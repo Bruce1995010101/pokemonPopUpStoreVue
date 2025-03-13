@@ -246,12 +246,12 @@ async function submit() {
       `http://localhost:3000/api/account/checkAccount?userAccount=${rowData.value.userAccount}`
     );
     if (accountdata.length === 0) {
-      console.log("可新增帳號");
+      // console.log("可新增帳號");
       data = {
         ...rowData.value,
       };
     } else {
-      console.log("不可");
+      // console.log("不可");
       wrongSign.value = true
       return
     }

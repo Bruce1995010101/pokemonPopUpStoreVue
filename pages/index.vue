@@ -58,8 +58,8 @@ async function login() {
     navigateTo('/overAll')
   } else {
     wrongLoginSign.value = true;
-    console.log(wrongLoginSign);
-    console.log("登入失敗");
+    // console.log(wrongLoginSign);
+    // console.log("登入失敗");
   }
 }
 

@@ -177,7 +177,7 @@ app.get('/checkUserAuthority', async function (req, res) {
     let account = req.session.account
     let userTitle = req.session.userTitle
     let accountAuthority = req.session.accountAuthority
-    console.log('存在/checkUserAuthority的session:', account);
+    // console.log('存在/checkUserAuthority的session:', account);
     // console.log('🟢 /checkUserAuthority session ID:', req.sessionID);
     res.send({account, userTitle, accountAuthority})
 })

@@ -98,7 +98,7 @@ async function changeWebStatus() {
     const payload = {
       webStatus: webStatusResult.data.value[0].webStatus === 1 ? 0 : 1,
     };
-    console.log(payload);
+    // console.log(payload);
     return await $fetch(url, {
       method: "PATCH",
       body: payload,

@@ -239,7 +239,7 @@ async function editData(data) {
       body: data,
     });
   });
-  console.log(result);
+  // console.log(result);
   refresh();
   refresh();
   closeAllEditUI();

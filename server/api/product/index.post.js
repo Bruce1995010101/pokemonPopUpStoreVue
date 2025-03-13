@@ -17,8 +17,8 @@ export default defineEventHandler(async (event) => {
             productMain,
             productImg
         } = body;
-        console.log(productImg);
-        console.log(typeof(productImg));
+        // console.log(productImg);
+        // console.log(typeof(productImg));
 
         // 插入產品資訊
         const [result] = await conn.query(

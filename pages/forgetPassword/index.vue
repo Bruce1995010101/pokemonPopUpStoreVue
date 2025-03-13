@@ -94,7 +94,7 @@ async function verifyAccountAndSentEmail() {
     text: `申請人帳號：${userData.userAccount}`,
   };
   if (userData !== null) {
-    console.log("寄信");
+    // console.log("寄信");
     const mailResult = await useAsyncData("loginForgetMailITApi", () =>
       $fetch("http://localhost:3000/mailSomeone", {
         method: "POST",
@@ -105,7 +105,7 @@ async function verifyAccountAndSentEmail() {
     navigateTo('/forgetPassword/success')
     // console.log(mailResult);
   } else {
-    console.log("無資料");
+    // console.log("無資料");
     wrongLoginSign.value = true;
     pendingSign.value = false;
   }

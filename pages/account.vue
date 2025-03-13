@@ -173,7 +173,7 @@ const { data, pending, error, refresh } = useAsyncData(
     // 只有HR能看到並修改刪除其他人資料
     url +=
       userInfo.currentUser.userTitle === "HR" ? "" : `&userAccount=${userInfo.currentUser.account}`;
-    console.log(userInfo.currentUser);
+    // console.log(userInfo.currentUser);
     
     if (condition.value.value !== "") {
       url += "&";
@@ -252,7 +252,7 @@ async function editData(data) {
       body: data,
     });
   });
-  console.log(result);
+  // console.log(result);
   refresh();
   refresh();
   closeAllEditUI();
